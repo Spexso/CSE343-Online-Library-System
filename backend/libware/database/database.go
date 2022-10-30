@@ -10,6 +10,9 @@ type Database struct {
 	db *sql.DB
 }
 
+// Open opens the Database. If the database file does not exist, a new
+// database file is created. If the required tables do not exist, the
+// tables are created.
 func Open(name string) (Database, error) {
 	db, err := sql.Open("sqlite3", name)
 
@@ -68,6 +71,7 @@ func Open(name string) (Database, error) {
 	return Database{db: db}, err
 }
 
+// Close closes the Database.
 func (d *Database) Close() error {
 	return d.db.Close()
 }
