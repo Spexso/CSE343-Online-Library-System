@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"libware/database"
 	"log"
 )
@@ -8,7 +9,7 @@ import (
 func main() {
 	err := tryMain()
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatalf("error: %v", err)
 	}
 }
 
@@ -17,7 +18,7 @@ func tryMain() error {
 
 	db, err := database.Open("data.db")
 	if err != nil {
-		return err
+		return fmt.Errorf("database: %w", err)
 	}
 	defer db.Close()
 
