@@ -139,6 +139,20 @@ func (d *Database) IsUserExistWithEmail(email string) (bool, error) {
 	}
 }
 
+func generateHash(password, salt []byte) []byte {
+	return argon2.IDKey(password, salt, 1, 64*1024, 4, 32)
+}
+
+func generateSalt() ([]byte, error) {
+	salt := make([]byte, 16)
+	_, err := io.ReadFull(rand.Reader, salt)
+	if err != nil {
+		return nil, err
+	}
+
+	return salt, nil
+}
+
 // UserInsert inserts the user to users table and returns the user id. If the user exists, returns ErrExist.
 func (d *Database) UserInsert(gender, name, surname, email, phone, password string) (int64, error) {
 	var err error
@@ -157,13 +171,12 @@ func (d *Database) UserInsert(gender, name, surname, email, phone, password stri
 	nextId := id + 1
 	nextIdValue := strconv.FormatInt(nextId, 10)
 
-	salt := make([]byte, 16)
-	_, err = io.ReadFull(rand.Reader, salt)
+	salt, err := generateSalt()
 	if err != nil {
 		return -1, err
 	}
 
-	hash := argon2.IDKey([]byte(password), salt, 1, 64*1024, 4, 32)
+	hash := generateHash([]byte(password), salt)
 
 	sqlStmt := `
 INSERT INTO users
