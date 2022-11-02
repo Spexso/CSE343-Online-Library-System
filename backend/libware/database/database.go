@@ -1,6 +1,7 @@
 package database
 
 import (
+	"bytes"
 	"crypto/rand"
 	"database/sql"
 	"errors"
@@ -13,8 +14,9 @@ import (
 )
 
 var (
-	ErrNotExist = errors.New("does not exist")
-	ErrExist    = errors.New("already exist")
+	ErrNotExist        = errors.New("does not exist")
+	ErrExist           = errors.New("already exist")
+	ErrInvalidPassword = errors.New("password is invalid")
 )
 
 type Database struct {
@@ -190,6 +192,31 @@ WHERE key = "nextuserid";
 	_, err = d.db.Exec(sqlStmt, id, gender, name, surname, email, phone, hash, salt, "[]", "[]", "[]", nil, "[]", nextIdValue)
 	if err != nil {
 		return -1, err
+	}
+
+	return id, nil
+}
+
+// UserValidate returns user id if the password is valid.
+// If the user doesn't exist, returns ErrNotExist.
+// If the password is invalid, returns ErrInvalidPassword.
+func (d *Database) UserValidate(email, password string) (int64, error) {
+	if yes, err := d.IsUserExistWithEmail(email); !yes {
+		return -1, ErrNotExist
+	} else if err != nil {
+		return -1, err
+	}
+
+	row := d.db.QueryRow(`SELECT id, hash, salt FROM users WHERE email = ?`, email)
+	var id int64
+	var savedHash, salt []byte
+	if err := row.Scan(&id, &savedHash, &salt); err != nil {
+		return -1, err
+	}
+
+	hash := generateHash([]byte(password), salt)
+	if !bytes.Equal(hash, savedHash) {
+		return -1, ErrInvalidPassword
 	}
 
 	return id, nil
