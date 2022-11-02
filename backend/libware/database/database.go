@@ -222,3 +222,45 @@ func (d *Database) UserValidate(email, password string) (int64, error) {
 
 	return id, nil
 }
+
+// IsAdminExistWithName returns true if the admin with name exists.
+func (d *Database) IsAdminExistWithName(name string) (bool, error) {
+	row := d.db.QueryRow("SELECT 1 FROM admins WHERE name = ?", name)
+	if err := row.Err(); err != nil {
+		return false, err
+	}
+
+	var temp int
+	if err := row.Scan(&temp); err == nil {
+		return true, nil
+	} else if errors.Is(err, sql.ErrNoRows) {
+		return false, nil
+	} else {
+		return false, err
+	}
+}
+
+// AdminValidate returns admin id if the password is valid.
+// If the admin doesn't exist, returns ErrNotExist.
+// If the password is invalid, returns ErrInvalidPassword.
+func (d *Database) AdminValidate(name, password string) (int64, error) {
+	if yes, err := d.IsAdminExistWithName(name); !yes {
+		return -1, ErrNotExist
+	} else if err != nil {
+		return -1, err
+	}
+
+	row := d.db.QueryRow(`SELECT id, hash, salt FROM admins WHERE name = ?`, name)
+	var id int64
+	var savedHash, salt []byte
+	if err := row.Scan(&id, &savedHash, &salt); err != nil {
+		return -1, err
+	}
+
+	hash := generateHash([]byte(password), salt)
+	if !bytes.Equal(hash, savedHash) {
+		return -1, ErrInvalidPassword
+	}
+
+	return id, nil
+}
