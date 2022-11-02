@@ -71,9 +71,10 @@ CREATE TABLE users (
 CREATE TABLE admins (
 	id INTEGER NOT NULL,
 	name VARCHAR(255) NOT NULL,
-	password TEXT NOT NULL,
+	hash BLOB NOT NULL,
+	salt BLOB NOT NULL,
 	PRIMARY KEY(id),
-	UNIQUE(id)
+	UNIQUE(id, name),
 );
 
 CREATE TABLE isbndata (
