@@ -139,7 +139,7 @@ func (d *Database) IsUserExistWithEmail(email string) (bool, error) {
 	}
 }
 
-// UserInsert inserts the user to users table. If the user exists, returns ErrExist.
+// UserInsert inserts the user to users table and returns the user id. If the user exists, returns ErrExist.
 func (d *Database) UserInsert(gender, name, surname, email, phone, password string) (int64, error) {
 	var err error
 	if yes, err := d.IsUserExistWithEmail(email); yes {
