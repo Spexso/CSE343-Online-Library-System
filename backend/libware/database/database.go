@@ -122,7 +122,7 @@ func (d *Database) Close() error {
 	return d.db.Close()
 }
 
-// IsUserExistWithEmail returns true if the user with email exist.
+// IsUserExistWithEmail returns true if the user with email exists.
 func (d *Database) IsUserExistWithEmail(email string) (bool, error) {
 	row := d.db.QueryRow("SELECT 1 FROM users WHERE email = ?", email)
 	if err := row.Err(); err != nil {
