@@ -22,7 +22,7 @@ func New(db *database.Database) *LibraryServer {
 	l.userSessions = userstore.New()
 
 	router := http.NewServeMux()
-	router.Handle("/unauthorized/", http.StripPrefix("/unauthorized", l.unauthorizedHandler()))
+	router.Handle("/guest/", http.StripPrefix("/guest", l.guestHandler()))
 	router.Handle("/user/", http.StripPrefix("/user", l.userHandler()))
 	router.Handle("/admin/", http.StripPrefix("/admin", l.adminHandler()))
 

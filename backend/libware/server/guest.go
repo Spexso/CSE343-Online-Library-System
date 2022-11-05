@@ -12,7 +12,7 @@ import (
 	"github.com/fatih/color"
 )
 
-func (l *LibraryServer) unauthorizedHandler() http.Handler {
+func (l *LibraryServer) guestHandler() http.Handler {
 	router := http.NewServeMux()
 	router.HandleFunc("/user-register", l.userRegister)
 	router.HandleFunc("/user-login", l.userLogin)
