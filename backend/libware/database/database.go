@@ -2,38 +2,19 @@ package database
 
 import (
 	"bytes"
-	"crypto/rand"
 	"database/sql"
 	"errors"
-	"io"
-	"os"
 	"strconv"
 
+	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/errlist"
+	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/helpers"
 	_ "github.com/mattn/go-sqlite3"
-	"golang.org/x/crypto/argon2"
 )
 
-var (
-	ErrNotExist        = errors.New("does not exist")
-	ErrExist           = errors.New("already exist")
-	ErrInvalidPassword = errors.New("password is invalid")
-)
+var ()
 
 type Database struct {
 	db *sql.DB
-}
-
-func isFileExist(name string) (bool, error) {
-	info, err := os.Stat(name)
-	if errors.Is(err, os.ErrNotExist) {
-		return false, nil
-	}
-
-	if info.IsDir() {
-		return false, errors.New(name + " is a directory")
-	}
-
-	return true, err
 }
 
 // Open opens the Database. If the database file does not exist, a new
@@ -45,7 +26,7 @@ func Open(name string) (Database, error) {
 		return Database{db: db}, err
 	}
 
-	if yes, err := isFileExist(name); yes || err != nil {
+	if yes, err := helpers.IsFileExist(name); yes || err != nil {
 		return Database{db: db}, err
 	}
 
@@ -142,25 +123,12 @@ func (d *Database) IsUserExistWithEmail(email string) (bool, error) {
 	}
 }
 
-func generateHash(password, salt []byte) []byte {
-	return argon2.IDKey(password, salt, 1, 64*1024, 4, 32)
-}
-
-func generateSalt() ([]byte, error) {
-	salt := make([]byte, 16)
-	_, err := io.ReadFull(rand.Reader, salt)
-	if err != nil {
-		return nil, err
-	}
-
-	return salt, nil
-}
-
-// UserInsert inserts the user to users table and returns the user id. If the user exists, returns ErrExist.
+// UserInsert inserts the user to users table and returns the user id.
+// If the email is already in use, returns ErrEmailExist.
 func (d *Database) UserInsert(gender, name, surname, email, phone, password string) (int64, error) {
 	var err error
 	if yes, err := d.IsUserExistWithEmail(email); yes {
-		return -1, ErrExist
+		return -1, errlist.ErrEmailExist
 	} else if err != nil {
 		return -1, err
 	}
@@ -174,12 +142,12 @@ func (d *Database) UserInsert(gender, name, surname, email, phone, password stri
 	nextId := id + 1
 	nextIdValue := strconv.FormatInt(nextId, 10)
 
-	salt, err := generateSalt()
+	salt, err := helpers.GenerateSalt()
 	if err != nil {
 		return -1, err
 	}
 
-	hash := generateHash([]byte(password), salt)
+	hash := helpers.GenerateHash([]byte(password), salt)
 
 	sqlStmt := `
 INSERT INTO users
@@ -199,11 +167,11 @@ WHERE key = "nextuserid";
 }
 
 // UserValidate returns user id if the password is valid.
-// If the user doesn't exist, returns ErrNotExist.
+// If the user doesn't exist, returns ErrEmailNotExist.
 // If the password is invalid, returns ErrInvalidPassword.
 func (d *Database) UserValidate(email, password string) (int64, error) {
 	if yes, err := d.IsUserExistWithEmail(email); !yes {
-		return -1, ErrNotExist
+		return -1, errlist.ErrEmailNotExist
 	} else if err != nil {
 		return -1, err
 	}
@@ -215,9 +183,9 @@ func (d *Database) UserValidate(email, password string) (int64, error) {
 		return -1, err
 	}
 
-	hash := generateHash([]byte(password), salt)
+	hash := helpers.GenerateHash([]byte(password), salt)
 	if !bytes.Equal(hash, savedHash) {
-		return -1, ErrInvalidPassword
+		return -1, errlist.ErrInvalidPassword
 	}
 
 	return id, nil
@@ -241,11 +209,11 @@ func (d *Database) IsAdminExistWithName(name string) (bool, error) {
 }
 
 // AdminValidate returns admin id if the password is valid.
-// If the admin doesn't exist, returns ErrNotExist.
+// If the admin doesn't exist, returns ErrNameNotExist.
 // If the password is invalid, returns ErrInvalidPassword.
 func (d *Database) AdminValidate(name, password string) (int64, error) {
 	if yes, err := d.IsAdminExistWithName(name); !yes {
-		return -1, ErrNotExist
+		return -1, errlist.ErrNameNotExist
 	} else if err != nil {
 		return -1, err
 	}
@@ -257,9 +225,9 @@ func (d *Database) AdminValidate(name, password string) (int64, error) {
 		return -1, err
 	}
 
-	hash := generateHash([]byte(password), salt)
+	hash := helpers.GenerateHash([]byte(password), salt)
 	if !bytes.Equal(hash, savedHash) {
-		return -1, ErrInvalidPassword
+		return -1, errlist.ErrInvalidPassword
 	}
 
 	return id, nil

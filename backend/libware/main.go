@@ -2,14 +2,18 @@ package main
 
 import (
 	"fmt"
-	"libware/database"
 	"log"
+	"net/http"
+
+	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/database"
+	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/server"
+	"github.com/fatih/color"
 )
 
 func main() {
 	err := tryMain()
 	if err != nil {
-		log.Fatalf("error: %v", err)
+		log.Fatal(color.RedString("libware: %v", err))
 	}
 }
 
@@ -21,6 +25,12 @@ func tryMain() error {
 		return fmt.Errorf("database: %w", err)
 	}
 	defer db.Close()
+
+	handler := server.New(&db)
+	err = http.ListenAndServe(":8080", handler)
+	if err != nil {
+		return fmt.Errorf("server: %w", err)
+	}
 
 	return nil
 }
