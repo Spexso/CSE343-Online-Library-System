@@ -1,1 +1,2 @@
 backend/libware/*.db
+backend/libware/*.log
