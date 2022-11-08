@@ -1,9 +1,13 @@
 package main
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
+	"os/signal"
 
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/database"
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/server"
@@ -26,8 +30,6 @@ func tryMain() error {
 
 	log.SetOutput(logFile)
 
-	log.Println("start")
-
 	db, err := database.Open("data.db")
 	if err != nil {
 		return fmt.Errorf("database: %w", err)
@@ -35,12 +37,29 @@ func tryMain() error {
 	defer db.Close()
 
 	srv := server.New(":8080", &db)
+
+	go handleSigint(srv)
+
+	log.Print("start")
+
 	err = srv.ListenAndServe()
-	if err != nil {
+	if err != nil && !errors.Is(err, http.ErrServerClosed) {
 		return fmt.Errorf("server: %w", err)
 	}
 
-	log.Print("end")
+	log.Print("shutdown complete")
 
 	return nil
+}
+
+func handleSigint(srv *http.Server) {
+	sigint := make(chan os.Signal, 1)
+	signal.Notify(sigint, os.Interrupt)
+	<-sigint
+
+	log.Print("shutdown initiated")
+
+	if err := srv.Shutdown(context.Background()); err != nil {
+		log.Printf("error: handleInterruptSignal: %v", err)
+	}
 }
