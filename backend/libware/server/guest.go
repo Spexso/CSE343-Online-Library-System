@@ -9,7 +9,6 @@ import (
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/helpers"
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/server/requests"
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/server/responses"
-	"github.com/fatih/color"
 )
 
 func (l *LibraryServer) guestHandler() http.Handler {
@@ -25,7 +24,7 @@ func (l *LibraryServer) userRegister(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		helpers.WriteError(w, errlist.ErrJsonDecoder)
-		log.Print(color.RedString("user-register: %v", err))
+		log.Printf("error: user-register: %v", err)
 		return
 	}
 
@@ -37,7 +36,7 @@ func (l *LibraryServer) userRegister(w http.ResponseWriter, r *http.Request) {
 		} else {
 			helpers.WriteError(w, errlist.ErrGeneric)
 		}
-		log.Print(color.RedString("user-register: %v", err))
+		log.Printf("error: user-register: %v", err)
 		return
 	}
 
@@ -51,7 +50,7 @@ func (l *LibraryServer) userLogin(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		helpers.WriteError(w, errlist.ErrJsonDecoder)
-		log.Print(color.RedString("user-login: %v", err))
+		log.Printf("error: user-login: %v", err)
 		return
 	}
 
@@ -65,7 +64,7 @@ func (l *LibraryServer) userLogin(w http.ResponseWriter, r *http.Request) {
 		} else {
 			helpers.WriteError(w, errlist.ErrGeneric)
 		}
-		log.Print(color.RedString("user-login: %v", err))
+		log.Printf("error: user-login: %v", err)
 		return
 	}
 
@@ -73,7 +72,7 @@ func (l *LibraryServer) userLogin(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		helpers.WriteError(w, errlist.ErrGeneric)
-		log.Print(color.RedString("user-login: %v", err))
+		log.Printf("error: user-login: %v", err)
 		return
 	}
 

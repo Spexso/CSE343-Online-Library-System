@@ -4,20 +4,29 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/database"
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/server"
-	"github.com/fatih/color"
 )
 
 func main() {
 	err := tryMain()
 	if err != nil {
-		log.Fatal(color.RedString("libware: %v", err))
+		fmt.Fprintf(os.Stderr, "libware: %v\n", err)
+		os.Exit(1)
 	}
 }
 
 func tryMain() error {
+	logFile, err := os.OpenFile("history.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return fmt.Errorf("logger: %v", err)
+	}
+	defer logFile.Close()
+
+	log.SetOutput(logFile)
+
 	log.Println("start")
 
 	db, err := database.Open("data.db")
@@ -31,6 +40,8 @@ func tryMain() error {
 	if err != nil {
 		return fmt.Errorf("server: %w", err)
 	}
+
+	log.Print("end")
 
 	return nil
 }
