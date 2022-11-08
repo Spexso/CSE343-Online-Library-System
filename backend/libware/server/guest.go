@@ -11,14 +11,14 @@ import (
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/server/responses"
 )
 
-func (l *LibraryServer) guestHandler() http.Handler {
+func (l *LibraryHandler) guestHandler() http.Handler {
 	router := http.NewServeMux()
 	router.HandleFunc("/user-register", l.userRegister)
 	router.HandleFunc("/user-login", l.userLogin)
 	return router
 }
 
-func (l *LibraryServer) userRegister(w http.ResponseWriter, r *http.Request) {
+func (l *LibraryHandler) userRegister(w http.ResponseWriter, r *http.Request) {
 	var request requests.UserRegister
 	err := helpers.ReadRequest(r.Body, &request)
 	if err != nil {
@@ -44,7 +44,7 @@ func (l *LibraryServer) userRegister(w http.ResponseWriter, r *http.Request) {
 	log.Printf("user-register: %v registered", request.Email)
 }
 
-func (l *LibraryServer) userLogin(w http.ResponseWriter, r *http.Request) {
+func (l *LibraryHandler) userLogin(w http.ResponseWriter, r *http.Request) {
 	var request requests.UserLogin
 	err := helpers.ReadRequest(r.Body, &request)
 	if err != nil {

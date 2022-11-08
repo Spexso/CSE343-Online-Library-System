@@ -8,15 +8,15 @@ import (
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/server/userstore"
 )
 
-type LibraryServer struct {
+type LibraryHandler struct {
 	adminSessions *adminstore.AdminStore
 	userSessions  *userstore.UserStore
 	db            *database.Database
 	http.Handler
 }
 
-func New(db *database.Database) *LibraryServer {
-	l := new(LibraryServer)
+func newHandler(db *database.Database) *LibraryHandler {
+	l := new(LibraryHandler)
 	l.db = db
 	l.adminSessions = adminstore.New()
 	l.userSessions = userstore.New()
@@ -32,4 +32,9 @@ func New(db *database.Database) *LibraryServer {
 	})
 
 	return l
+}
+
+func New(addr string, db *database.Database) *http.Server {
+	handler := newHandler(db)
+	return &http.Server{Addr: addr, Handler: handler}
 }

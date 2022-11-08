@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/database"
@@ -35,8 +34,8 @@ func tryMain() error {
 	}
 	defer db.Close()
 
-	handler := server.New(&db)
-	err = http.ListenAndServe(":8080", handler)
+	srv := server.New(":8080", &db)
+	err = srv.ListenAndServe()
 	if err != nil {
 		return fmt.Errorf("server: %w", err)
 	}
