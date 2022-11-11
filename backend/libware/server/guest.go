@@ -41,7 +41,7 @@ func (l *LibraryHandler) userRegister(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	log.Printf("user-register: %v registered", request.Email)
+	log.Printf("user-register: %q registered", request.Email)
 }
 
 func (l *LibraryHandler) userLogin(w http.ResponseWriter, r *http.Request) {
@@ -80,5 +80,5 @@ func (l *LibraryHandler) userLogin(w http.ResponseWriter, r *http.Request) {
 		Token: token,
 	}
 	helpers.WriteResponse(w, &response)
-	log.Printf("user-login: %s logged in", request.Email)
+	log.Printf("user-login: %q logged in", request.Email)
 }
