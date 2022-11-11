@@ -28,7 +28,7 @@ func (l *LibraryHandler) userRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = l.db.UserInsert(request.Gender, request.Name, request.Surname, request.Email, request.Phone, request.Password)
+	_, err = l.db.UserInsert(request.Name, request.Surname, request.Email, request.Phone, request.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		if errors.Is(err, errlist.ErrEmailExist) {

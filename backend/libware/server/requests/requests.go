@@ -6,7 +6,6 @@ type UserLogin struct {
 }
 
 type UserRegister struct {
-	Gender   string `json:"gender"`
 	Name     string `json:"name"`
 	Surname  string `json:"surname"`
 	Email    string `json:"email"`

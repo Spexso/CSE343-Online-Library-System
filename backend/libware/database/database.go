@@ -33,7 +33,6 @@ func Open(name string) (Database, error) {
 	sqlStmt := `
 CREATE TABLE users (
 	id INTEGER NOT NULL,
-	gender VARCHAR(32) NOT NULL,
 	name VARCHAR(128) NOT NULL,
 	surname VARCHAR(64) NOT NULL,
 	email VARCHAR(254) NOT NULL,
@@ -41,10 +40,9 @@ CREATE TABLE users (
 	hash BLOB NOT NULL,
 	salt BLOB NOT NULL,
 	currentbooks TEXT NOT NULL,
-	bookhistory TEXT NOT NULL,
 	savedbooks TEXT NOT NULL,
-	forbiddenbetween TEXT,
-	punishmenthistory TEXT NOT NULL,
+	forbiddenuntil INTEGER,
+	accounthistory TEXT NOT NULL,
 	PRIMARY KEY(id),
 	UNIQUE(id, email)
 );
@@ -54,8 +52,9 @@ CREATE TABLE admins (
 	name VARCHAR(255) NOT NULL,
 	hash BLOB NOT NULL,
 	salt BLOB NOT NULL,
+	accounthistory TEXT NOT NULL,
 	PRIMARY KEY(id),
-	UNIQUE(id, name),
+	UNIQUE(id, name)
 );
 
 CREATE TABLE isbndata (
@@ -125,7 +124,7 @@ func (d *Database) IsUserExistWithEmail(email string) (bool, error) {
 
 // UserInsert inserts the user to users table and returns the user id.
 // If the email is already in use, returns ErrEmailExist.
-func (d *Database) UserInsert(gender, name, surname, email, phone, password string) (int64, error) {
+func (d *Database) UserInsert(name, surname, email, phone, password string) (int64, error) {
 	var err error
 	if yes, err := d.IsUserExistWithEmail(email); yes {
 		return -1, errlist.ErrEmailExist
@@ -150,15 +149,14 @@ func (d *Database) UserInsert(gender, name, surname, email, phone, password stri
 	hash := helpers.GenerateHash([]byte(password), salt)
 
 	sqlStmt := `
-INSERT INTO users
-VALUES
-	(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+INSERT INTO users (id, name, surname, email, phone, hash, salt, currentbooks, savedbooks, forbiddenuntil, accounthistory)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 UPDATE configs
 SET value = ?
 WHERE key = "nextuserid";
 `
-	_, err = d.db.Exec(sqlStmt, id, gender, name, surname, email, phone, hash, salt, "[]", "[]", "[]", nil, "[]", nextIdValue)
+	_, err = d.db.Exec(sqlStmt, id, name, surname, email, phone, hash, salt, "[]", "[]", nil, "[]", nextIdValue)
 	if err != nil {
 		return -1, err
 	}
