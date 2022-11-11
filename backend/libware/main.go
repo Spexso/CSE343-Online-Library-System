@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/signal"
 
+	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/cli"
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/database"
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/server"
 )
@@ -36,9 +37,12 @@ func tryMain() error {
 	}
 	defer db.Close()
 
-	srv := server.New(":8080", &db)
+	srv := server.New(":8080", db)
 
 	go handleSigint(srv)
+
+	cli := cli.New(db, srv)
+	go cli.Start()
 
 	log.Print("start")
 
