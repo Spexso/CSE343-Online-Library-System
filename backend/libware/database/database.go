@@ -20,14 +20,14 @@ type Database struct {
 // Open opens the Database. If the database file does not exist, a new
 // database file is created. If the required tables do not exist, the
 // tables are created.
-func Open(name string) (Database, error) {
+func Open(name string) (*Database, error) {
 	db, err := sql.Open("sqlite3", name)
 	if err != nil {
-		return Database{db: db}, err
+		return &Database{db: db}, err
 	}
 
 	if yes, err := helpers.IsFileExist(name); yes || err != nil {
-		return Database{db: db}, err
+		return &Database{db: db}, err
 	}
 
 	sqlStmt := `
@@ -97,7 +97,7 @@ VALUES
 
 	_, err = db.Exec(sqlStmt)
 
-	return Database{db: db}, err
+	return &Database{db: db}, err
 }
 
 // Close closes the Database.
@@ -204,6 +204,48 @@ func (d *Database) IsAdminExistWithName(name string) (bool, error) {
 	} else {
 		return false, err
 	}
+}
+
+// AdminInsert inserts the admin to admins table and returns the admin id.
+// If the name is already in use, returns ErrNameExist.
+func (d *Database) AdminInsert(name, password string) (int64, error) {
+	var err error
+	if yes, err := d.IsAdminExistWithName(name); yes {
+		return -1, errlist.ErrNameExist
+	} else if err != nil {
+		return -1, err
+	}
+
+	IdRow := d.db.QueryRow(`SELECT value FROM configs WHERE key = "nextadminid"`)
+	var IdValue string
+	IdRow.Scan(&IdValue)
+
+	id, _ := strconv.ParseInt(IdValue, 10, 64)
+
+	nextId := id + 1
+	nextIdValue := strconv.FormatInt(nextId, 10)
+
+	salt, err := helpers.GenerateSalt()
+	if err != nil {
+		return -1, err
+	}
+
+	hash := helpers.GenerateHash([]byte(password), salt)
+
+	sqlStmt := `
+INSERT INTO admins (id, name, hash, salt, accounthistory)
+VALUES (?, ?, ?, ?, ?);
+
+UPDATE configs
+SET value = ?
+WHERE key = "nextadminid";
+`
+	_, err = d.db.Exec(sqlStmt, id, name, hash, salt, "[]", nextIdValue)
+	if err != nil {
+		return -1, err
+	}
+
+	return id, nil
 }
 
 // AdminValidate returns admin id if the password is valid.
