@@ -25,6 +25,8 @@ var (
 	ErrEmailNotExist   = New("err-email-not-exist", "email is not registered")
 	ErrNameExist       = New("err-name-exist", "name is already in use")
 	ErrNameNotExist    = New("err-name-not-exist", "name is not registered")
+	ErrIsbnExist       = New("err-isbn-exist", "isbn is already registered")
+	ErrIsbnNotExist    = New("err-isbn-not-exist", "isbn is not registered")
 	ErrGeneric         = New("err-generic", "something happened")
 	ErrNotExist        = New("err-not-exist", "does not exist")
 	ErrExist           = New("err-exist", "already exist")
