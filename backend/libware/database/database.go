@@ -74,7 +74,7 @@ CREATE TABLE books (
 	id INTEGER NOT NULL,
 	isbn INTEGER NOT NULL,
 	userid INTEGER,
-	duedate TEXT,
+	duedate INTEGER,
 	PRIMARY KEY(id),
 	FOREIGN KEY(isbn) REFERENCES isbndata(isbn),
 	FOREIGN KEY(userid) REFERENCES users(id),
