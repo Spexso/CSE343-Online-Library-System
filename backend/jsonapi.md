@@ -1,6 +1,6 @@
-# an error response
+# Error Response
 
-*requests may result in an error response*
+*Requests may result in an error response.*
 ```json
 {
   "kind": "err-generic",
@@ -8,8 +8,10 @@
 }
 ```
 
+**NOTE:** err-generic and err-json-decoder aren't listed in Possible Errors. Because they may be returned to any request.
+
 # /guest/user-register
-## request
+## Request
 
 ```json
 {
@@ -21,21 +23,19 @@
 }
 ```
 
-## response
+## Response
 
 ```json
 {
 }
 ```
 
-### possible errors
+### Possible Errors
 
 - err-email-exist
-- err-json-decoder
-- err-generic
 
 # /guest/user-login
-## request
+## Request
 
 ```json
 {
@@ -44,23 +44,21 @@
 }
 ```
 
-## response
+## Response
 
 ```json
 {
-  "token": "mgdHJK",
+  "token": "mgdHJK"
 }
 ```
 
-### possible errors
+### Possible Errors
 
 - err-email-not-exist
 - err-invalid-password
-- err-json-decoder
-- err-generic
 
 # /guest/admin-login
-## request
+## Request
 
 ```json
 {
@@ -69,17 +67,15 @@
 }
 ```
 
-## response
+## Response
 
 ```json
 {
-  "token": "mgdHJK",
+  "token": "mgdHJK"
 }
 ```
 
-### possible errors
+### Possible Errors
 
 - err-name-not-exist
 - err-invalid-password
-- err-json-decoder
-- err-generic
