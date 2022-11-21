@@ -2,11 +2,14 @@ package helpers
 
 import (
 	"crypto/rand"
-	"encoding/base64"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"os"
+	"time"
+
+	"github.com/golang-jwt/jwt/v4"
 
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/errlist"
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/server/responses"
@@ -29,16 +32,60 @@ func ReadRequest(r io.Reader, v any) error {
 	return json.NewDecoder(r).Decode(v)
 }
 
-func CreateToken() (string, error) {
-	tokenBytes := make([]byte, 30)
-	_, err := io.ReadFull(rand.Reader, tokenBytes)
+func GenerateRandomBytes(size int) ([]byte, error) {
+	s := make([]byte, size)
+	_, err := io.ReadFull(rand.Reader, s)
+	if err != nil {
+		return nil, err
+	}
+
+	return s, nil
+}
+
+func GenerateSecret() ([]byte, error) {
+	return GenerateRandomBytes(32)
+}
+
+func CreateToken(subject string, secret []byte) (string, error) {
+	claims := &jwt.RegisteredClaims{
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(7 * 24 * time.Hour)),
+		IssuedAt:  jwt.NewNumericDate(time.Now()),
+		Subject:   subject,
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	tokenString, err := token.SignedString(secret)
+	return tokenString, err
+}
+
+func ValidateToken(tokenString string, secret []byte) (string, error) {
+	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
+		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
+		}
+
+		return secret, nil
+	})
+
 	if err != nil {
 		return "", err
 	}
 
-	token := base64.StdEncoding.EncodeToString(tokenBytes)
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		err := claims.Valid()
+		if err != nil {
+			return "", err
+		}
 
-	return token, nil
+		if subject, ok := claims["sub"].(string); ok {
+			return subject, nil
+		} else {
+			return "", errlist.ErrToken
+		}
+	} else {
+		return "", errlist.ErrToken
+	}
 }
 
 func GenerateHash(password, salt []byte) []byte {
@@ -46,13 +93,7 @@ func GenerateHash(password, salt []byte) []byte {
 }
 
 func GenerateSalt() ([]byte, error) {
-	salt := make([]byte, 16)
-	_, err := io.ReadFull(rand.Reader, salt)
-	if err != nil {
-		return nil, err
-	}
-
-	return salt, nil
+	return GenerateRandomBytes(16)
 }
 
 func IsFileExist(name string) (bool, error) {

@@ -5,6 +5,10 @@ type Error struct {
 	Message string `json:"message"`
 }
 
+type AdminLogin struct {
+	Token string `json:"token"`
+}
+
 type UserLogin struct {
 	Token string `json:"token"`
 }

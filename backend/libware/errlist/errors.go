@@ -32,4 +32,7 @@ var (
 	ErrExist           = New("err-exist", "already exist")
 	ErrInvalidPassword = New("err-invalid-password", "password is invalid")
 	ErrJsonDecoder     = New("err-json-decoder", "malformed input")
+	ErrSessionExist    = New("err-session-exist", "session already exists")
+	ErrToken           = New("err-token", "token is invalid")
+	ErrAuthorization   = New("err-authorization", "authorization header or bearer schema is malformed")
 )
