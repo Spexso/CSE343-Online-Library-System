@@ -74,8 +74,8 @@ func (l *LibraryHandler) userLogin(w http.ResponseWriter, r *http.Request) {
 
 	token, err := helpers.CreateToken(strconv.FormatInt(id, 10), l.userSecret)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		helpers.WriteError(w, errlist.ErrToken)
+		w.WriteHeader(http.StatusInternalServerError)
+		helpers.WriteError(w, errlist.ErrGeneric)
 		log.Printf("error: user-login: %v", err)
 		return
 	}
@@ -117,8 +117,8 @@ func (l *LibraryHandler) adminLogin(w http.ResponseWriter, r *http.Request) {
 
 	token, err := helpers.CreateToken(strconv.FormatInt(id, 10), l.adminSecret)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		helpers.WriteError(w, errlist.ErrToken)
+		w.WriteHeader(http.StatusInternalServerError)
+		helpers.WriteError(w, errlist.ErrGeneric)
 		log.Printf("error: admin-login: %v", err)
 		return
 	}
