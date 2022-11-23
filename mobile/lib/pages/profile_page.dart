@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:library_project/edit_profile_page.dart';
-import 'package:library_project/user.dart';
-import 'package:library_project/user_preferences.dart';
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
+//import 'package:library_project/edit_profile_page.dart';
+//import 'package:library_project/user.dart';
+//import 'package:library_project/user_preferences.dart';
+//import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -12,7 +12,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final user = UserPreferences.myUser;
+  //final user = UserPreferences.myUser;
   late String name = "berry";
   late String surname = "aaa";
 
@@ -114,7 +114,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-
+/*
   Widget buildName(User user) => Column(
         children: [
           Text(
@@ -122,5 +122,5 @@ class _ProfilePageState extends State<ProfilePage> {
             style: const TextStyle(fontSize: 30),
           ),
         ],
-      );
+      ); */
 }
