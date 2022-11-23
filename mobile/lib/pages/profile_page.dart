@@ -12,24 +12,27 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-
   final user = UserPreferences.myUser;
   late String name = "berry";
   late String surname = "aaa";
 
-  late final TextEditingController _nameController = TextEditingController(text: name);
-  late final TextEditingController _surnameController = TextEditingController(text: surname);
+  late final TextEditingController _nameController =
+      TextEditingController(text: name);
+  late final TextEditingController _surnameController =
+      TextEditingController(text: surname);
 
   bool _isEnable = false;
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Padding(
-          padding: const EdgeInsets.only(left: 97),
-          child: Icon(Icons.person_pin, size: 75,),
+        title: const Padding(
+          padding: EdgeInsets.only(left: 97),
+          child: Icon(
+            Icons.person_pin,
+            size: 75,
+          ),
         ),
         leading: Padding(
           padding: const EdgeInsets.only(bottom: 80),
@@ -70,16 +73,14 @@ class _ProfilePageState extends State<ProfilePage> {
                         setState(() {
                           _isEnable = true;
                         });
-                      }
-                  ),
+                      }),
                   IconButton(
                       icon: const Icon(Icons.check_rounded),
                       onPressed: () {
                         setState(() {
                           _isEnable = false;
                         });
-                      }
-                  ),
+                      }),
                 ],
               ),
               Row(
@@ -97,36 +98,29 @@ class _ProfilePageState extends State<ProfilePage> {
                         setState(() {
                           _isEnable = true;
                         });
-                      }
-                  ),
+                      }),
                   IconButton(
                       icon: const Icon(Icons.check_rounded),
                       onPressed: () {
                         setState(() {
                           _isEnable = false;
                         });
-                      }
-                  ),
+                      }),
                 ],
               ),
             ],
           ),
         ),
-
       ),
     );
   }
 
   Widget buildName(User user) => Column(
-    children: [
-      Text(
-        user.name,
-        style: const TextStyle(fontSize: 30),
-      ),
-    ],
-  );
-
+        children: [
+          Text(
+            user.name,
+            style: const TextStyle(fontSize: 30),
+          ),
+        ],
+      );
 }
-
-
-
