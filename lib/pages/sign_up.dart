@@ -13,7 +13,7 @@ class SignUpPage extends StatelessWidget {
       decoration: ProjectUtility().customgradient(),
       child: Center(
         child: Container(
-          height: MediaQuery.of(context).size.height / 50 * 40,
+          height: MediaQuery.of(context).size.height / 50 * 32,
           width: MediaQuery.of(context).size.width / 5 * 4,
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(

@@ -18,16 +18,16 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           colorScheme: const ColorScheme(
               brightness: Brightness.light,
-              primary: Colors.brown, // important
-              onPrimary: Colors.red,
-              secondary: Colors.red,
-              onSecondary: Colors.red,
-              error: Colors.red,
-              onError: Colors.red,
-              background: Colors.red,
-              onBackground: Colors.red,
+              primary: Color.fromRGBO(42, 43, 46, 1), // important
+              onPrimary: Colors.white,
+              secondary: Colors.white,
+              onSecondary: Colors.white,
+              error: Colors.white,
+              onError: Colors.white,
+              background: Colors.white,
+              onBackground: Colors.white,
               surface: Colors.brown, //important
-              onSurface: Colors.brown)), //important
+              onSurface: Color.fromRGBO(42, 43, 46, 1))), //important
       home: const LoginPage(),
     );
   }

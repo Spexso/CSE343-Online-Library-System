@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:login_page/pages/forgot_password.dart';
+import 'package:login_page/pages/new_home_page.dart';
 import 'sign_up.dart';
 
 class LoginPage extends StatelessWidget {
@@ -59,9 +60,28 @@ class LoginPage extends StatelessWidget {
                 Center(
                   child: Column(
                     children: [
-                      const CustomButton(
-                        title: 'Giriş Yap',
-                      ),
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            elevation: 5,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 15),
+                          ),
+                          onPressed: () => {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const NewHomePage()),
+                                )
+                              },
+                          child: const Text(
+                            "Giriş Yap",
+                            style: TextStyle(fontSize: 20, color: Colors.white),
+                          )),
                       TextButton(
                           onPressed: () => {
                                 Navigator.push(
