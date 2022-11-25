@@ -66,6 +66,7 @@ CREATE TABLE isbndata (
 	classnumber TEXT NOT NULL,
 	cutternumber TEXT NOT NULL,
 	picture BLOB NOT NULL,
+	requestqueue TEXT NOT NULL,
 	PRIMARY KEY(isbn),
 	UNIQUE(isbn)
 );
