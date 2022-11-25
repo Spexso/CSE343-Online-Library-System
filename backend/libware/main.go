@@ -37,9 +37,6 @@ func tryMain() error {
 	}
 	defer db.Close()
 
-	fmt.Println(db.IsbnInsert(45445, "dsfg", "sdfds", "dfgfd", 2010, "dfgfd", "fdgfd", []byte{97, 98, 99}))
-	fmt.Println(db.BookInsert(4544))
-
 	srv := server.New(":8080", db)
 
 	go handleSigint(srv)
