@@ -10,8 +10,9 @@
 
 **NOTE:** err-generic and err-json-decoder aren't listed in Possible Errors. Because they may be returned to any request.
 
-# /guest/user-register
-## Request
+# /guest/
+## /guest/user-register
+### Request
 
 ```json
 {
@@ -23,19 +24,16 @@
 }
 ```
 
-## Response
+### Response
 
-```json
-{
-}
-```
+empty
 
 ### Possible Errors
 
 - err-email-exist
 
-# /guest/user-login
-## Request
+## /guest/user-login
+### Request
 
 ```json
 {
@@ -44,7 +42,7 @@
 }
 ```
 
-## Response
+### Response
 
 ```json
 {
@@ -57,8 +55,8 @@
 - err-email-not-exist
 - err-invalid-password
 
-# /guest/admin-login
-## Request
+## /guest/admin-login
+### Request
 
 ```json
 {
@@ -67,7 +65,7 @@
 }
 ```
 
-## Response
+### Response
 
 ```json
 {
@@ -79,3 +77,52 @@
 
 - err-name-not-exist
 - err-invalid-password
+
+# /admin/
+
+The client must put the token returned with admin-login response in the Authorization header using the Bearer schema.\
+Refer to [JSON Web Token](https://jwt.io/introduction/) 
+
+## /admin/isbn-insert
+### Request
+
+```json
+{
+  "isbn": 0201558025,
+  "name": "Concrete mathematics",
+  "author": "Ronald L. Graham",
+  "publisher": "Addison-Wesley",
+  "publication-year": "1994",
+  "class-number": "QA 39.2",
+  "cutter-number": "G73",
+  "picture": "eWVzc2ly"
+}
+```
+
+**NOTE:** picture should be a jpg or png image encoded with base64 with standard padding (`=`).
+
+### Response
+
+empty
+
+### Possible Errors
+
+- err-base64-decoder
+- err-isbn-exist
+
+## /admin/book-add
+### Request
+
+```json
+{
+  "isbn": 0201558025
+}
+```
+
+### Response
+
+empty
+
+### Possible Errors
+
+- err-isbn-not-exist
