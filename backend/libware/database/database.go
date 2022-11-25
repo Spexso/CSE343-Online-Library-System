@@ -310,7 +310,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
 	return isbn, nil
 }
 
-func (d *Database) BookInsert(isbn int64) (int64, error) {
+func (d *Database) BookAdd(isbn int64) (int64, error) {
 	var err error
 	if yes, err := d.IsIsbnExist(isbn); !yes {
 		return -1, errlist.ErrIsbnNotExist
