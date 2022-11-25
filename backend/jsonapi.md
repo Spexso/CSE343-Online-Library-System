@@ -88,7 +88,7 @@ Refer to [JSON Web Token](https://jwt.io/introduction/)
 
 ```json
 {
-  "isbn": 0201558025,
+  "isbn": "0201558025",
   "name": "Concrete mathematics",
   "author": "Ronald L. Graham",
   "publisher": "Addison-Wesley",
@@ -115,7 +115,7 @@ empty
 
 ```json
 {
-  "isbn": 0201558025
+  "isbn": "0201558025"
 }
 ```
 
