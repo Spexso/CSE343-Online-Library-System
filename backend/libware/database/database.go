@@ -58,7 +58,7 @@ CREATE TABLE admins (
 );
 
 CREATE TABLE isbndata (
-	isbn INTEGER NOT NULL,
+	isbn TEXT NOT NULL,
 	name TEXT NOT NULL,
 	author TEXT NOT NULL,
 	publisher TEXT NOT NULL,
@@ -73,7 +73,7 @@ CREATE TABLE isbndata (
 		
 CREATE TABLE books (
 	id INTEGER NOT NULL,
-	isbn INTEGER NOT NULL,
+	isbn TEXT NOT NULL,
 	userid INTEGER,
 	duedate INTEGER,
 	PRIMARY KEY(id),
@@ -274,7 +274,7 @@ func (d *Database) AdminValidate(name, password string) (int64, error) {
 	return id, nil
 }
 
-func (d *Database) IsIsbnExist(isbn int64) (bool, error) {
+func (d *Database) IsIsbnExist(isbn string) (bool, error) {
 	row := d.db.QueryRow("SELECT 1 FROM isbndata WHERE isbn = ?", isbn)
 	if err := row.Err(); err != nil {
 		return false, err
@@ -290,12 +290,12 @@ func (d *Database) IsIsbnExist(isbn int64) (bool, error) {
 	}
 }
 
-func (d *Database) IsbnInsert(isbn int64, name string, author string, publisher string, publicationYear int16, classNumber string, cutterNumber string, picture []byte) (int64, error) {
+func (d *Database) IsbnInsert(isbn string, name string, author string, publisher string, publicationYear int16, classNumber string, cutterNumber string, picture []byte) error {
 	var err error
 	if yes, err := d.IsIsbnExist(isbn); yes {
-		return -1, errlist.ErrIsbnExist
+		return errlist.ErrIsbnExist
 	} else if err != nil {
-		return -1, err
+		return err
 	}
 
 	sqlStmt := `
@@ -304,13 +304,13 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
 `
 	_, err = d.db.Exec(sqlStmt, isbn, name, author, publisher, publicationYear, classNumber, cutterNumber, picture, "[]")
 	if err != nil {
-		return -1, err
+		return err
 	}
 
-	return isbn, nil
+	return nil
 }
 
-func (d *Database) BookAdd(isbn int64) (int64, error) {
+func (d *Database) BookAdd(isbn string) (int64, error) {
 	var err error
 	if yes, err := d.IsIsbnExist(isbn); !yes {
 		return -1, errlist.ErrIsbnNotExist

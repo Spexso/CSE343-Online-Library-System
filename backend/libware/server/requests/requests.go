@@ -19,7 +19,7 @@ type UserRegister struct {
 }
 
 type IsbnInsert struct {
-	Isbn            int64  `json:"isbn"`
+	Isbn            string `json:"isbn"`
 	Name            string `json:"name"`
 	Author          string `json:"author"`
 	Publisher       string `json:"publisher"`
@@ -30,5 +30,5 @@ type IsbnInsert struct {
 }
 
 type BookAdd struct {
-	Isbn int64 `json:"isbn"`
+	Isbn string `json:"isbn"`
 }

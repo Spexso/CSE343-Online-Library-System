@@ -48,7 +48,7 @@ func (l *LibraryHandler) isbnInsert(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = l.db.IsbnInsert(request.Isbn, request.Name, request.Author, request.Publisher, request.PublicationYear, request.ClassNumber, request.CutterNumber, picture)
+	err = l.db.IsbnInsert(request.Isbn, request.Name, request.Author, request.Publisher, request.PublicationYear, request.ClassNumber, request.CutterNumber, picture)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		if errors.Is(err, errlist.ErrIsbnExist) {
@@ -87,5 +87,5 @@ func (l *LibraryHandler) bookAdd(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	log.Printf("isbn-insert: %q with id %q inserted", request.Isbn, id)
+	log.Printf("book-add: a copy of %q with id %q inserted", request.Isbn, id)
 }
