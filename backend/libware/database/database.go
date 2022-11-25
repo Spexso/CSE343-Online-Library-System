@@ -273,3 +273,72 @@ func (d *Database) AdminValidate(name, password string) (int64, error) {
 
 	return id, nil
 }
+
+func (d *Database) IsIsbnExist(isbn int64) (bool, error) {
+	row := d.db.QueryRow("SELECT 1 FROM isbndata WHERE isbn = ?", isbn)
+	if err := row.Err(); err != nil {
+		return false, err
+	}
+
+	var temp int
+	if err := row.Scan(&temp); err == nil {
+		return true, nil
+	} else if errors.Is(err, sql.ErrNoRows) {
+		return false, nil
+	} else {
+		return false, err
+	}
+}
+
+func (d *Database) IsbnInsert(isbn int64, name string, author string, publisher string, publicationYear int16, classNumber string, cutterNumber string, picture []byte) (int64, error) {
+	var err error
+	if yes, err := d.IsIsbnExist(isbn); yes {
+		return -1, errlist.ErrIsbnExist
+	} else if err != nil {
+		return -1, err
+	}
+
+	sqlStmt := `
+INSERT INTO isbndata (isbn, name, author, publisher, publicationyear, classnumber, cutternumber, picture, requestqueue)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+`
+	_, err = d.db.Exec(sqlStmt, isbn, name, author, publisher, publicationYear, classNumber, cutterNumber, picture, "[]")
+	if err != nil {
+		return -1, err
+	}
+
+	return isbn, nil
+}
+
+func (d *Database) BookInsert(isbn int64) (int64, error) {
+	var err error
+	if yes, err := d.IsIsbnExist(isbn); !yes {
+		return -1, errlist.ErrIsbnNotExist
+	} else if err != nil {
+		return -1, err
+	}
+
+	IdRow := d.db.QueryRow(`SELECT value FROM configs WHERE key = "nextbookid"`)
+	var IdValue string
+	IdRow.Scan(&IdValue)
+
+	id, _ := strconv.ParseInt(IdValue, 10, 64)
+
+	nextId := id + 1
+	nextIdValue := strconv.FormatInt(nextId, 10)
+
+	sqlStmt := `
+INSERT INTO books (id, isbn, userid, duedate)
+VALUES (?, ?, ?, ?);
+
+UPDATE configs
+SET value = ?
+WHERE key = "nextbookid";
+`
+	_, err = d.db.Exec(sqlStmt, id, isbn, nil, nil, nextIdValue)
+	if err != nil {
+		return -1, err
+	}
+
+	return id, nil
+}
