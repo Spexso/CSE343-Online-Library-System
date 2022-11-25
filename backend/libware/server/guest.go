@@ -21,16 +21,16 @@ func (l *LibraryHandler) guestHandler() http.Handler {
 }
 
 func (l *LibraryHandler) userRegister(w http.ResponseWriter, r *http.Request) {
-	var request requests.UserRegister
-	err := helpers.ReadRequest(r.Body, &request)
-	if err != nil {
+	var req requests.UserRegister
+	err := helpers.ReadRequest(r.Body, &req)
+	if err != nil || req.Name == "" || req.Surname == "" || req.Email == "" || req.Phone == "" || req.Password == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		helpers.WriteError(w, errlist.ErrJsonDecoder)
 		log.Printf("error: user-register: %v", err)
 		return
 	}
 
-	_, err = l.db.UserInsert(request.Name, request.Surname, request.Email, request.Phone, request.Password)
+	_, err = l.db.UserInsert(req.Name, req.Surname, req.Email, req.Phone, req.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		if errors.Is(err, errlist.ErrEmailExist) {
@@ -43,20 +43,20 @@ func (l *LibraryHandler) userRegister(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	log.Printf("user-register: %q registered", request.Email)
+	log.Printf("user-register: %q registered", req.Email)
 }
 
 func (l *LibraryHandler) userLogin(w http.ResponseWriter, r *http.Request) {
-	var request requests.UserLogin
-	err := helpers.ReadRequest(r.Body, &request)
-	if err != nil {
+	var req requests.UserLogin
+	err := helpers.ReadRequest(r.Body, &req)
+	if err != nil || req.Email == "" || req.Password == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		helpers.WriteError(w, errlist.ErrJsonDecoder)
 		log.Printf("error: user-login: %v", err)
 		return
 	}
 
-	id, err := l.db.UserValidate(request.Email, request.Password)
+	id, err := l.db.UserValidate(req.Email, req.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		if errors.Is(err, errlist.ErrEmailNotExist) {
@@ -86,20 +86,20 @@ func (l *LibraryHandler) userLogin(w http.ResponseWriter, r *http.Request) {
 		Token: token,
 	}
 	helpers.WriteResponse(w, &response)
-	log.Printf("user-login: %q logged in", request.Email)
+	log.Printf("user-login: %q logged in", req.Email)
 }
 
 func (l *LibraryHandler) adminLogin(w http.ResponseWriter, r *http.Request) {
-	var request requests.AdminLogin
-	err := helpers.ReadRequest(r.Body, &request)
-	if err != nil {
+	var req requests.AdminLogin
+	err := helpers.ReadRequest(r.Body, &req)
+	if err != nil || req.Name == "" || req.Password == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		helpers.WriteError(w, errlist.ErrJsonDecoder)
 		log.Printf("error: admin-login: %v", err)
 		return
 	}
 
-	id, err := l.db.AdminValidate(request.Name, request.Password)
+	id, err := l.db.AdminValidate(req.Name, req.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		if errors.Is(err, errlist.ErrNameNotExist) {
@@ -129,5 +129,5 @@ func (l *LibraryHandler) adminLogin(w http.ResponseWriter, r *http.Request) {
 		Token: token,
 	}
 	helpers.WriteResponse(w, &response)
-	log.Printf("admin-login: %q logged in", request.Name)
+	log.Printf("admin-login: %q logged in", req.Name)
 }
