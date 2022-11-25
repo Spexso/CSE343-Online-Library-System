@@ -30,16 +30,16 @@ func (l *LibraryHandler) adminHandler() http.Handler {
 }
 
 func (l *LibraryHandler) isbnInsert(w http.ResponseWriter, r *http.Request) {
-	var request requests.IsbnInsert
-	err := helpers.ReadRequest(r.Body, &request)
-	if err != nil {
+	var req requests.IsbnInsert
+	err := helpers.ReadRequest(r.Body, &req)
+	if err != nil || req.Isbn == "" || req.Name == "" || req.Author == "" || req.Publisher == "" || req.PublicationYear == "" || req.ClassNumber == "" || req.CutterNumber == "" || req.Picture == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		helpers.WriteError(w, errlist.ErrJsonDecoder)
 		log.Printf("error: isbn-insert: %v", err)
 		return
 	}
 
-	pictureDecoder := base64.NewDecoder(base64.StdEncoding, strings.NewReader(request.Picture))
+	pictureDecoder := base64.NewDecoder(base64.StdEncoding, strings.NewReader(req.Picture))
 	picture, err := io.ReadAll(pictureDecoder)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -48,7 +48,7 @@ func (l *LibraryHandler) isbnInsert(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = l.db.IsbnInsert(request.Isbn, request.Name, request.Author, request.Publisher, request.PublicationYear, request.ClassNumber, request.CutterNumber, picture)
+	err = l.db.IsbnInsert(req.Isbn, req.Name, req.Author, req.Publisher, req.PublicationYear, req.ClassNumber, req.CutterNumber, picture)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		if errors.Is(err, errlist.ErrIsbnExist) {
@@ -61,20 +61,20 @@ func (l *LibraryHandler) isbnInsert(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	log.Printf("isbn-insert: %q inserted", request.Isbn)
+	log.Printf("isbn-insert: %q inserted", req.Isbn)
 }
 
 func (l *LibraryHandler) bookAdd(w http.ResponseWriter, r *http.Request) {
-	var request requests.BookAdd
-	err := helpers.ReadRequest(r.Body, &request)
-	if err != nil {
+	var req requests.BookAdd
+	err := helpers.ReadRequest(r.Body, &req)
+	if err != nil || req.Isbn == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		helpers.WriteError(w, errlist.ErrJsonDecoder)
 		log.Printf("error: book-add: %v", err)
 		return
 	}
 
-	id, err := l.db.BookAdd(request.Isbn)
+	id, err := l.db.BookAdd(req.Isbn)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		if errors.Is(err, errlist.ErrIsbnNotExist) {
@@ -87,5 +87,5 @@ func (l *LibraryHandler) bookAdd(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	log.Printf("book-add: a copy of %q with id %q inserted", request.Isbn, id)
+	log.Printf("book-add: a copy of %q with id %q inserted", req.Isbn, id)
 }

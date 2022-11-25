@@ -23,7 +23,7 @@ type IsbnInsert struct {
 	Name            string `json:"name"`
 	Author          string `json:"author"`
 	Publisher       string `json:"publisher"`
-	PublicationYear int16  `json:"publication-year"`
+	PublicationYear string `json:"publication-year"`
 	ClassNumber     string `json:"class-number"`
 	CutterNumber    string `json:"cutter-number"`
 	Picture         string `json:"picture"`

@@ -62,7 +62,7 @@ CREATE TABLE isbndata (
 	name TEXT NOT NULL,
 	author TEXT NOT NULL,
 	publisher TEXT NOT NULL,
-	publicationyear INTEGER NOT NULL,
+	publicationyear TEXT NOT NULL,
 	classnumber TEXT NOT NULL,
 	cutternumber TEXT NOT NULL,
 	picture BLOB NOT NULL,
@@ -290,7 +290,7 @@ func (d *Database) IsIsbnExist(isbn string) (bool, error) {
 	}
 }
 
-func (d *Database) IsbnInsert(isbn string, name string, author string, publisher string, publicationYear int16, classNumber string, cutterNumber string, picture []byte) error {
+func (d *Database) IsbnInsert(isbn string, name string, author string, publisher string, publicationYear string, classNumber string, cutterNumber string, picture []byte) error {
 	var err error
 	if yes, err := d.IsIsbnExist(isbn); yes {
 		return errlist.ErrIsbnExist
