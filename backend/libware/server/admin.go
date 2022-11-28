@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/errlist"
@@ -48,7 +49,15 @@ func (l *LibraryHandler) isbnInsert(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = l.db.IsbnInsert(req.Isbn, req.Name, req.Author, req.Publisher, req.PublicationYear, req.ClassNumber, req.CutterNumber, picture)
+	publicationYear, err := strconv.ParseInt(req.PublicationYear, 10, 16)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrGeneric)
+		log.Printf("error: isbn-insert: %v", err)
+		return
+	}
+
+	err = l.db.IsbnInsert(req.Isbn, req.Name, req.Author, req.Publisher, int16(publicationYear), req.ClassNumber, req.CutterNumber, picture)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		if errors.Is(err, errlist.ErrIsbnExist) {
