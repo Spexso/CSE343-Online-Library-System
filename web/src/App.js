@@ -13,21 +13,21 @@ function App() {
   const Login = details => {
     console.log(details);
 
-    if(details.email == adminUser.email && details.password == adminUser.password){
+    if(details.email === adminUser.email && details.password === adminUser.password){
     console.log("Details matched");
     setUser({
       email: details.email,
       password: details.password,
     });
-  } else if( details.password == adminUser.password && details.email != adminUser.email){
+  } else if( details.password === adminUser.password && details.email !== adminUser.email){
     console.log("Email invalid");
     setError("Email is wrong");
   } 
-    else if( details.password != adminUser.password && details.email == adminUser.email){
+    else if( details.password !== adminUser.password && details.email === adminUser.email){
     console.log("Password invalid");
     setError("Password is wrong");
   }
-  else if( details.password != adminUser.password && details.email != adminUser.email){
+  else if( details.password !== adminUser.password && details.email !== adminUser.email){
     console.log("Email and password wrong");
     setError("Wrong email and password");
   }
@@ -36,7 +36,7 @@ function App() {
   const Logout = () => {
     console.log("Logout");
     setUser({
-      email: ""
+      email: "",
     });
     setError("");
   }
@@ -44,7 +44,7 @@ function App() {
 
   return (
     <div className="App">
-      {(user.email != "") ? (
+      {(user.email !== "") ? (
         <div className="welcome">
           <h2> Welcome, <span> Admin </span></h2>
           <button onClick={Logout}>Logout</button>
