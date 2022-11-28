@@ -29,7 +29,7 @@ function LoginForm({Login, error}) {
                 <input type="password" name="password" id="password" onChange={e => setDetails({...details, password: e.target.value})} value={details.password} />
             </div>
 
-            {(error != "") ? ( 
+            {(error !== "") ? ( 
             <div className="error">
                 {error}
             </div>
@@ -38,7 +38,7 @@ function LoginForm({Login, error}) {
             <input type="submit" value="LOGIN" />
 
             <div className="form-logo">
-                <img src={logo}/>
+                <img src={logo} alt="Login page logo"/>
             </div>
 
         </div>
