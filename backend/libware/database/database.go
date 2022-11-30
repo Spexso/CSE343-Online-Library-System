@@ -58,7 +58,7 @@ CREATE TABLE admins (
 );
 
 CREATE TABLE isbndata (
-	isbn INTEGER NOT NULL,
+	isbn TEXT NOT NULL,
 	name TEXT NOT NULL,
 	author TEXT NOT NULL,
 	publisher TEXT NOT NULL,
@@ -66,13 +66,14 @@ CREATE TABLE isbndata (
 	classnumber TEXT NOT NULL,
 	cutternumber TEXT NOT NULL,
 	picture BLOB NOT NULL,
+	requestqueue TEXT NOT NULL,
 	PRIMARY KEY(isbn),
 	UNIQUE(isbn)
 );
 		
 CREATE TABLE books (
 	id INTEGER NOT NULL,
-	isbn INTEGER NOT NULL,
+	isbn TEXT NOT NULL,
 	userid INTEGER,
 	duedate INTEGER,
 	PRIMARY KEY(id),
@@ -268,6 +269,75 @@ func (d *Database) AdminValidate(name, password string) (int64, error) {
 	hash := helpers.GenerateHash([]byte(password), salt)
 	if !bytes.Equal(hash, savedHash) {
 		return -1, errlist.ErrInvalidPassword
+	}
+
+	return id, nil
+}
+
+func (d *Database) IsIsbnExist(isbn string) (bool, error) {
+	row := d.db.QueryRow("SELECT 1 FROM isbndata WHERE isbn = ?", isbn)
+	if err := row.Err(); err != nil {
+		return false, err
+	}
+
+	var temp int
+	if err := row.Scan(&temp); err == nil {
+		return true, nil
+	} else if errors.Is(err, sql.ErrNoRows) {
+		return false, nil
+	} else {
+		return false, err
+	}
+}
+
+func (d *Database) IsbnInsert(isbn string, name string, author string, publisher string, publicationYear int16, classNumber string, cutterNumber string, picture []byte) error {
+	var err error
+	if yes, err := d.IsIsbnExist(isbn); yes {
+		return errlist.ErrIsbnExist
+	} else if err != nil {
+		return err
+	}
+
+	sqlStmt := `
+INSERT INTO isbndata (isbn, name, author, publisher, publicationyear, classnumber, cutternumber, picture, requestqueue)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+`
+	_, err = d.db.Exec(sqlStmt, isbn, name, author, publisher, publicationYear, classNumber, cutterNumber, picture, "[]")
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (d *Database) BookAdd(isbn string) (int64, error) {
+	var err error
+	if yes, err := d.IsIsbnExist(isbn); !yes {
+		return -1, errlist.ErrIsbnNotExist
+	} else if err != nil {
+		return -1, err
+	}
+
+	IdRow := d.db.QueryRow(`SELECT value FROM configs WHERE key = "nextbookid"`)
+	var IdValue string
+	IdRow.Scan(&IdValue)
+
+	id, _ := strconv.ParseInt(IdValue, 10, 64)
+
+	nextId := id + 1
+	nextIdValue := strconv.FormatInt(nextId, 10)
+
+	sqlStmt := `
+INSERT INTO books (id, isbn, userid, duedate)
+VALUES (?, ?, ?, ?);
+
+UPDATE configs
+SET value = ?
+WHERE key = "nextbookid";
+`
+	_, err = d.db.Exec(sqlStmt, id, isbn, nil, nil, nextIdValue)
+	if err != nil {
+		return -1, err
 	}
 
 	return id, nil

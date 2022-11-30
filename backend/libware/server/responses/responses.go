@@ -12,6 +12,3 @@ type AdminLogin struct {
 type UserLogin struct {
 	Token string `json:"token"`
 }
-
-type UserRegister struct {
-}
