@@ -39,7 +39,7 @@ CREATE TABLE users (
 	phone VARCHAR(32) NOT NULL,
 	hash BLOB NOT NULL,
 	salt BLOB NOT NULL,
-	currentbooks TEXT NOT NULL,
+	queuedbooks TEXT NOT NULL,
 	savedbooks TEXT NOT NULL,
 	forbiddenuntil INTEGER,
 	accounthistory TEXT NOT NULL,
