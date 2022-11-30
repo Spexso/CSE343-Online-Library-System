@@ -12,12 +12,16 @@ import (
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/errlist"
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/helpers"
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/server/requests"
+	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/server/responses"
 )
 
 func (l *LibraryHandler) adminHandler() http.Handler {
 	router := http.NewServeMux()
 	router.HandleFunc("/isbn-insert", l.isbnInsert)
 	router.HandleFunc("/book-add", l.bookAdd)
+	router.HandleFunc("/isbn-profile", l.isbnProfile)
+	router.HandleFunc("/isbn-picture", l.isbnPicture)
+	router.HandleFunc("/user-profile-with-id", l.userProfileWithId)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		subject, err := l.authorize(w, r, l.adminSecret)
 		if err != nil {
@@ -97,4 +101,45 @@ func (l *LibraryHandler) bookAdd(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	log.Printf("book-add: a copy of %q with id %q inserted", req.Isbn, id)
+}
+
+func (l *LibraryHandler) userProfileWithId(w http.ResponseWriter, r *http.Request) {
+	var req requests.UserProfileWithId
+	err := helpers.ReadRequest(r.Body, &req)
+	if err != nil || req.Id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrJsonDecoder)
+		log.Printf("error: user-profile-with-id: %v", err)
+		return
+	}
+
+	id, err := strconv.ParseInt(req.Id, 10, 64)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrGeneric)
+		log.Printf("error: user-profile-with-id: %v", err)
+		return
+	}
+
+	name, surname, email, phone, err := l.db.UserProfile(id)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		if errors.Is(err, errlist.ErrUserIdNotExist) {
+			helpers.WriteError(w, errlist.ErrUserIdNotExist)
+		} else {
+			helpers.WriteError(w, errlist.ErrGeneric)
+		}
+		log.Printf("error: user-profile-with-id: %v", err)
+		return
+	}
+
+	response := responses.UserProfile{
+		Name:    name,
+		Surname: surname,
+		Email:   email,
+		Phone:   phone,
+	}
+	helpers.WriteResponse(w, response)
+
+	w.WriteHeader(http.StatusOK)
 }

@@ -123,6 +123,54 @@ func (d *Database) IsUserExistWithEmail(email string) (bool, error) {
 	}
 }
 
+func (d *Database) IsUserExistWithId(id int64) (bool, error) {
+	row := d.db.QueryRow("SELECT 1 FROM users WHERE id = ?", id)
+	if err := row.Err(); err != nil {
+		return false, err
+	}
+
+	var temp int
+	if err := row.Scan(&temp); err == nil {
+		return true, nil
+	} else if errors.Is(err, sql.ErrNoRows) {
+		return false, nil
+	} else {
+		return false, err
+	}
+}
+
+func (d *Database) IsAdminExistWithId(id int64) (bool, error) {
+	row := d.db.QueryRow("SELECT 1 FROM admins WHERE id = ?", id)
+	if err := row.Err(); err != nil {
+		return false, err
+	}
+
+	var temp int
+	if err := row.Scan(&temp); err == nil {
+		return true, nil
+	} else if errors.Is(err, sql.ErrNoRows) {
+		return false, nil
+	} else {
+		return false, err
+	}
+}
+
+func (d *Database) IsBookExistWithId(id int64) (bool, error) {
+	row := d.db.QueryRow("SELECT 1 FROM books WHERE id = ?", id)
+	if err := row.Err(); err != nil {
+		return false, err
+	}
+
+	var temp int
+	if err := row.Scan(&temp); err == nil {
+		return true, nil
+	} else if errors.Is(err, sql.ErrNoRows) {
+		return false, nil
+	} else {
+		return false, err
+	}
+}
+
 // UserInsert inserts the user to users table and returns the user id.
 // If the email is already in use, returns ErrEmailExist.
 func (d *Database) UserInsert(name, surname, email, phone, password string) (int64, error) {
@@ -341,4 +389,64 @@ WHERE key = "nextbookid";
 	}
 
 	return id, nil
+}
+
+func (d *Database) UserProfile(id int64) (name string, surname string, email string, phone string, err error) {
+	yes, err := d.IsUserExistWithId(id)
+	if !yes {
+		err = errlist.ErrUserIdNotExist
+		return
+	} else if err != nil {
+		return
+	}
+
+	userRow := d.db.QueryRow(`SELECT name, surname, email, phone FROM users WHERE id = ?`, id)
+	err = userRow.Err()
+	if err != nil {
+		return
+	}
+
+	err = userRow.Scan(&name, &surname, &email, &phone)
+
+	return
+}
+
+func (d *Database) IsbnProfile(isbn string) (name string, author string, publisher string, publicationYear int16, classNumber string, cutterNumber string, err error) {
+	yes, err := d.IsIsbnExist(isbn)
+	if !yes {
+		err = errlist.ErrIsbnNotExist
+		return
+	} else if err != nil {
+		return
+	}
+
+	userRow := d.db.QueryRow(`SELECT name, author, publisher, publicationyear, classnumber, cutternumber FROM isbndata WHERE isbn = ?`, isbn)
+	err = userRow.Err()
+	if err != nil {
+		return
+	}
+
+	err = userRow.Scan(&name, &author, &publisher, &publicationYear, &classNumber, &cutterNumber)
+
+	return
+}
+
+func (d *Database) IsbnPicture(isbn string) (picture []byte, err error) {
+	yes, err := d.IsIsbnExist(isbn)
+	if !yes {
+		err = errlist.ErrIsbnNotExist
+		return
+	} else if err != nil {
+		return
+	}
+
+	userRow := d.db.QueryRow(`SELECT picture FROM isbndata WHERE isbn = ?`, isbn)
+	err = userRow.Err()
+	if err != nil {
+		return
+	}
+
+	err = userRow.Scan(&picture)
+
+	return
 }

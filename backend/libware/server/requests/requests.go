@@ -32,3 +32,15 @@ type IsbnInsert struct {
 type BookAdd struct {
 	Isbn string `json:"isbn"`
 }
+
+type UserProfileWithId struct {
+	Id string `json:"id"`
+}
+
+type IsbnProfile struct {
+	Isbn string `json:"isbn"`
+}
+
+type IsbnPicture struct {
+	Isbn string `json:"isbn"`
+}
