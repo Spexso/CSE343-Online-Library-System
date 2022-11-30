@@ -24,7 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
   late final TextEditingController _emailController =
       TextEditingController(text: surname);
   late final TextEditingController _passwordController =
-    TextEditingController(text: password);
+      TextEditingController(text: password);
 
   late bool _isEnable = false;
   bool passenable = true;
@@ -34,11 +34,14 @@ class _ProfilePageState extends State<ProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Uyarı"),
-          content: Text("Girilen bilgileri kayıt etmek istediğinize emin misiniz?", style: TextStyle(fontSize: 15),),
+          title: const Text("Uyarı"),
+          content: const Text(
+            "Girilen bilgileri kayıt etmek istediğinize emin misiniz?",
+            style: TextStyle(fontSize: 15),
+          ),
           actions: [
             TextButton(
-              child: Text("Evet"),
+              child: const Text("Evet"),
               onPressed: () {
                 setState(() {
                   _isEnable = false;
@@ -47,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
               },
             ),
             TextButton(
-              child: Text("Hayır"),
+              child: const Text("Hayır"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -61,168 +64,208 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(30),
-          child: Column(
-            children: [
-              SizedBox(
-                width: 100, height: 100,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(100), child: Image.network("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png")),
-              ),
-              const SizedBox(height: 40,),
-              SizedBox(
-                width: 250,
-                child: Column(
-                  children: [
-                    TextField(
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25, color: Colors.white),
-                      controller: _nameController,
-                      enabled: _isEnable,
-                      decoration: InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    TextField(
-                      style: const TextStyle(fontSize: 15, color: Colors.white),
-                      controller: _emailController,
-                      enabled: _isEnable,
-                      decoration: InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    TextField(
-                      style: const TextStyle(fontSize: 15, color: Colors.white),
-                      controller: _passwordController,
-                      enabled: _isEnable,
-                      decoration: InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              // to do: profili düzenle butonu dönüşcek veya kaydetmek için 2 buton?
-              const SizedBox(height: 20,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Container(
+        padding: const EdgeInsets.all(30),
+        child: Column(
+          children: [
+            SizedBox(
+              width: 100,
+              height: 100,
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: Image.network(
+                      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png")),
+            ),
+            const SizedBox(
+              height: 40,
+            ),
+            SizedBox(
+              width: 250,
+              child: Column(
                 children: [
-                  SizedBox(
-                    width: 200, height: 45,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _isEnable = true;
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0),),
-                            backgroundColor: Colors.yellow
-                        ),
-                        child: const Text("Profili Düzenle", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                  TextField(
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                        color: Colors.white),
+                    controller: _nameController,
+                    enabled: _isEnable,
+                    decoration: const InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.check_box,size: 30, color: Colors.green,),
-                    onPressed: () {
-                      _showDialog(context);
-                    },
+                  TextField(
+                    style: const TextStyle(fontSize: 15, color: Colors.white),
+                    controller: _emailController,
+                    enabled: _isEnable,
+                    decoration: const InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  TextField(
+                    style: const TextStyle(fontSize: 15, color: Colors.white),
+                    controller: _passwordController,
+                    enabled: _isEnable,
+                    decoration: const InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 20,),
-              const Divider(),
+            ),
+            // to do: profili düzenle butonu dönüşcek veya kaydetmek için 2 buton?
+            const SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  width: 200,
+                  height: 45,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _isEnable = true;
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.yellow,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                    ),
+                    child: const Text(
+                      "Profili Düzenle",
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.check_box,
+                    size: 30,
+                    color: Colors.green,
+                  ),
+                  onPressed: () {
+                    _showDialog(context);
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            const Divider(),
 
-              // MENU
-              const SizedBox(height: 10,),
-              SizedBox(
+            // MENU
+            const SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              width: 225,
+              child: SizedBox(
+                height: 40,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                      primary: const Color.fromRGBO(100, 100, 100, 1),
+                      side: const BorderSide(color: Colors.grey)),
+                  child: Row(
+                    //mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text(
+                        "Cezalar",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Icon(
+                        Icons.keyboard_arrow_right_rounded,
+                        color: Colors.grey,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(13.0),
+              child: SizedBox(
                 width: 225,
                 child: SizedBox(
                   height: 40,
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromRGBO(100, 100, 100, 1),
-                        side: BorderSide(color: Colors.grey)
-                    ),
+                        primary: const Color.fromRGBO(100, 100, 100, 1),
+                        side: const BorderSide(color: Colors.grey)),
                     child: Row(
                       //mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Cezalar", style: TextStyle(color: Colors.white ),),
-                        Icon(Icons.keyboard_arrow_right_rounded, color: Colors.grey,)
+                      children: const [
+                        Text(
+                          "Okunmuş Kitaplar",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_right_rounded,
+                          color: Colors.grey,
+                        )
                       ],
                     ),
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(13.0),
-                child: SizedBox(
-                  width: 225,
-                  child: SizedBox(
-                    height: 40,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromRGBO(100, 100, 100, 1),
-                          side: BorderSide(color: Colors.grey)
+            ),
+            SizedBox(
+              width: 225,
+              child: SizedBox(
+                height: 40,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                      primary: const Color.fromRGBO(100, 100, 100, 1),
+                      side: const BorderSide(color: Colors.grey)),
+                  child: Row(
+                    //mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text(
+                        "Çıkış Yap",
+                        style: TextStyle(color: Colors.red),
                       ),
-                      child: Row(
-                        //mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Okunmuş Kitaplar", style: TextStyle(color: Colors.white ),),
-                          Icon(Icons.keyboard_arrow_right_rounded, color: Colors.grey,)
-                        ],
-                      ),
-                    ),
+                      Icon(
+                        Icons.keyboard_arrow_right_rounded,
+                        color: Colors.grey,
+                      )
+                    ],
                   ),
                 ),
               ),
-              SizedBox(
-                width: 225,
-                child: SizedBox(
-                  height: 40,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromRGBO(100, 100, 100, 1),
-                        side: BorderSide(color: Colors.grey)
-                    ),
-                    child: Row(
-                      //mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Çıkış Yap", style: TextStyle(color: Colors.red ),),
-                        Icon(Icons.keyboard_arrow_right_rounded, color: Colors.grey,)
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            ],
-
-          ),
+            )
+          ],
         ),
+      ),
     );
   }
-
 
 /*
   Widget buildName(User user) => Column(

@@ -134,9 +134,11 @@ class _LibraryPageState extends State<LibraryPage> {
                   style: TextStyle(color: Colors.white, fontSize: 20),
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
+                    
                         borderSide: BorderSide(width: 2, color: Colors.white)),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(width: 2, color: Colors.white)),
+                        
                     hintStyle: TextStyle(color: Colors.white),
                     suffixIcon: Icon(
                       Icons.search,
