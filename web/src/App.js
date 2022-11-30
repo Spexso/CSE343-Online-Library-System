@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import LoginForm from './LoginForm';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import MainPage from "./MainPage";
 
 function App() {
+
   const adminUser = {
     email: "admin@admin.com",
     password: "admin123"
@@ -41,8 +44,12 @@ function App() {
     setError("");
   }
 
+  
 
   return (
+    <Router>
+    <Switch>
+    <Route exact path="/">
     <div className="App">
       {(user.email !== "") ? (
         <div className="welcome">
@@ -53,6 +60,14 @@ function App() {
         <LoginForm Login={Login} error={error} />
       )}
     </div>
+    </Route>
+
+    <Route exact path="/main">
+        <MainPage/>
+    </Route>
+
+    </Switch>
+    </Router>
   );
 }
 

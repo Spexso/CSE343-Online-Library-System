@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 //import 'package:library_project/edit_profile_page.dart';
 //import 'package:library_project/user.dart';
 //import 'package:library_project/user_preferences.dart';
@@ -12,108 +13,155 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  //final user = UserPreferences.myUser;
-  late String name = "berry";
-  late String surname = "aaa";
+  // to do: taken from database
+
+  late String name = "berry lafci";
+  late String surname = "aaa@gtu.edu.tr";
+  late String password = "abcd";
 
   late final TextEditingController _nameController =
       TextEditingController(text: name);
-  late final TextEditingController _surnameController =
+  late final TextEditingController _emailController =
       TextEditingController(text: surname);
+  late final TextEditingController _passwordController =
+    TextEditingController(text: password);
 
-  bool _isEnable = false;
+  late bool _isEnable = false;
+  bool passenable = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Padding(
-          padding: EdgeInsets.only(left: 97),
-          child: Icon(
-            Icons.person_pin,
-            size: 75,
-          ),
-        ),
-        leading: Padding(
-          padding: const EdgeInsets.only(bottom: 80),
-          child: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ),
-        backgroundColor: Colors.blue[700],
-        foregroundColor: Colors.white,
-        toolbarHeight: 120,
-        shadowColor: Colors.brown,
-        elevation: 5,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(250),
-          ),
-        ),
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(30),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
-                children: [
-                  SizedBox(
-                    width: 250,
-                    child: TextField(
+              SizedBox(
+                width: 100, height: 100,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100), child: Image.network("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png")),
+              ),
+              const SizedBox(height: 10,),
+              SizedBox(
+                width: 250,
+                child: Column(
+                  children: [
+                    TextField(
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
                       controller: _nameController,
                       enabled: _isEnable,
                     ),
-                  ),
-                  IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () {
-                        setState(() {
-                          _isEnable = true;
-                        });
-                      }),
-                  IconButton(
-                      icon: const Icon(Icons.check_rounded),
-                      onPressed: () {
-                        setState(() {
-                          _isEnable = false;
-                        });
-                      }),
-                ],
-              ),
-              Row(
-                children: [
-                  SizedBox(
-                    width: 250,
-                    child: TextField(
-                      controller: _surnameController,
+                    TextField(
+                      style: const TextStyle(fontSize: 15),
+                      controller: _emailController,
                       enabled: _isEnable,
                     ),
-                  ),
-                  IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () {
-                        setState(() {
-                          _isEnable = true;
-                        });
-                      }),
-                  IconButton(
-                      icon: const Icon(Icons.check_rounded),
-                      onPressed: () {
-                        setState(() {
-                          _isEnable = false;
-                        });
-                      }),
-                ],
+                    TextField(
+                      style: const TextStyle(fontSize: 15),
+                      controller: _passwordController,
+                      enabled: _isEnable,
+                    ),
+                  ],
+                ),
               ),
+              // to do: profili düzenle butonu dönüşcek veya kaydetmek için 2 buton?
+              const SizedBox(height: 20,),
+              SizedBox(
+                width: 200, height: 45,
+                child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _isEnable = true;
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0),),
+                        backgroundColor: Colors.yellow
+                    ),
+                    child: const Text("Profili Düzenle", style: TextStyle(fontSize: 15),),
+                ),
+              ),
+              const SizedBox(height: 20,),
+              const Divider(),
+              
+              // MENU
+              const SizedBox(height: 10,),
+              SizedBox(
+                width: 225,
+                child: SizedBox(
+                  height: 40,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        side: BorderSide(color: Colors.grey)
+                    ),
+                    child: Row(
+                      //mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Cezalar", style: TextStyle(color: Colors.black ),),
+                        Icon(Icons.keyboard_arrow_right_rounded, color: Colors.grey,)
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(13.0),
+                child: SizedBox(
+                  width: 225,
+                  child: SizedBox(
+                    height: 40,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: BorderSide(color: Colors.grey)
+                      ),
+                      child: Row(
+                        //mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Okunmuş Kitaplar", style: TextStyle(color: Colors.black ),),
+                          Icon(Icons.keyboard_arrow_right_rounded, color: Colors.grey,)
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 225,
+                child: SizedBox(
+                  height: 40,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        side: BorderSide(color: Colors.grey)
+                    ),
+                    child: Row(
+                      //mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Çıkış Yap", style: TextStyle(color: Colors.red ),),
+                        Icon(Icons.keyboard_arrow_right_rounded, color: Colors.grey,)
+                      ],
+                    ),
+                  ),
+                ),
+              )
             ],
+
           ),
         ),
       ),
     );
   }
+
+
 /*
   Widget buildName(User user) => Column(
         children: [
