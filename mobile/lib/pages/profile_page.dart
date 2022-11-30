@@ -14,6 +14,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   // to do: taken from database
+
   late String name = "berry lafci";
   late String surname = "aaa@gtu.edu.tr";
   late String password = "abcd";
@@ -31,105 +32,130 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 300,
-              child: TextField(
-                decoration: const InputDecoration(icon: Icon(Icons.person)),
-                controller: _nameController,
-                enabled: _isEnable,
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(30),
+          child: Column(
+            children: [
+              SizedBox(
+                width: 100, height: 100,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100), child: Image.network("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png")),
               ),
-            ),
-            SizedBox(
-              width: 300,
-              child: TextField(
-                decoration: const InputDecoration(icon: Icon(Icons.mail)),
-                controller: _emailController,
-                enabled: _isEnable,
-              ),
-            ),
-            SizedBox(
-              width: 300,
-              child: TextField(
-                decoration: const InputDecoration(icon: Icon(Icons.password)),
-                obscureText: passenable,
-                controller: _passwordController,
-                enabled: _isEnable,
-                /*
-                decoration: InputDecoration(
-                  suffix: IconButton(
-                    onPressed: () { //add Icon button at end of TextField
-                      setState(() { //refresh UI
-                        if(passenable){
-                          passenable = false;
-                        } else {
-                          passenable = true;
-                          }
-                        });
-                      },
-                      icon: Icon(passenable == true?Icons.remove_red_eye:Icons.password)
-                  ),
+              const SizedBox(height: 10,),
+              SizedBox(
+                width: 250,
+                child: Column(
+                  children: [
+                    TextField(
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                      controller: _nameController,
+                      enabled: _isEnable,
+                    ),
+                    TextField(
+                      style: const TextStyle(fontSize: 15),
+                      controller: _emailController,
+                      enabled: _isEnable,
+                    ),
+                    TextField(
+                      style: const TextStyle(fontSize: 15),
+                      controller: _passwordController,
+                      enabled: _isEnable,
+                    ),
+                  ],
                 ),
-                 */
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
+              // to do: profili düzenle butonu dönüşcek veya kaydetmek için 2 buton?
+              const SizedBox(height: 20,),
+              SizedBox(
+                width: 200, height: 45,
+                child: ElevatedButton(
                     onPressed: () {
                       setState(() {
                         _isEnable = true;
                       });
                     },
-                    child: const Text("Düzenle", style: TextStyle(color: Colors.white ),),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          _isEnable = false;
-                        });
-                      },
-                      child: const Text("Kaydet", style: TextStyle(color: Colors.white ),),
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0),),
+                        backgroundColor: Colors.yellow
                     ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              width: 150,
-              child: ElevatedButton(
-                  onPressed: () {},
-                  child: Row(
-                    //mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("Cezalar", style: TextStyle(color: Colors.white ),),
-                      Icon(Icons.arrow_forward_outlined, color: Colors.white,)
-                    ],
-                  ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: SizedBox(
-                width: 125,
-                child: ElevatedButton(
-                    onPressed: () {
-                      SystemNavigator.pop(); // exit from app
-                    },
-                    child: Text("Çıkış Yap", style: TextStyle(color: Colors.white ),),
+                    child: const Text("Profili Düzenle", style: TextStyle(fontSize: 15),),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 20,),
+              const Divider(),
+              
+              // MENU
+              const SizedBox(height: 10,),
+              SizedBox(
+                width: 225,
+                child: SizedBox(
+                  height: 40,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        side: BorderSide(color: Colors.grey)
+                    ),
+                    child: Row(
+                      //mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Cezalar", style: TextStyle(color: Colors.black ),),
+                        Icon(Icons.keyboard_arrow_right_rounded, color: Colors.grey,)
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(13.0),
+                child: SizedBox(
+                  width: 225,
+                  child: SizedBox(
+                    height: 40,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: BorderSide(color: Colors.grey)
+                      ),
+                      child: Row(
+                        //mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Okunmuş Kitaplar", style: TextStyle(color: Colors.black ),),
+                          Icon(Icons.keyboard_arrow_right_rounded, color: Colors.grey,)
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 225,
+                child: SizedBox(
+                  height: 40,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        side: BorderSide(color: Colors.grey)
+                    ),
+                    child: Row(
+                      //mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Çıkış Yap", style: TextStyle(color: Colors.red ),),
+                        Icon(Icons.keyboard_arrow_right_rounded, color: Colors.grey,)
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ],
+
+          ),
         ),
       ),
     );
