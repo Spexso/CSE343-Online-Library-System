@@ -11,7 +11,8 @@
 **NOTE:** err-generic and err-json-decoder aren't listed in Possible Errors. Because they may be returned to any request.
 
 # /guest/
-## /guest/user-register
+
+## user-register
 ### Request
 
 ```json
@@ -32,7 +33,7 @@ empty
 
 - err-email-exist
 
-## /guest/user-login
+## user-login
 ### Request
 
 ```json
@@ -55,7 +56,7 @@ empty
 - err-email-not-exist
 - err-invalid-password
 
-## /guest/admin-login
+## admin-login
 ### Request
 
 ```json
@@ -78,12 +79,19 @@ empty
 - err-name-not-exist
 - err-invalid-password
 
+# /user/
+
+The client must put the token returned with user-login response in the Authorization header using the Bearer schema.\
+Refer to [JSON Web Token](https://jwt.io/introduction/)
+
+## TODO
+
 # /admin/
 
 The client must put the token returned with admin-login response in the Authorization header using the Bearer schema.\
-Refer to [JSON Web Token](https://jwt.io/introduction/) 
+Refer to [JSON Web Token](https://jwt.io/introduction/)
 
-## /admin/isbn-insert
+## isbn-insert
 ### Request
 
 ```json
@@ -110,7 +118,7 @@ empty
 - err-base64-decoder
 - err-isbn-exist
 
-## /admin/book-add
+## book-add
 ### Request
 
 ```json
@@ -122,6 +130,76 @@ empty
 ### Response
 
 empty
+
+### Possible Errors
+
+- err-isbn-not-exist
+
+# /user/ and /admin/
+
+## isbn-list
+### Request 1
+
+```json
+{
+  "name": "Concrete mathematics",
+  "author": "Ronald L. Graham",
+  "publisher": "Addison-Wesley",
+  "year-start": "1994",
+  "year-end": "1994",
+  "class-number": "QA 39.2",
+  "cutter-number": "G73"
+}
+```
+
+**NOTE:** year-start and year-end are inclusive (`year-start <= year <= year-end`).\
+**NOTE:** any of these fields may be left empty or omitted entirely.
+
+### Response 1
+
+```json
+{
+  "isbn-list": ["0201558025"]
+}
+```
+
+### Request 2
+
+```json
+{
+  "name": "Mathematics",
+  "class-number": "QA 37.2",
+}
+```
+
+### Response 2
+
+```json
+{
+  "isbn-list": ["0521406498", "0521406501", "0135641543"]
+}
+```
+
+### Possible Errors
+
+empty
+
+## book-list
+### Request
+
+```json
+{
+  "isbn": "0201558025"
+}
+```
+
+### Response
+
+```json
+{
+  "id-list": ["7", "123", "342"]
+}
+```
 
 ### Possible Errors
 
