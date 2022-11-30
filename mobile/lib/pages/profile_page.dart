@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 //import 'package:library_project/edit_profile_page.dart';
 //import 'package:library_project/user.dart';
 //import 'package:library_project/user_preferences.dart';
@@ -12,108 +13,129 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  //final user = UserPreferences.myUser;
-  late String name = "berry";
-  late String surname = "aaa";
+  // to do: taken from database
+  late String name = "berry lafci";
+  late String surname = "aaa@gtu.edu.tr";
+  late String password = "abcd";
 
   late final TextEditingController _nameController =
       TextEditingController(text: name);
-  late final TextEditingController _surnameController =
+  late final TextEditingController _emailController =
       TextEditingController(text: surname);
+  late final TextEditingController _passwordController =
+    TextEditingController(text: password);
 
-  bool _isEnable = false;
+  late bool _isEnable = false;
+  bool passenable = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Padding(
-          padding: EdgeInsets.only(left: 97),
-          child: Icon(
-            Icons.person_pin,
-            size: 75,
-          ),
-        ),
-        leading: Padding(
-          padding: const EdgeInsets.only(bottom: 80),
-          child: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ),
-        backgroundColor: Colors.blue[700],
-        foregroundColor: Colors.white,
-        toolbarHeight: 120,
-        shadowColor: Colors.brown,
-        elevation: 5,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(250),
-          ),
-        ),
-      ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                children: [
-                  SizedBox(
-                    width: 250,
-                    child: TextField(
-                      controller: _nameController,
-                      enabled: _isEnable,
-                    ),
-                  ),
-                  IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () {
-                        setState(() {
-                          _isEnable = true;
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 300,
+              child: TextField(
+                decoration: const InputDecoration(icon: Icon(Icons.person)),
+                controller: _nameController,
+                enabled: _isEnable,
+              ),
+            ),
+            SizedBox(
+              width: 300,
+              child: TextField(
+                decoration: const InputDecoration(icon: Icon(Icons.mail)),
+                controller: _emailController,
+                enabled: _isEnable,
+              ),
+            ),
+            SizedBox(
+              width: 300,
+              child: TextField(
+                decoration: const InputDecoration(icon: Icon(Icons.password)),
+                obscureText: passenable,
+                controller: _passwordController,
+                enabled: _isEnable,
+                /*
+                decoration: InputDecoration(
+                  suffix: IconButton(
+                    onPressed: () { //add Icon button at end of TextField
+                      setState(() { //refresh UI
+                        if(passenable){
+                          passenable = false;
+                        } else {
+                          passenable = true;
+                          }
                         });
-                      }),
-                  IconButton(
-                      icon: const Icon(Icons.check_rounded),
+                      },
+                      icon: Icon(passenable == true?Icons.remove_red_eye:Icons.password)
+                  ),
+                ),
+                 */
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _isEnable = true;
+                      });
+                    },
+                    child: const Text("Düzenle", style: TextStyle(color: Colors.white ),),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15),
+                    child: ElevatedButton(
                       onPressed: () {
                         setState(() {
                           _isEnable = false;
                         });
-                      }),
-                ],
-              ),
-              Row(
-                children: [
-                  SizedBox(
-                    width: 250,
-                    child: TextField(
-                      controller: _surnameController,
-                      enabled: _isEnable,
+                      },
+                      child: const Text("Kaydet", style: TextStyle(color: Colors.white ),),
                     ),
                   ),
-                  IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () {
-                        setState(() {
-                          _isEnable = true;
-                        });
-                      }),
-                  IconButton(
-                      icon: const Icon(Icons.check_rounded),
-                      onPressed: () {
-                        setState(() {
-                          _isEnable = false;
-                        });
-                      }),
                 ],
               ),
-            ],
-          ),
+            ),
+            SizedBox(
+              width: 150,
+              child: ElevatedButton(
+                  onPressed: () {},
+                  child: Row(
+                    //mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Cezalar", style: TextStyle(color: Colors.white ),),
+                      Icon(Icons.arrow_forward_outlined, color: Colors.white,)
+                    ],
+                  ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: SizedBox(
+                width: 125,
+                child: ElevatedButton(
+                    onPressed: () {
+                      SystemNavigator.pop(); // exit from app
+                    },
+                    child: Text("Çıkış Yap", style: TextStyle(color: Colors.white ),),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
+
+
 /*
   Widget buildName(User user) => Column(
         children: [
