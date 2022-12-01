@@ -29,6 +29,8 @@ class _ProfilePageState extends State<ProfilePage> {
   late bool _isEnable = false;
   bool passenable = true;
 
+  late bool _isObscure = true;
+
   void _showDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -41,6 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Text("Evet"),
               onPressed: () {
                 setState(() {
+                  _isObscure = true;
                   _isEnable = false;
                 });
                 Navigator.of(context).pop();
@@ -102,10 +105,20 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                     TextField(
+                      obscureText: _isObscure,
                       style: const TextStyle(fontSize: 15, color: Colors.white),
                       controller: _passwordController,
                       enabled: _isEnable,
                       decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                              _isObscure ? Icons.visibility : Icons.visibility_off),
+                            onPressed: () {
+                              setState(() {
+                                _isObscure = !_isObscure;
+                              });
+                            }
+                        ),
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
                         ),
