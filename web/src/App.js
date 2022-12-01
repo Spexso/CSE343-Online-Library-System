@@ -1,43 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import LoginForm from '../src/components/LoginForm';
-import { BrowserRouter as Router, Route, Switch, useHistory } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, } from 'react-router-dom';
 import { Link } from "react-router-dom"; 
 import Loading from "./components/Loading";
 import MainPage from './MainPage';
 
 function App() {
 
-  const history = useHistory();
-  
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [errors, setErrors] = useState(null);
-
-
   const adminUser = {
     email: "admin@admin.com",
     password: "admin123"
   }
 
-  useEffect(() => {
-    fetch('https://jsonplaceholder.typicode.com/users')
-    .then(response => {
-      if(response.ok) {
-        return response.json()
-      }
-      throw response;
-    })
-    .then(res => {
-      setData(res);
-    })
-    .catch(error => {
-      console.error("Error fetching data: ", error);
-      setError(errors)
-    })
-    .finally(() => {
-      setLoading(false)
-    })
-  }, []);
 
   const [user, setUser] = useState({email: ""});
   const [error, setError] = useState("");
@@ -65,6 +39,7 @@ function App() {
   }
 }
 
+/*
   const Logout = () => {
     console.log("Logout");
     setUser({
@@ -72,7 +47,7 @@ function App() {
     });
     setError("");
   }
-
+*/
   
 
   return (

@@ -1,0 +1,10 @@
+.load h2{
+    color: blue;
+    padding: 10px;
+}
+
+.loadW h2{
+    position: relative;
+    color: blue;
+    padding-right: 10px;
+}
