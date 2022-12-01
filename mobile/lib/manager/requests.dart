@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'package:login_page/model/user_login_api.dart';
+import 'package:login_page/model/error_message.dart';
 
 class Requests {
 
@@ -32,7 +32,7 @@ class Requests {
     }
     else {
       print("errorr signup");
-      UserLoginApi resp = UserLoginApi.fromJson(json.decode(answer.body));
+      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
 
       return false;
     }

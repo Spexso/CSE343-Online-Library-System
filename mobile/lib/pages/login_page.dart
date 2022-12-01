@@ -1,10 +1,66 @@
+import 'dart:convert';
+import 'dart:async';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:login_page/model/login.dart';
 import 'package:login_page/pages/forgot_password.dart';
 import 'package:login_page/pages/new_home_page.dart';
+import '../model/error_message.dart';
 import 'sign_up.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key, bool value = true}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+
+  var snackBar = const SnackBar(
+      content: Text("Login Error")
+  );
+
+  final _tfEmailController = TextEditingController();
+  final _tfKeyController = TextEditingController();
+
+  late String token;
+
+  Future<bool> loginState() async {
+
+    var url = Uri.parse("http://10.0.2.2:8080/guest/user-login");
+    var data = {
+      "email": _tfEmailController.text,
+      "password": _tfKeyController.text,
+    };
+
+    var body = json.encode(data);
+
+    var answer = await http.post(
+        url,
+        body: body
+    );
+
+    print("all log in");
+
+    if(answer.statusCode == 200){
+      print("login success");
+      Login resp = Login.fromJson(json.decode(answer.body));
+      token = resp.token;
+      print(token);
+      return true;
+    }
+    else if(answer.statusCode == 400){
+      print("login not success");
+      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
+      print(resp.message);
+      return false;
+    }
+    else {
+      print("not 200 and 400");
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +84,28 @@ class LoginPage extends StatelessWidget {
                 const CustomTitle(
                   str: 'Giriş Yap',
                 ),
-                const CustomTextField(hint: 'Email Adresi', a: Icons.email),
-                const CustomTextField(hint: 'Şifre', a: Icons.password),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: TextField(
+                    controller: _tfEmailController,
+                    decoration: InputDecoration(
+                        suffixIcon: const Icon(Icons.mail),
+                        hintText: "Email",
+                        border:
+                        OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: TextField(
+                    controller: _tfKeyController,
+                    decoration: InputDecoration(
+                        suffixIcon: const Icon(Icons.password),
+                        hintText: "Şifre",
+                        border:
+                        OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -70,18 +146,27 @@ class LoginPage extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 30, vertical: 15),
                           ),
-                          onPressed: () => {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const NewHomePage()),
-                                )
-                              },
+                          onPressed: () async {
+
+                            var ans = await loginState();
+
+                            if(ans == true){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                    const NewHomePage()),
+                              );
+                            }
+                            else if(ans == false){
+                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            }
+                          },
                           child: const Text(
                             "Giriş Yap",
                             style: TextStyle(fontSize: 20, color: Colors.white),
-                          )),
+                          )
+                      ),
                       TextButton(
                           onPressed: () => {
                                 Navigator.push(

@@ -1,10 +1,9 @@
 import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:login_page/model/user_login_api.dart';
+import 'package:login_page/model/error_message.dart';
 import 'login_page.dart';
 import 'package:http/http.dart' as http;
-
 
 import 'package:login_page/manager/requests.dart';
 
@@ -18,14 +17,14 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
 
   var snackBar = const SnackBar(
-      content: Text("Hata")
+      content: Text("Sign Up Error")
   );
+/*
+  ErrorMessage parseSignUp(String ans) {
+    return ErrorMessage.fromJson(json.decode(ans));
+  } */
 
-  UserLoginApi parseSignUp(String ans) {
-    return UserLoginApi.fromJson(json.decode(ans));
-  }
-
-  Future<bool> allSignUp() async {
+  Future<bool> signUpState() async {
     String name = "";
     String surname = "";
     String email = "";
@@ -56,7 +55,7 @@ class _SignUpPageState extends State<SignUpPage> {
     }
     else if(answer.statusCode == 400) {
       print("errorr signup");
-      UserLoginApi resp = UserLoginApi.fromJson(json.decode(answer.body));
+      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
       //print(resp);
       print(resp.kind);
       print(resp.message);
@@ -69,7 +68,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
     //return parseSignUp(answer.body);
   }
-
 
 
   final _tfNameController = TextEditingController();
@@ -169,7 +167,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             ),
                             onPressed: () async {
 
-                              var ans = await allSignUp();
+                              var ans = await signUpState();
 
                               if(ans == true){
                                 print("trueee2");
