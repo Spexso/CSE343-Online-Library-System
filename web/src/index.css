@@ -123,6 +123,7 @@ form .form-inner input[type="submit"]:hover , .welcome button:hover
 .welcome h2 span {
     color:#b8e5d3;
     font-weight: 700;
+    margin-bottom: 30px;
 }
 
 .form-inner .form-logo {

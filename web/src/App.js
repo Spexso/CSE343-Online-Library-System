@@ -1,14 +1,43 @@
-import React, { useState } from "react";
-import LoginForm from './LoginForm';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import MainPage from "./MainPage";
+import React, { useEffect, useState } from "react";
+import LoginForm from '../src/components/LoginForm';
+import { BrowserRouter as Router, Route, Switch, useHistory } from 'react-router-dom';
+import { Link } from "react-router-dom"; 
+import Loading from "./components/Loading";
+import MainPage from './MainPage';
 
 function App() {
+
+  const history = useHistory();
+  
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [errors, setErrors] = useState(null);
+
 
   const adminUser = {
     email: "admin@admin.com",
     password: "admin123"
   }
+
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/users')
+    .then(response => {
+      if(response.ok) {
+        return response.json()
+      }
+      throw response;
+    })
+    .then(res => {
+      setData(res);
+    })
+    .catch(error => {
+      console.error("Error fetching data: ", error);
+      setError(errors)
+    })
+    .finally(() => {
+      setLoading(false)
+    })
+  }, []);
 
   const [user, setUser] = useState({email: ""});
   const [error, setError] = useState("");
@@ -47,27 +76,31 @@ function App() {
   
 
   return (
+
     <Router>
     <Switch>
-    <Route exact path="/">
+    
+    <Route exact path="/CSE343-Online-Library-System" component={LoginForm}>
     <div className="App">
-      {(user.email !== "") ? (
+      { (user.email !== "") ? (
         <div className="welcome">
+          <Link to="/main"> HERE </Link>
           <h2> Welcome, <span> Admin </span></h2>
-          <button onClick={Logout}>Logout</button>
-        </div>
+          <Loading/>
+      </div>
       ) : (
         <LoginForm Login={Login} error={error} />
-      )}
+      ) }
     </div>
     </Route>
 
     <Route exact path="/main">
-        <MainPage/>
+      <MainPage/>
     </Route>
-
+    
     </Switch>
     </Router>
+  
   );
 }
 
