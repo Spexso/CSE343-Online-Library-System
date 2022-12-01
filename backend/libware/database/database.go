@@ -238,6 +238,27 @@ func (d *Database) UserValidate(email, password string) (int64, error) {
 	return id, nil
 }
 
+func (d *Database) UserValidateWithId(id int64, password string) error {
+	if yes, err := d.IsUserExistWithId(id); !yes {
+		return errlist.ErrUserIdNotExist
+	} else if err != nil {
+		return err
+	}
+
+	row := d.db.QueryRow(`SELECT hash, salt FROM users WHERE id = ?`, id)
+	var savedHash, salt []byte
+	if err := row.Scan(&savedHash, &salt); err != nil {
+		return err
+	}
+
+	hash := helpers.GenerateHash([]byte(password), salt)
+	if !bytes.Equal(hash, savedHash) {
+		return errlist.ErrInvalidPassword
+	}
+
+	return nil
+}
+
 // IsAdminExistWithName returns true if the admin with name exists.
 func (d *Database) IsAdminExistWithName(name string) (bool, error) {
 	row := d.db.QueryRow("SELECT 1 FROM admins WHERE name = ?", name)
@@ -449,4 +470,96 @@ func (d *Database) IsbnPicture(isbn string) (picture []byte, err error) {
 	err = userRow.Scan(&picture)
 
 	return
+}
+
+func (d *Database) ChangeUserName(id int64, newName string, newSurname string) error {
+	yes, err := d.IsUserExistWithId(id)
+	if !yes {
+		return errlist.ErrUserIdNotExist
+	} else if err != nil {
+		return err
+	}
+
+	sqlStmt := `
+	UPDATE users
+	SET name = ?, surname = ?
+	WHERE id = ?;
+	`
+	_, err = d.db.Exec(sqlStmt, newName, newSurname, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (d *Database) ChangeUserPassword(id int64, oldPassword string, newPassword string) error {
+	err := d.UserValidateWithId(id, oldPassword)
+	if err != nil {
+		return err
+	}
+
+	salt, err := helpers.GenerateSalt()
+	if err != nil {
+		return err
+	}
+
+	hash := helpers.GenerateHash([]byte(newPassword), salt)
+
+	sqlStmt := `
+	UPDATE users
+	SET hash = ?, salt = ?
+	WHERE id = ?;
+	`
+	_, err = d.db.Exec(sqlStmt, hash, salt, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (d *Database) ChangeUserEmail(id int64, password string, newEmail string) error {
+	err := d.UserValidateWithId(id, password)
+	if err != nil {
+		return err
+	}
+
+	yes, err := d.IsUserExistWithEmail(newEmail)
+	if yes {
+		return errlist.ErrEmailExist
+	} else if err != nil {
+		return err
+	}
+
+	sqlStmt := `
+	UPDATE users
+	SET email = ?
+	WHERE id = ?;
+	`
+	_, err = d.db.Exec(sqlStmt, newEmail, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (d *Database) ChangeUserPhone(id int64, password string, newPhone string) error {
+	err := d.UserValidateWithId(id, password)
+	if err != nil {
+		return err
+	}
+
+	sqlStmt := `
+	UPDATE users
+	SET phone = ?
+	WHERE id = ?;
+	`
+	_, err = d.db.Exec(sqlStmt, newPhone, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

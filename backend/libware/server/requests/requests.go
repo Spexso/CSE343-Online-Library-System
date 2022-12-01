@@ -44,3 +44,23 @@ type IsbnProfile struct {
 type IsbnPicture struct {
 	Isbn string `json:"isbn"`
 }
+
+type ChangeUserName struct {
+	NewName    string `json:"new-name"`
+	NewSurname string `json:"new-surname"`
+}
+
+type ChangeUserEmail struct {
+	Password string `json:"password"`
+	NewEmail string `json:"new-email"`
+}
+
+type ChangeUserPhone struct {
+	Password string `json:"password"`
+	NewPhone string `json:"new-phone"`
+}
+
+type ChangeUserPassword struct {
+	OldPassword string `json:"old-password"`
+	NewPassword string `json:"new-password"`
+}
