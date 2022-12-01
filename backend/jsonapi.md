@@ -84,12 +84,110 @@ empty
 The client must put the token returned with user-login response in the Authorization header using the Bearer schema.\
 Refer to [JSON Web Token](https://jwt.io/introduction/)
 
-## TODO
+**NOTE:** err-authorization isn't listed in Possible Errors. Because it may be returned to any request.
+
+## user-profile
+### Request
+
+empty
+
+### Response
+
+```json
+{
+  "name": "john",
+  "surname": "smith",
+  "email": "js@example.com",
+  "phone": "+123456789"
+}
+```
+
+### Possible Errors
+
+- err-user-id-not-exist
+
+## change-user-name
+### Request
+
+```json
+{
+  "new-name": "jonathan",
+  "new-surname": "wick"
+}
+```
+
+### Response
+
+empty
+
+### Possible Errors
+
+- err-user-id-not-exist
+
+## change-user-email
+### Request
+
+```json
+{
+  "password": "123",
+  "new-email": "example@example.com"
+}
+```
+
+### Response
+
+empty
+
+### Possible Errors
+
+- err-user-id-not-exist
+- err-email-exist
+- err-invalid-password
+
+## change-user-phone
+### Request
+
+```json
+{
+  "password": "123",
+  "new-phone": "+987654321"
+}
+```
+
+### Response
+
+empty
+
+### Possible Errors
+
+- err-user-id-not-exist
+- err-invalid-password
+
+## change-user-password
+### Request
+
+```json
+{
+  "old-password": "123",
+  "new-password": "abc"
+}
+```
+
+### Response
+
+empty
+
+### Possible Errors
+
+- err-user-id-not-exist
+- err-invalid-password
 
 # /admin/
 
 The client must put the token returned with admin-login response in the Authorization header using the Bearer schema.\
 Refer to [JSON Web Token](https://jwt.io/introduction/)
+
+**NOTE:** err-authorization isn't listed in Possible Errors. Because it may be returned to any request.
 
 ## isbn-insert
 ### Request
@@ -134,6 +232,31 @@ empty
 ### Possible Errors
 
 - err-isbn-not-exist
+
+## user-profile-with-id
+### Request
+
+```json
+{
+  "id": "1"
+}
+```
+
+### Response
+
+```json
+{
+  "name": "john",
+  "surname": "smith",
+  "email": "js@example.com",
+  "phone": "+123456789"
+}
+```
+
+### Possible Errors
+
+- err-user-id-not-exist
+
 
 # /user/ and /admin/
 
@@ -198,6 +321,53 @@ empty
 ```json
 {
   "id-list": ["7", "123", "342"]
+}
+```
+
+### Possible Errors
+
+- err-isbn-not-exist
+
+## isbn-profile
+### Request
+
+```json
+{
+  "isbn": "0201558025"
+}
+```
+
+### Response
+
+```json
+{
+  "name": "Concrete mathematics",
+  "author": "Ronald L. Graham",
+  "publisher": "Addison-Wesley",
+  "publication-year": "1994",
+  "class-number": "QA 39.2",
+  "cutter-number": "G73",
+}
+```
+
+### Possible Errors
+
+- err-isbn-not-exist
+
+## isbn-picture
+### Request
+
+```json
+{
+  "isbn": "0201558025"
+}
+```
+
+### Response
+
+```json
+{
+  "picture": "eWVzc2ly"
 }
 ```
 

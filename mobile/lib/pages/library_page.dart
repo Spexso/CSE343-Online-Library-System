@@ -14,6 +14,7 @@ class _LibraryPageState extends State<LibraryPage> {
   Widget build(BuildContext context) {
     return isGridView
         ? ListView(
+      shrinkWrap: true,
             children: [
               const Padding(
                 padding: EdgeInsets.all(10.0),
@@ -110,20 +111,19 @@ class _LibraryPageState extends State<LibraryPage> {
                   ],
                 ),
               ),
-              Wrap(
-                alignment: WrapAlignment.spaceAround,
-                children: const [
-                  BookinGrid(),
-                  BookinGrid(),
-                  BookinGrid(),
-                  BookinGrid(),
-                  BookinGrid(),
-                  BookinGrid(),
-                  BookinGrid(),
-                  BookinGrid(),
-                  BookinGrid(),
-                ],
-              )
+
+              GridView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                itemCount: 20,
+                  gridDelegate:   const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.5
+                  ),
+                  itemBuilder: (context,index){
+                    return const BookinGrid();
+                  })
             ],
           )
         : ListView(
@@ -223,14 +223,14 @@ class _LibraryPageState extends State<LibraryPage> {
                   ],
                 ),
               ),
-              const BookinList(),
-              const BookinList(),
-              const BookinList(),
-              const BookinList(),
-              const BookinList(),
-              const BookinList(),
-              const BookinList(),
-              const BookinList(),
+              ListView.builder(
+                itemCount: 20,
+                physics: const ClampingScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return const BookinList();
+                },
+              ),
             ],
           );
   }
@@ -295,7 +295,7 @@ class BookinList extends StatelessWidget {
         ),
       ),
     );
-  }
+    }
 }
 
 class BookinGrid extends StatelessWidget {
@@ -306,7 +306,7 @@ class BookinGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
       child: Container(
         width: MediaQuery.of(context).size.width / 5 * 2,
         height: MediaQuery.of(context).size.width / 50 * 45,

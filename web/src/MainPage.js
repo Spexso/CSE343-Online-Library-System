@@ -3,12 +3,11 @@ import './MainPage.css'
 
 const MainPage = () => {
 
-    const Warn  = useState("MAIN PAGE HERE");
 
     return (
         <div className="text">
             <h1>
-                {Warn}
+            <h2> Welcome,Welcome,Welcome,Welcome, <span> Admin </span></h2>
             </h1>
         </div>
     );
