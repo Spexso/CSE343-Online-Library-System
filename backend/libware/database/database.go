@@ -198,7 +198,7 @@ func (d *Database) UserInsert(name, surname, email, phone, password string) (int
 	hash := helpers.GenerateHash([]byte(password), salt)
 
 	sqlStmt := `
-INSERT INTO users (id, name, surname, email, phone, hash, salt, currentbooks, savedbooks, forbiddenuntil, accounthistory)
+INSERT INTO users (id, name, surname, email, phone, hash, salt, queuedbooks, savedbooks, forbiddenuntil, accounthistory)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 UPDATE configs
