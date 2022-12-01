@@ -8,7 +8,7 @@
 }
 ```
 
-**NOTE:** err-generic and err-json-decoder aren't listed in Possible Errors. Because they may be returned to any request.
+**NOTE:** `err-generic` and `err-json-decoder` aren't listed in Possible Errors. Because they may be returned to any request.
 
 # /guest/
 
@@ -84,7 +84,7 @@ empty
 The client must put the token returned with user-login response in the Authorization header using the Bearer schema.\
 Refer to [JSON Web Token](https://jwt.io/introduction/)
 
-**NOTE:** err-authorization isn't listed in Possible Errors. Because it may be returned to any request.
+**NOTE:** `err-authorization` isn't listed in Possible Errors. Because it may be returned to any request.
 
 ## user-profile
 ### Request
@@ -187,7 +187,7 @@ empty
 The client must put the token returned with admin-login response in the Authorization header using the Bearer schema.\
 Refer to [JSON Web Token](https://jwt.io/introduction/)
 
-**NOTE:** err-authorization isn't listed in Possible Errors. Because it may be returned to any request.
+**NOTE:** `err-authorization` isn't listed in Possible Errors. Because it may be returned to any request.
 
 ## isbn-insert
 ### Request
@@ -205,7 +205,7 @@ Refer to [JSON Web Token](https://jwt.io/introduction/)
 }
 ```
 
-**NOTE:** picture should be a jpg or png image encoded with base64 with standard padding (`=`).
+**NOTE:** `picture` should be a jpg or png image encoded with base64 with standard padding (`=`).
 
 ### Response
 
