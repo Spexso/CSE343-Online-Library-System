@@ -8,7 +8,7 @@
 }
 ```
 
-**NOTE:** err-generic and err-json-decoder aren't listed in Possible Errors. Because they may be returned to any request.
+**NOTE:** `err-generic` and `err-json-decoder` aren't listed in Possible Errors. Because they may be returned to any request.
 
 # /guest/
 
@@ -17,9 +17,9 @@
 
 ```json
 {
-  "name": "john",
-  "surname": "smith",
-  "email": "js@example.com",
+  "name": "Walter",
+  "surname": "White",
+  "email": "ww@albuquerque.us",
   "phone": "+123456789",
   "password": "123"
 }
@@ -84,7 +84,7 @@ empty
 The client must put the token returned with user-login response in the Authorization header using the Bearer schema.\
 Refer to [JSON Web Token](https://jwt.io/introduction/)
 
-**NOTE:** err-authorization isn't listed in Possible Errors. Because it may be returned to any request.
+**NOTE:** `err-authorization` isn't listed in Possible Errors. Because it may be returned to any request.
 
 ## user-profile
 ### Request
@@ -95,9 +95,9 @@ empty
 
 ```json
 {
-  "name": "john",
-  "surname": "smith",
-  "email": "js@example.com",
+  "name": "Jesse",
+  "surname": "Pinkman",
+  "email": "jesse@pinkman.com",
   "phone": "+123456789"
 }
 ```
@@ -111,8 +111,8 @@ empty
 
 ```json
 {
-  "new-name": "jonathan",
-  "new-surname": "wick"
+  "new-name": "Jonathan",
+  "new-surname": "Wick"
 }
 ```
 
@@ -187,7 +187,7 @@ empty
 The client must put the token returned with admin-login response in the Authorization header using the Bearer schema.\
 Refer to [JSON Web Token](https://jwt.io/introduction/)
 
-**NOTE:** err-authorization isn't listed in Possible Errors. Because it may be returned to any request.
+**NOTE:** `err-authorization` isn't listed in Possible Errors. Because it may be returned to any request.
 
 ## isbn-insert
 ### Request
@@ -205,7 +205,7 @@ Refer to [JSON Web Token](https://jwt.io/introduction/)
 }
 ```
 
-**NOTE:** picture should be a jpg or png image encoded with base64 with standard padding (`=`).
+**NOTE:** `picture` should be a jpg or png image encoded with base64 with standard padding (`=`).
 
 ### Response
 
@@ -271,12 +271,15 @@ empty
   "year-start": "1994",
   "year-end": "1994",
   "class-number": "QA 39.2",
-  "cutter-number": "G73"
+  "cutter-number": "G73",
+  "per-page": "20",
+  "page": "1"
 }
 ```
 
-**NOTE:** year-start and year-end are inclusive (`year-start <= year <= year-end`).\
-**NOTE:** any of these fields may be left empty or omitted entirely.
+**NOTE:** `year-start` and `year-end` are inclusive (`year-start <= year <= year-end`).\
+**NOTE:** any of these fields may be left empty or omitted entirely.\
+**NOTE:** `per-page` will be the maximum number of isbn entries per response. `page` is the index of the response (if `per-page` is 20, and current `page` is 3; pages 1 and 2 have been shown so far; current page will have entries starting at 41st entry.). Last page has 0 entries.
 
 ### Response 1
 
@@ -291,7 +294,7 @@ empty
 ```json
 {
   "name": "Mathematics",
-  "class-number": "QA 37.2",
+  "class-number": "QA 37.2"
 }
 ```
 
@@ -346,7 +349,7 @@ empty
   "publisher": "Addison-Wesley",
   "publication-year": "1994",
   "class-number": "QA 39.2",
-  "cutter-number": "G73",
+  "cutter-number": "G73"
 }
 ```
 
