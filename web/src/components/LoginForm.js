@@ -1,16 +1,21 @@
 import React, {useState} from 'react';
-import logo from './assets/books-stack-of-three.png';
+import { useHistory } from 'react-router-dom';
+import logo from '../assets/books-stack-of-three.png';
+import Loading from './Loading';
 
 
 function LoginForm({Login, error}) {
     
-    const [details, setDetails] = useState({name:"", email: "", password: ""});
+    const history = useHistory();
+    const [details, setDetails] = useState({email: "", password: ""});
 
     const submitHandler = e => {
         e.preventDefault();
-
         Login(details);
-
+        if(details.email === "admin@admin.com" && details.password === "admin123")
+        {
+            history.push('/main');
+        }
     }
 
   return (
@@ -38,9 +43,9 @@ function LoginForm({Login, error}) {
             <input type="submit" value="LOGIN" />
 
             <div className="form-logo">
-                <img src={logo} alt="Login page logo"/>
+                <img src={logo} alt="LoginPageLogo"/>
             </div>
-
+            
         </div>
     </form>
   )
