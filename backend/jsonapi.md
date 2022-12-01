@@ -17,9 +17,9 @@
 
 ```json
 {
-  "name": "john",
-  "surname": "smith",
-  "email": "js@example.com",
+  "name": "Walter",
+  "surname": "White",
+  "email": "ww@albuquerque.us",
   "phone": "+123456789",
   "password": "123"
 }
@@ -95,9 +95,9 @@ empty
 
 ```json
 {
-  "name": "john",
-  "surname": "smith",
-  "email": "js@example.com",
+  "name": "Jesse",
+  "surname": "Pinkman",
+  "email": "jesse@pinkman.com",
   "phone": "+123456789"
 }
 ```
@@ -111,8 +111,8 @@ empty
 
 ```json
 {
-  "new-name": "jonathan",
-  "new-surname": "wick"
+  "new-name": "Jonathan",
+  "new-surname": "Wick"
 }
 ```
 
@@ -277,9 +277,9 @@ empty
 }
 ```
 
-**NOTE:** year-start and year-end are inclusive (`year-start <= year <= year-end`).\
+**NOTE:** `year-start` and `year-end` are inclusive (`year-start <= year <= year-end`).\
 **NOTE:** any of these fields may be left empty or omitted entirely.\
-**NOTE:** per-page will be the maximum number isbn entries per response. page is the index of the response (if per-page is 20, and current page is 3; pages 1 and 2 have been shown so far; current page will have entries starting at 41st entry.). Last page has 0 entries.
+**NOTE:** `per-page` will be the maximum number of isbn entries per response. `page` is the index of the response (if `per-page` is 20, and current `page` is 3; pages 1 and 2 have been shown so far; current page will have entries starting at 41st entry.). Last page has 0 entries.
 
 ### Response 1
 
