@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"strconv"
+	"time"
 
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/errlist"
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/helpers"
@@ -205,7 +206,7 @@ UPDATE configs
 SET value = ?
 WHERE key = "nextuserid";
 `
-	_, err = d.db.Exec(sqlStmt, id, name, surname, email, phone, hash, salt, "[]", "[]", nil, "[]", nextIdValue)
+	_, err = d.db.Exec(sqlStmt, id, name, surname, email, phone, hash, salt, "[]", "[]", time.Now(), "[]", nextIdValue)
 	if err != nil {
 		return -1, err
 	}
