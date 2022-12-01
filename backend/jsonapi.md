@@ -271,12 +271,15 @@ empty
   "year-start": "1994",
   "year-end": "1994",
   "class-number": "QA 39.2",
-  "cutter-number": "G73"
+  "cutter-number": "G73",
+  "per-page": "20",
+  "page": "1"
 }
 ```
 
 **NOTE:** year-start and year-end are inclusive (`year-start <= year <= year-end`).\
-**NOTE:** any of these fields may be left empty or omitted entirely.
+**NOTE:** any of these fields may be left empty or omitted entirely.\
+**NOTE:** per-page will be the maximum number isbn entries per response. page is the index of the response (if per-page is 20, and current page is 3; pages 1 and 2 have been shown so far; current page will have entries starting at 41st entry.). Last page has 0 entries.
 
 ### Response 1
 
