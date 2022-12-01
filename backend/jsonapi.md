@@ -106,6 +106,82 @@ empty
 
 - err-user-id-not-exist
 
+## change-user-name
+### Request
+
+```json
+{
+  "new-name": "jonathan",
+  "new-surname": "wick"
+}
+```
+
+### Response
+
+empty
+
+### Possible Errors
+
+- err-user-id-not-exist
+
+## change-user-email
+### Request
+
+```json
+{
+  "password": "123",
+  "new-email": "example@example.com"
+}
+```
+
+### Response
+
+empty
+
+### Possible Errors
+
+- err-user-id-not-exist
+- err-email-exist
+- err-invalid-password
+
+## change-user-phone
+### Request
+
+```json
+{
+  "password": "123",
+  "new-phone": "+987654321"
+}
+```
+
+### Response
+
+empty
+
+### Possible Errors
+
+- err-user-id-not-exist
+- err-invalid-password
+
+## change-user-password
+### Request
+
+```json
+{
+  "old-password": "123",
+  "new-password": "abc"
+}
+```
+
+### Response
+
+empty
+
+### Possible Errors
+
+- err-user-id-not-exist
+- err-invalid-password
+
 # /admin/
 
 The client must put the token returned with admin-login response in the Authorization header using the Bearer schema.\
