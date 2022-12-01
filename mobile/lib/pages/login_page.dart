@@ -87,7 +87,7 @@ class LoginPage extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const SignUpPage()),
+                                      builder: (context) => SignUpPage()),
                                 )
                               },
                           child: const Text('Kayıt Ol',
@@ -135,11 +135,13 @@ class CustomButton extends StatelessWidget {
           elevation: 5,
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
         ),
-        onPressed: () => {},
+        onPressed: () => {
+        },
         child: Text(
           title,
           style: const TextStyle(fontSize: 20, color: Colors.white),
-        ));
+        )
+    );
   }
 }
 
