@@ -294,7 +294,7 @@ empty
 ```json
 {
   "name": "Mathematics",
-  "class-number": "QA 37.2",
+  "class-number": "QA 37.2"
 }
 ```
 
@@ -349,7 +349,7 @@ empty
   "publisher": "Addison-Wesley",
   "publication-year": "1994",
   "class-number": "QA 39.2",
-  "cutter-number": "G73",
+  "cutter-number": "G73"
 }
 ```
 
