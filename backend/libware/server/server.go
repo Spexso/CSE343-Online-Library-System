@@ -44,7 +44,16 @@ func newHandler(db *database.Database) *LibraryHandler {
 	router.Handle("/admin/", http.StripPrefix("/admin", l.adminHandler()))
 
 	l.Handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Access-Control-Allow-Origin", "*")
+		w.Header().Add("Access-Control-Allow-Methods", "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS")
+		w.Header().Add("Access-Control-Allow-Headers", "X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization")
 		w.Header().Add("Content-Type", "application/json")
+
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
 		router.ServeHTTP(w, r)
 	})
 
