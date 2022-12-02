@@ -205,7 +205,7 @@ Refer to [JSON Web Token](https://jwt.io/introduction/)
 }
 ```
 
-**NOTE:** `picture` should be a jpg or png image encoded with base64 with standard padding (`=`).
+**NOTE:** `picture` should be a jpg image encoded with base64 with standard padding (`=`).
 
 ### Response
 
