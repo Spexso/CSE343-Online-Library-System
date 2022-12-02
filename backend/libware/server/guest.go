@@ -26,6 +26,9 @@ func (l *LibraryHandler) userRegister(w http.ResponseWriter, r *http.Request) {
 	if err != nil || req.Name == "" || req.Surname == "" || req.Email == "" || req.Phone == "" || req.Password == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		helpers.WriteError(w, errlist.ErrJsonDecoder)
+		if err == nil {
+			err = errlist.ErrJsonDecoder
+		}
 		log.Printf("error: user-register: %v", err)
 		return
 	}
@@ -52,6 +55,9 @@ func (l *LibraryHandler) userLogin(w http.ResponseWriter, r *http.Request) {
 	if err != nil || req.Email == "" || req.Password == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		helpers.WriteError(w, errlist.ErrJsonDecoder)
+		if err == nil {
+			err = errlist.ErrJsonDecoder
+		}
 		log.Printf("error: user-login: %v", err)
 		return
 	}
@@ -95,6 +101,9 @@ func (l *LibraryHandler) adminLogin(w http.ResponseWriter, r *http.Request) {
 	if err != nil || req.Name == "" || req.Password == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		helpers.WriteError(w, errlist.ErrJsonDecoder)
+		if err == nil {
+			err = errlist.ErrJsonDecoder
+		}
 		log.Printf("error: admin-login: %v", err)
 		return
 	}
