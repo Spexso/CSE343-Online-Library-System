@@ -279,7 +279,7 @@ empty
 
 **NOTE:** `year-start` and `year-end` are inclusive (`year-start <= year <= year-end`).\
 **NOTE:** fields except `per-page` and `page` may be left empty or omitted entirely.\
-**NOTE:** `per-page` will be the maximum number of isbn entries per response. `page` is the index of the response (if `per-page` is 20, and current `page` is 3; pages 1 and 2 have been shown so far; current page will have entries starting at 41st entry.). Last page has less than `per-page` entries.
+**NOTE:** `per-page` will be the maximum number of entries per response. `page` is the index of the response (if `per-page` is 20, and current `page` is 3; pages 1 and 2 have been shown so far; current page will have entries starting at 41st entry.). Last page has less than `per-page` entries.
 
 ### Response 1
 
@@ -321,7 +321,7 @@ empty
 }
 ```
 
-**NOTE:** `per-page` will be the maximum number of isbn entries per response. `page` is the index of the response (if `per-page` is 20, and current `page` is 3; pages 1 and 2 have been shown so far; current page will have entries starting at 41st entry.). Last page has less than `per-page` entries.
+**NOTE:** `per-page` will be the maximum number of entries per response. `page` is the index of the response (if `per-page` is 20, and current `page` is 3; pages 1 and 2 have been shown so far; current page will have entries starting at 41st entry.). Last page has less than `per-page` entries.
 
 ### Response
 
