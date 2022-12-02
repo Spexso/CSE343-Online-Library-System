@@ -1,5 +1,11 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:async';
+import 'package:http/http.dart' as http;
+import 'package:login_page/model/isbn_profile.dart';
+
+import '../model/error_message.dart';
 
 class LibraryPage extends StatefulWidget {
   const LibraryPage({Key? key}) : super(key: key);
@@ -10,6 +16,9 @@ class LibraryPage extends StatefulWidget {
 
 class _LibraryPageState extends State<LibraryPage> {
   bool isGridView = false;
+
+
+
   @override
   Widget build(BuildContext context) {
     return isGridView
@@ -228,7 +237,7 @@ class _LibraryPageState extends State<LibraryPage> {
                 physics: const ClampingScrollPhysics(),
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  return const BookinList();
+                  return BookinList();
                 },
               ),
             ],
@@ -236,10 +245,66 @@ class _LibraryPageState extends State<LibraryPage> {
   }
 }
 
-class BookinList extends StatelessWidget {
-  const BookinList({
-    Key? key,
-  }) : super(key: key);
+
+
+
+class BookinList extends StatefulWidget {
+  const BookinList({Key? key}) : super(key: key);
+
+  @override
+  State<BookinList> createState() => _BookinListState();
+}
+
+class _BookinListState extends State<BookinList> {
+
+  //======================================================
+
+  String bookName = "";
+  String bookAuthor = "";
+  String bookPublisher = "";
+
+  Future<void> isbnProfileState() async {
+
+    var url = Uri.parse("http://10.0.2.2:8080/user/isbn-profile");
+    var data = {
+      "isbn": "0201558025",
+    };
+
+    var body = json.encode(data);
+
+    var answer = await http.post(
+        url,
+        body: body
+    );
+
+    if(answer.statusCode == 200){
+      print("isbn profile success");
+      IsbnProfile resp = IsbnProfile.fromJson(json.decode(answer.body));
+      bookName = resp.name;
+      bookAuthor = resp.author;
+      bookPublisher = resp.publisher;
+      print(bookName);
+      print(bookAuthor);
+      print(bookPublisher);
+    }
+    else if(answer.statusCode == 400){
+      print("isbn profile not success");
+      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
+      print(resp.message);
+
+    }
+    else {
+      print("not 200 and 400");
+    }
+  }
+  //======================================================
+
+  @override
+  void initState() {
+    isbnProfileState();
+    super.initState();
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -267,21 +332,21 @@ class BookinList extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
+                    children: [
                       Text(
-                        "1984",
+                        bookName,
                         style: TextStyle(color: Colors.white, fontSize: 20),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        "George Orwell",
+                        bookAuthor,
                         style: TextStyle(color: Colors.white, fontSize: 20),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        "Can Yayınları",
+                        bookPublisher,
                         style: TextStyle(color: Colors.white, fontSize: 20),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
