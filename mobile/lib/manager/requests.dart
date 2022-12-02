@@ -3,13 +3,22 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:login_page/model/error_message.dart';
 
+import '../model/isbn_profile.dart';
 import '../model/login.dart';
 
 class Requests {
 
   String email = "";
   String password = "";
-  String token = "";
+  late String token;
+
+  static Requests singleInstance = Requests();
+
+  static Requests getInstance() {
+
+    singleInstance = Requests();
+    return singleInstance;
+  }
 
   Future<bool> signUp() async {
     String name = "john";
@@ -67,6 +76,7 @@ class Requests {
       print("login success");
       resp = Login.fromJson(json.decode(answer.body));
       token = resp.token;
+      print("in login:");
       print(token);
       return resp;
     }
@@ -82,4 +92,55 @@ class Requests {
     }
     return resp;
   }
+
+  //======================================================
+
+  //String bookName = "";
+  //String bookAuthor = "";
+  //String bookPublisher = "";
+
+  Future<IsbnProfile> isbnProfileState() async {
+
+    var url = Uri.parse("http://10.0.2.2:8080/user/isbn-profile");
+    var data = {
+      "isbn": "0201558025",
+    };
+
+    var body = json.encode(data);
+
+    print("in isbn:");
+    print(token);
+
+    var answer = await http.post(
+        url,
+        body: body,
+        headers: {
+          "Authorization": "Bearer $token"}
+    );
+
+    IsbnProfile resp = IsbnProfile("", "", "", "", "", "");
+
+    if(answer.statusCode == 200){
+      print("isbn profile success");
+      resp = IsbnProfile.fromJson(json.decode(answer.body));
+      return resp;
+      /*bookName = resp.name;
+      bookAuthor = resp.author;
+      bookPublisher = resp.publisher;
+      print(bookName);
+      print(bookAuthor);
+      print(bookPublisher); */
+    }
+    else if(answer.statusCode == 400){
+      print("isbn profile not success");
+      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
+      print(resp.message);
+
+    }
+
+    return resp;
+  }
+//======================================================
+
+
 }

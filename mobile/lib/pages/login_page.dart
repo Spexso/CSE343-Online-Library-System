@@ -155,7 +155,7 @@ class _LoginPageState extends State<LoginPage> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                    const NewHomePage()),
+                                    NewHomePage(token: token,)),
                               );
                             }
                             else if(ans == false){

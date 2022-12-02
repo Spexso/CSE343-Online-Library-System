@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'package:login_page/manager/requests.dart';
 import 'package:login_page/model/isbn_profile.dart';
 
 import '../model/error_message.dart';
 
 class LibraryPage extends StatefulWidget {
-  const LibraryPage({Key? key}) : super(key: key);
+  final String token;
+  const LibraryPage({Key? key, required this.token}) : super(key: key);
 
   @override
   State<LibraryPage> createState() => _LibraryPageState();
@@ -17,13 +19,68 @@ class LibraryPage extends StatefulWidget {
 class _LibraryPageState extends State<LibraryPage> {
   bool isGridView = false;
 
+  String bookName = "";
+  String bookAuthor = "";
+  String bookPublisher = "";
+
+  //======================================================
+
+  Future<void> isbnProfileState() async {
+
+    var url = Uri.parse("http://10.0.2.2:8080/user/isbn-profile");
+    var data = {
+      "isbn": "0201558025",
+    };
+
+    var body = json.encode(data);
+
+    print("in isbn:");
+    print(widget.token);
+
+    var answer = await http.post(
+        url,
+        body: body,
+        headers: {
+          "Authorization": "Bearer ${widget.token}"}
+    );
+
+    IsbnProfile resp = IsbnProfile("", "", "", "", "", "");
+
+    if(answer.statusCode == 200){
+      print("isbn profile success");
+      resp = IsbnProfile.fromJson(json.decode(answer.body));
+      //return resp;
+      bookName = resp.name;
+      bookAuthor = resp.author;
+      bookPublisher = resp.publisher;
+      print("bookkksss");
+      print(bookName);
+      print(bookAuthor);
+      print(bookPublisher);
+    }
+    else if(answer.statusCode == 400){
+      print("isbn profile not success");
+      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
+      print(resp.message);
+
+    }
+
+    //return resp;
+  }
+//======================================================
+
+  @override
+  void initState() {
+    isbnProfileState();
+    super.initState();
+  }
 
 
   @override
   Widget build(BuildContext context) {
     return isGridView
         ? ListView(
-      shrinkWrap: true,
+            shrinkWrap: true,
             children: [
               const Padding(
                 padding: EdgeInsets.all(10.0),
@@ -124,15 +181,16 @@ class _LibraryPageState extends State<LibraryPage> {
               GridView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                  physics: const ClampingScrollPhysics(),
-                itemCount: 20,
-                  gridDelegate:   const SliverGridDelegateWithFixedCrossAxisCount(
+                physics: const ClampingScrollPhysics(),
+                itemCount: 5,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       childAspectRatio: 0.5
-                  ),
-                  itemBuilder: (context,index){
-                    return const BookinGrid();
-                  })
+                ),
+                itemBuilder: (context,index){
+                    return BookingGrid(name: bookName, author: bookAuthor, publisher: bookPublisher,);
+                }
+              )
             ],
           )
         : ListView(
@@ -233,11 +291,11 @@ class _LibraryPageState extends State<LibraryPage> {
                 ),
               ),
               ListView.builder(
-                itemCount: 20,
+                itemCount: 5,
                 physics: const ClampingScrollPhysics(),
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  return BookinList();
+                  return BookingList(name: bookName, author: bookAuthor, publisher: bookPublisher,);
                 },
               ),
             ],
@@ -245,66 +303,19 @@ class _LibraryPageState extends State<LibraryPage> {
   }
 }
 
+//==============================================================================
 
-
-
-class BookinList extends StatefulWidget {
-  const BookinList({Key? key}) : super(key: key);
+class BookingList extends StatefulWidget {
+  final String name;
+  final String author;
+  final String publisher;
+  const BookingList({Key? key,required this.name, required this.author, required this.publisher}) : super(key: key);
 
   @override
-  State<BookinList> createState() => _BookinListState();
+  State<BookingList> createState() => _BookingListState();
 }
 
-class _BookinListState extends State<BookinList> {
-
-  //======================================================
-
-  String bookName = "";
-  String bookAuthor = "";
-  String bookPublisher = "";
-
-  Future<void> isbnProfileState() async {
-
-    var url = Uri.parse("http://10.0.2.2:8080/user/isbn-profile");
-    var data = {
-      "isbn": "0201558025",
-    };
-
-    var body = json.encode(data);
-
-    var answer = await http.post(
-        url,
-        body: body
-    );
-
-    if(answer.statusCode == 200){
-      print("isbn profile success");
-      IsbnProfile resp = IsbnProfile.fromJson(json.decode(answer.body));
-      bookName = resp.name;
-      bookAuthor = resp.author;
-      bookPublisher = resp.publisher;
-      print(bookName);
-      print(bookAuthor);
-      print(bookPublisher);
-    }
-    else if(answer.statusCode == 400){
-      print("isbn profile not success");
-      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
-      print(resp.message);
-
-    }
-    else {
-      print("not 200 and 400");
-    }
-  }
-  //======================================================
-
-  @override
-  void initState() {
-    isbnProfileState();
-    super.initState();
-
-  }
+class _BookingListState extends State<BookingList> {
 
   @override
   Widget build(BuildContext context) {
@@ -325,8 +336,7 @@ class _BookinListState extends State<BookinList> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                      "https://kbimages1-a.akamaihd.net/a5312ed2-bc80-4f4c-972b-c24dc5990bd5/1200/1200/False/george-orwell-1984-4.jpg"),
+                  //child: Image.network("https://kbimages1-a.akamaihd.net/a5312ed2-bc80-4f4c-972b-c24dc5990bd5/1200/1200/False/george-orwell-1984-4.jpg"),
                 ),
                 Expanded(
                   child: Column(
@@ -334,20 +344,20 @@ class _BookinListState extends State<BookinList> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        bookName,
-                        style: TextStyle(color: Colors.white, fontSize: 20),
+                        widget.name,
+                        style: const TextStyle(color: Colors.white, fontSize: 20),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        bookAuthor,
-                        style: TextStyle(color: Colors.white, fontSize: 20),
+                        widget.author,
+                        style: const TextStyle(color: Colors.white, fontSize: 20),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        bookPublisher,
-                        style: TextStyle(color: Colors.white, fontSize: 20),
+                        widget.publisher,
+                        style: const TextStyle(color: Colors.white, fontSize: 20),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -360,13 +370,22 @@ class _BookinListState extends State<BookinList> {
         ),
       ),
     );
-    }
+  }
 }
 
-class BookinGrid extends StatelessWidget {
-  const BookinGrid({
-    Key? key,
-  }) : super(key: key);
+//==============================================================================
+
+class BookingGrid extends StatefulWidget {
+  final String name;
+  final String author;
+  final String publisher;
+  const BookingGrid({Key? key,required this.name, required this.author, required this.publisher}) : super(key: key);
+
+  @override
+  State<BookingGrid> createState() => _BookingGridState();
+}
+
+class _BookingGridState extends State<BookingGrid> {
 
   @override
   Widget build(BuildContext context) {
@@ -387,31 +406,31 @@ class BookinGrid extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(5),
-                child: Image.network(
-                    "https://kbimages1-a.akamaihd.net/a5312ed2-bc80-4f4c-972b-c24dc5990bd5/1200/1200/False/george-orwell-1984-4.jpg"),
+                //child: Image.network("https://kbimages1-a.akamaihd.net/a5312ed2-bc80-4f4c-972b-c24dc5990bd5/1200/1200/False/george-orwell-1984-4.jpg"),
               ),
-              const Expanded(
+              Expanded(
                 child: Padding(
-                  padding: EdgeInsets.only(top: 5.0),
+                  padding: const EdgeInsets.only(top: 5.0),
                   child: Text(
-                    "1984",
-                    style: TextStyle(color: Colors.white, fontSize: 20),
+                    widget.name,
+                    style: const TextStyle(color: Colors.white, fontSize: 20),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
-              const Expanded(
-                  child: Text(
-                "George Orwell",
-                style: TextStyle(color: Colors.white, fontSize: 20),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              )),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  "Can Yayınları",
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                  widget.author,
+                  style: const TextStyle(color: Colors.white, fontSize: 20),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                )
+              ),
+              Expanded(
+                child: Text(
+                  widget.publisher,
+                  style: const TextStyle(color: Colors.white, fontSize: 20),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),

@@ -6,25 +6,39 @@ import 'package:login_page/pages/profile_page.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 class NewHomePage extends StatefulWidget {
-  const NewHomePage({Key? key}) : super(key: key);
+  final String token;
+  const NewHomePage({Key? key, required this.token}) : super(key: key);
 
   @override
   State<NewHomePage> createState() => _NewHomePageState();
 }
 
 class _NewHomePageState extends State<NewHomePage> {
+
+  late final List<Widget> _children;
+  late final String _token = widget.token;
   int _selectedIndex = 0;
-  final List<Widget> _children = [
-    const LibraryPage(),
-    const SavedPage(),
-    const RequestsPage(),
-    const ProfilePage(),
-  ];
+
   void onTabTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
+
+  @override
+  void initState() {
+
+    _children = [
+      LibraryPage(token: _token),
+      const SavedPage(),
+      const RequestsPage(),
+      const ProfilePage(),
+    ];
+
+    super.initState();
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
