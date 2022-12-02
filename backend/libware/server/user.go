@@ -73,6 +73,9 @@ func (l *LibraryHandler) changeUserName(w http.ResponseWriter, r *http.Request) 
 	if err != nil || req.NewName == "" || req.NewSurname == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		helpers.WriteError(w, errlist.ErrJsonDecoder)
+		if err == nil {
+			err = errlist.ErrJsonDecoder
+		}
 		log.Printf("error: change-user-name: %v", err)
 		return
 	}
@@ -108,6 +111,9 @@ func (l *LibraryHandler) changeUserEmail(w http.ResponseWriter, r *http.Request)
 	if err != nil || req.Password == "" || req.NewEmail == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		helpers.WriteError(w, errlist.ErrJsonDecoder)
+		if err == nil {
+			err = errlist.ErrJsonDecoder
+		}
 		log.Printf("error: change-user-email: %v", err)
 		return
 	}
@@ -147,6 +153,9 @@ func (l *LibraryHandler) changeUserPhone(w http.ResponseWriter, r *http.Request)
 	if err != nil || req.Password == "" || req.NewPhone == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		helpers.WriteError(w, errlist.ErrJsonDecoder)
+		if err == nil {
+			err = errlist.ErrJsonDecoder
+		}
 		log.Printf("error: change-user-phone: %v", err)
 		return
 	}
@@ -184,6 +193,9 @@ func (l *LibraryHandler) changeUserPassword(w http.ResponseWriter, r *http.Reque
 	if err != nil || req.OldPassword == "" || req.NewPassword == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		helpers.WriteError(w, errlist.ErrJsonDecoder)
+		if err == nil {
+			err = errlist.ErrJsonDecoder
+		}
 		log.Printf("error: change-user-password: %v", err)
 		return
 	}

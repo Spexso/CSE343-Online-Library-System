@@ -40,6 +40,9 @@ func (l *LibraryHandler) isbnInsert(w http.ResponseWriter, r *http.Request) {
 	if err != nil || req.Isbn == "" || req.Name == "" || req.Author == "" || req.Publisher == "" || req.PublicationYear == "" || req.ClassNumber == "" || req.CutterNumber == "" || req.Picture == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		helpers.WriteError(w, errlist.ErrJsonDecoder)
+		if err == nil {
+			err = errlist.ErrJsonDecoder
+		}
 		log.Printf("error: isbn-insert: %v", err)
 		return
 	}
@@ -83,6 +86,9 @@ func (l *LibraryHandler) bookAdd(w http.ResponseWriter, r *http.Request) {
 	if err != nil || req.Isbn == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		helpers.WriteError(w, errlist.ErrJsonDecoder)
+		if err == nil {
+			err = errlist.ErrJsonDecoder
+		}
 		log.Printf("error: book-add: %v", err)
 		return
 	}
@@ -109,6 +115,9 @@ func (l *LibraryHandler) userProfileWithId(w http.ResponseWriter, r *http.Reques
 	if err != nil || req.Id == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		helpers.WriteError(w, errlist.ErrJsonDecoder)
+		if err == nil {
+			err = errlist.ErrJsonDecoder
+		}
 		log.Printf("error: user-profile-with-id: %v", err)
 		return
 	}

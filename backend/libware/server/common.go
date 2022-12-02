@@ -40,6 +40,9 @@ func (l *LibraryHandler) isbnPicture(w http.ResponseWriter, r *http.Request) {
 	if err != nil || req.Isbn == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		helpers.WriteError(w, errlist.ErrJsonDecoder)
+		if err == nil {
+			err = errlist.ErrJsonDecoder
+		}
 		log.Printf("error: isbn-picture: %v", err)
 		return
 	}
@@ -72,6 +75,9 @@ func (l *LibraryHandler) isbnProfile(w http.ResponseWriter, r *http.Request) {
 	if err != nil || req.Isbn == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		helpers.WriteError(w, errlist.ErrJsonDecoder)
+		if err == nil {
+			err = errlist.ErrJsonDecoder
+		}
 		log.Printf("error: isbn-picture: %v", err)
 		return
 	}
