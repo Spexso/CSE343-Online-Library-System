@@ -315,9 +315,13 @@ empty
 
 ```json
 {
-  "isbn": "0201558025"
+  "isbn": "0201558025",
+  "per-page": "20",
+  "page": "1"
 }
 ```
+
+**NOTE:** `per-page` will be the maximum number of isbn entries per response. `page` is the index of the response (if `per-page` is 20, and current `page` is 3; pages 1 and 2 have been shown so far; current page will have entries starting at 41st entry.). Last page has less than `per-page` entries.
 
 ### Response
 
