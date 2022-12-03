@@ -104,7 +104,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   child: TextField(
                     controller: _tfNameController,
                     decoration: InputDecoration(
-                        suffixIcon: Icon(Icons.person),
+                        suffixIcon: const Icon(Icons.person),
                         hintText: "İsim",
                         border:
                         OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
@@ -137,7 +137,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   child: TextField(
                     controller: _tfKeyController,
                     decoration: InputDecoration(
-                        suffixIcon: Icon(Icons.password),
+                        suffixIcon: const Icon(Icons.password),
                         hintText: "Şifre",
                         border:
                         OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
@@ -148,7 +148,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   child: TextField(
                     controller: _tfPhoneController,
                     decoration: InputDecoration(
-                        suffixIcon: Icon(Icons.phone),
+                        suffixIcon: const Icon(Icons.phone),
                         hintText: "Telefon",
                         border:
                         OutlineInputBorder(borderRadius: BorderRadius.circular(10))),

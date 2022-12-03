@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:login_page/manager/requests.dart';
 import 'package:login_page/model/isbn_profile.dart';
 
+import 'book_page.dart';
+
 import '../model/error_message.dart';
 
 class LibraryPage extends StatefulWidget {
@@ -331,7 +333,13 @@ class _BookingListState extends State<BookingList> {
           child: InkWell(
             customBorder:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            onTap: () {},
+            onTap: () =>{
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const BookPage()),
+              )
+            },
             child: Row(
               children: [
                 ClipRRect(
