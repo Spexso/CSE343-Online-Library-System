@@ -19,7 +19,19 @@ function App() {
   const Login = details => {
     console.log(details);
 
-    if(details.email === adminUser.email && details.password === adminUser.password){
+    if(details.email === "" && details.password === "" ){
+      console.log("Empty Sections");
+      setError("E-mail and password are empty");
+    }
+    else if(details.email === "" ){
+      console.log("Empty E-mail");
+      setError("E-mail is empty");
+    }
+    else if(details.password === ""){
+      console.log("Empty password");
+      setError("Password is empty");
+    }
+    else if(details.email === adminUser.email && details.password === adminUser.password){
     console.log("Details matched");
     setUser({
       email: details.email,
@@ -34,20 +46,21 @@ function App() {
     setError("Password is wrong");
   }
   else if( details.password !== adminUser.password && details.email !== adminUser.email){
-    console.log("Email and password wrong");
+    console.log("Email and password invalid");
     setError("Wrong email and password");
   }
 }
 
-/*
+
   const Logout = () => {
     console.log("Logout");
     setUser({
       email: "",
+      password: "",
     });
     setError("");
   }
-*/
+
   
 
   return (
@@ -60,6 +73,7 @@ function App() {
       { (user.email !== "") ? (
         <div className="welcome">
           <Link to="/main"> HERE </Link>
+          <button onClick={Logout}> Logout </button>
           <h2> Welcome, <span> Admin </span></h2>
           <Loading/>
       </div>
