@@ -12,11 +12,6 @@ class _BookPageState extends State<BookPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.bookmark_outlined),
-      ),*/
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(42, 43, 46, 1),
         leading: IconButton(
