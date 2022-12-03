@@ -148,22 +148,22 @@ class _LibraryPageState extends State<LibraryPage> {
             shrinkWrap: true,
             children: [
               Padding(
-                padding: EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(10.0),
                 child: TextField(
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                  style: const TextStyle(color: Colors.white, fontSize: 20),
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Color.fromRGBO(100, 100, 100, 1),
+                    fillColor: const Color.fromRGBO(100, 100, 100, 1),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 1.5, color: Colors.grey),
+                      borderSide: const BorderSide(width: 1.5, color: Colors.grey),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 2, color: Colors.white),
+                      borderSide: const BorderSide(width: 2, color: Colors.white),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    hintStyle: TextStyle(color: Colors.white),
-                    suffixIcon: Icon(
+                    hintStyle: const TextStyle(color: Colors.white),
+                    suffixIcon: const Icon(
                       Icons.search,
                       color: Colors.white,
                     ),
@@ -267,22 +267,22 @@ class _LibraryPageState extends State<LibraryPage> {
         : ListView(
             children: [
               Padding(
-                padding: EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(10.0),
                 child: TextField(
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                  style: const TextStyle(color: Colors.white, fontSize: 20),
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Color.fromRGBO(100, 100, 100, 1),
+                    fillColor: const Color.fromRGBO(100, 100, 100, 1),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 1.5, color: Colors.grey),
+                      borderSide: const BorderSide(width: 1.5, color: Colors.grey),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 2, color: Colors.white),
+                      borderSide: const BorderSide(width: 2, color: Colors.white),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    hintStyle: TextStyle(color: Colors.white),
-                    suffixIcon: Icon(
+                    hintStyle: const TextStyle(color: Colors.white),
+                    suffixIcon: const Icon(
                       Icons.search,
                       color: Colors.white,
                     ),
