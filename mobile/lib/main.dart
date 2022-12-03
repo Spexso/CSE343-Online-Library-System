@@ -19,13 +19,13 @@ class MyApp extends StatelessWidget {
           colorScheme: const ColorScheme(
               brightness: Brightness.light,
               primary: Color.fromRGBO(42, 43, 46, 1), // important
-              onPrimary: Colors.white,
-              secondary: Colors.white,
-              onSecondary: Colors.white,
-              error: Colors.white,
-              onError: Colors.white,
-              background: Colors.white,
-              onBackground: Colors.white,
+              onPrimary: Colors.purple,
+              secondary: Colors.purple,
+              onSecondary: Colors.purple,
+              error: Colors.purple,
+              onError: Colors.purple,
+              background: Colors.purple,
+              onBackground: Colors.purple,
               surface: Colors.brown, //important
               onSurface: Color.fromRGBO(42, 43, 46, 1))), //important
       home: const LoginPage(),

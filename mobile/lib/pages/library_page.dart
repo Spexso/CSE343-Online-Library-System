@@ -25,48 +25,111 @@ class _LibraryPageState extends State<LibraryPage> {
   String bookAuthor = "";
   String bookPublisher = "";
 
+  var nameList = List<String>.filled(4, "", growable: false);
+  var authorList = List<String>.filled(4, "", growable: false);
+  var publisherList = List<String>.filled(4, "", growable: false);
+
+
   //======================================================
 
   Future<void> isbnProfileState() async {
 
     var url = Uri.parse("http://10.0.2.2:8080/user/isbn-profile");
-    var data = {
+    var data1 = {
       "isbn": "0201558025",
     };
+    var data2 = {
+      "isbn": "0486240614",
+    };
+    var data3 = {
+      "isbn": "0761997601",
+    };
+    var data4 = {
+      "isbn": "9783527308378",
+    };
 
-    var body = json.encode(data);
+    var body1 = json.encode(data1);
+    var body2 = json.encode(data2);
+    var body3 = json.encode(data3);
+    var body4 = json.encode(data4);
+
 
     print("in isbn:");
     print(widget.token);
 
-    var answer = await http.post(
+    var answer1 = await http.post(
         url,
-        body: body,
+        body: body1,
         headers: {
           "Authorization": "Bearer ${widget.token}"}
     );
 
-    IsbnProfile resp = IsbnProfile("", "", "", "", "", "");
+    var answer2 = await http.post(
+        url,
+        body: body2,
+        headers: {
+          "Authorization": "Bearer ${widget.token}"}
+    );
 
-    if(answer.statusCode == 200){
+    var answer3 = await http.post(
+        url,
+        body: body3,
+        headers: {
+          "Authorization": "Bearer ${widget.token}"}
+    );
+
+    var answer4 = await http.post(
+        url,
+        body: body4,
+        headers: {
+          "Authorization": "Bearer ${widget.token}"}
+    );
+
+    IsbnProfile resp1 = IsbnProfile("", "", "", "", "", "");
+    IsbnProfile resp2 = IsbnProfile("", "", "", "", "", "");
+    IsbnProfile resp3 = IsbnProfile("", "", "", "", "", "");
+    IsbnProfile resp4 = IsbnProfile("", "", "", "", "", "");
+
+
+    if((answer1.statusCode == 200) && (answer2.statusCode == 200) && (answer3.statusCode == 200) && (answer4.statusCode == 200)){
       print("isbn profile success");
-      resp = IsbnProfile.fromJson(json.decode(answer.body));
-      //return resp;
+      resp1 = IsbnProfile.fromJson(json.decode(answer1.body));
+      resp2 = IsbnProfile.fromJson(json.decode(answer2.body));
+      resp3 = IsbnProfile.fromJson(json.decode(answer3.body));
+      resp4 = IsbnProfile.fromJson(json.decode(answer4.body));
+
+
+      nameList[0] = resp1.name;
+      authorList[0] = resp1.author;
+      publisherList[0] = resp1.publisher;
+
+      nameList[1] = resp2.name;
+      authorList[1] = resp2.author;
+      publisherList[1] = resp2.publisher;
+
+      nameList[2] = resp3.name;
+      authorList[2] = resp3.author;
+      publisherList[2] = resp3.publisher;
+
+      nameList[3] = resp4.name;
+      authorList[3] = resp4.author;
+      publisherList[3] = resp4.publisher;
+
+      /*
       bookName = resp.name;
       bookAuthor = resp.author;
       bookPublisher = resp.publisher;
       print("bookkksss");
       print(bookName);
       print(bookAuthor);
-      print(bookPublisher);
+      print(bookPublisher); */
     }
-    else if(answer.statusCode == 400){
+    else if((answer1.statusCode == 400) || (answer2.statusCode == 400) || (answer3.statusCode == 400) || (answer4.statusCode == 400)){
       print("isbn profile not success");
-      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
+      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer1.body));
       print(resp.message);
 
     }
-
     //return resp;
   }
 //======================================================
@@ -84,15 +147,21 @@ class _LibraryPageState extends State<LibraryPage> {
         ? ListView(
             shrinkWrap: true,
             children: [
-              const Padding(
+              Padding(
                 padding: EdgeInsets.all(10.0),
                 child: TextField(
                   style: TextStyle(color: Colors.white, fontSize: 20),
                   decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Color.fromRGBO(100, 100, 100, 1),
                     enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 2, color: Colors.white)),
+                      borderSide: BorderSide(width: 1.5, color: Colors.grey),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 2, color: Colors.white)),
+                      borderSide: BorderSide(width: 2, color: Colors.white),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     hintStyle: TextStyle(color: Colors.white),
                     suffixIcon: Icon(
                       Icons.search,
@@ -184,28 +253,34 @@ class _LibraryPageState extends State<LibraryPage> {
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 physics: const ClampingScrollPhysics(),
-                itemCount: 5,
+                itemCount: nameList.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       childAspectRatio: 0.5
                 ),
                 itemBuilder: (context,index){
-                    return BookingGrid(name: bookName, author: bookAuthor, publisher: bookPublisher,);
+                    return BookingGrid(name: nameList[index], author: authorList[index], publisher: publisherList[index],);
                 }
               )
             ],
           )
         : ListView(
             children: [
-              const Padding(
+              Padding(
                 padding: EdgeInsets.all(10.0),
                 child: TextField(
                   style: TextStyle(color: Colors.white, fontSize: 20),
                   decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Color.fromRGBO(100, 100, 100, 1),
                     enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 2, color: Colors.white)),
+                      borderSide: BorderSide(width: 1.5, color: Colors.grey),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 2, color: Colors.white)),
+                      borderSide: BorderSide(width: 2, color: Colors.white),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     hintStyle: TextStyle(color: Colors.white),
                     suffixIcon: Icon(
                       Icons.search,
@@ -293,11 +368,11 @@ class _LibraryPageState extends State<LibraryPage> {
                 ),
               ),
               ListView.builder(
-                itemCount: 5,
+                itemCount: nameList.length,
                 physics: const ClampingScrollPhysics(),
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  return BookingList(name: bookName, author: bookAuthor, publisher: bookPublisher,);
+                  return BookingList(name: nameList[index], author: authorList[index], publisher: publisherList[index],);
                 },
               ),
             ],
