@@ -17,6 +17,7 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
 
   var snackBar = const SnackBar(
+    width: 10,
       content: Text("Sign Up Error")
   );
 /*
@@ -102,6 +103,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: TextField(
+                      style: const TextStyle(color: Colors.white, fontSize: 20),
                       controller: _tfNameController,
                       decoration: InputDecoration(
                           filled: true,
@@ -127,6 +129,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: TextField(
+                      style: const TextStyle(color: Colors.white, fontSize: 20),
                       controller: _tfSurnameController,
                       decoration: InputDecoration(
                           filled: true,
@@ -151,6 +154,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: TextField(
+                      style: const TextStyle(color: Colors.white, fontSize: 20),
                       controller: _tfEmailController,
                       decoration: InputDecoration(
                           filled: true,
@@ -175,6 +179,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: TextField(
+                      style: const TextStyle(color: Colors.white, fontSize: 20),
                       controller: _tfKeyController,
                       decoration: InputDecoration(
                           filled: true,
@@ -199,6 +204,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: TextField(
+                      style: const TextStyle(color: Colors.white, fontSize: 20),
                       controller: _tfPhoneController,
                       decoration: InputDecoration(
                           filled: true,
