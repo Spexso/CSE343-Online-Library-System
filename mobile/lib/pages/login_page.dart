@@ -16,18 +16,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
-  var snackBar = const SnackBar(
-      content: Text("Login Error")
-  );
-
+  var snackBar = const SnackBar(content: Text("Login Error"));
   final _tfEmailController = TextEditingController();
   final _tfKeyController = TextEditingController();
 
   late String token;
 
   Future<bool> loginState() async {
-
     var url = Uri.parse("http://10.0.2.2:8080/guest/user-login");
     var data = {
       "email": _tfEmailController.text,
@@ -36,27 +31,22 @@ class _LoginPageState extends State<LoginPage> {
 
     var body = json.encode(data);
 
-    var answer = await http.post(
-        url,
-        body: body
-    );
+    var answer = await http.post(url, body: body);
 
     print("all log in");
 
-    if(answer.statusCode == 200){
+    if (answer.statusCode == 200) {
       print("login success");
       Login resp = Login.fromJson(json.decode(answer.body));
       token = resp.token;
       print(token);
       return true;
-    }
-    else if(answer.statusCode == 400){
+    } else if (answer.statusCode == 400) {
       print("login not success");
       ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
       print(resp.message);
       return false;
-    }
-    else {
+    } else {
       print("not 200 and 400");
       return false;
     }
@@ -69,17 +59,19 @@ class _LoginPageState extends State<LoginPage> {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         decoration: ProjectUtility().customgradient(),
+        //color: const Color.fromRGBO(42, 43, 46, 1),
         child: Center(
           child: Container(
-            height: MediaQuery.of(context).size.height / 5 * 2.5,
+            height: MediaQuery.of(context).size.height / 5 * 3,
             width: MediaQuery.of(context).size.width / 5 * 4,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
+              color: Colors.transparent,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const CustomTitle(
                   str: 'Giriş Yap',
@@ -87,23 +79,57 @@ class _LoginPageState extends State<LoginPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: TextField(
+                    style: const TextStyle(color: Colors.white, fontSize: 20),
                     controller: _tfEmailController,
                     decoration: InputDecoration(
-                        suffixIcon: const Icon(Icons.mail),
+                        filled: true,
+                        fillColor: const Color.fromRGBO(42, 43, 46, 1),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 1.5, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 2, color: Colors.white),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        hintStyle: const TextStyle(color: Colors.white),
+                        suffixIcon: const Icon(
+                          Icons.mail,
+                          color: Colors.white,
+                        ),
                         hintText: "Email",
-                        border:
-                        OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10))),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: TextField(
+                    style: const TextStyle(color: Colors.white, fontSize: 20),
+                    obscureText: true,
                     controller: _tfKeyController,
                     decoration: InputDecoration(
-                        suffixIcon: const Icon(Icons.password),
-                        hintText: "Şifre",
-                        border:
-                        OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+                      suffixIcon: const Icon(
+                        Icons.password,
+                        color: Colors.white,
+                      ),
+                      hintText: "Şifre",
+                      filled: true,
+                      fillColor: const Color.fromRGBO(42, 43, 46, 1),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            const BorderSide(width: 1.5, color: Colors.grey),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            const BorderSide(width: 2, color: Colors.white),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      hintStyle: const TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
                 Row(
@@ -112,7 +138,10 @@ class _LoginPageState extends State<LoginPage> {
                     Row(
                       children: const [
                         Checkbox(value: true, onChanged: null),
-                        Text("Beni Hatırla")
+                        Text(
+                          "Beni Hatırla",
+                          style: TextStyle(color: Colors.white),
+                        )
                       ],
                     ),
                     TextButton(
@@ -128,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                           'Şifremi Unuttum',
                           textAlign: TextAlign.end,
                           style: TextStyle(
-                              color: Colors.black,
+                              color: Colors.white,
                               decoration: TextDecoration.underline),
                         )),
                   ],
@@ -138,35 +167,34 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15.0),
                             ),
                             elevation: 5,
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 30, vertical: 15),
+                            primary: Colors.white,
                           ),
                           onPressed: () async {
-
                             var ans = await loginState();
 
-                            if(ans == true){
+                            if (ans == true) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                    NewHomePage(token: token,)),
+                                    builder: (context) => NewHomePage(
+                                          token: token,
+                                        )),
                               );
-                            }
-                            else if(ans == false){
-                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            } else if (ans == false) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
                             }
                           },
                           child: const Text(
                             "Giriş Yap",
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          )
-                      ),
+                            style: TextStyle(fontSize: 20, color: Colors.black),
+                          )),
                       TextButton(
                           onPressed: () => {
                                 Navigator.push(
@@ -178,7 +206,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: const Text('Kayıt Ol',
                               style: TextStyle(
                                   decoration: TextDecoration.underline,
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   fontSize: 18)))
                     ],
                   ),
@@ -196,7 +224,7 @@ class ProjectUtility {
   BoxDecoration customgradient() {
     return const BoxDecoration(
         gradient: LinearGradient(
-      colors: [Colors.blue, Colors.brown],
+      colors: [Colors.cyan, Colors.black],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     ));
@@ -205,6 +233,7 @@ class ProjectUtility {
 
 class CustomButton extends StatelessWidget {
   final String title;
+
   const CustomButton({
     Key? key,
     required this.title,
@@ -220,13 +249,11 @@ class CustomButton extends StatelessWidget {
           elevation: 5,
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
         ),
-        onPressed: () => {
-        },
+        onPressed: () => {},
         child: Text(
           title,
           style: const TextStyle(fontSize: 20, color: Colors.white),
-        )
-    );
+        ));
   }
 }
 
@@ -245,32 +272,9 @@ class CustomDivider extends StatelessWidget {
   }
 }
 
-class CustomTextField extends StatelessWidget {
-  final String hint;
-  final IconData a;
-  const CustomTextField({
-    Key? key,
-    required this.hint,
-    required this.a,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: TextField(
-        decoration: InputDecoration(
-            suffixIcon: Icon(a),
-            hintText: hint,
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
-      ),
-    );
-  }
-}
-
 class CustomTitle extends StatelessWidget {
   final String str;
+
   const CustomTitle({
     Key? key,
     required this.str,
@@ -285,6 +289,7 @@ class CustomTitle extends StatelessWidget {
         style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 30,
+          color: Colors.white,
         ),
       ),
     );

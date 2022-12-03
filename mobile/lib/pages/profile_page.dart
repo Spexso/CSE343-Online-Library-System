@@ -145,7 +145,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         },
                         style: ElevatedButton.styleFrom(
                             //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0),),
-                            backgroundColor: Colors.yellow
+                            primary: Colors.white
                         ),
                         child: const Text("Profili Düzenle", style: TextStyle(fontSize: 17),),
                     ),
@@ -170,7 +170,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromRGBO(100, 100, 100, 1),
+                        primary: const Color.fromRGBO(100, 100, 100, 1),
                         side: const BorderSide(color: Colors.grey)
                     ),
                     child: Row(
@@ -193,7 +193,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromRGBO(100, 100, 100, 1),
+                          primary: const Color.fromRGBO(100, 100, 100, 1),
                           side: const BorderSide(color: Colors.grey)
                       ),
                       child: Row(
@@ -215,7 +215,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromRGBO(100, 100, 100, 1),
+                        primary: const Color.fromRGBO(100, 100, 100, 1),
                         side: const BorderSide(color: Colors.grey)
                     ),
                     child: Row(
