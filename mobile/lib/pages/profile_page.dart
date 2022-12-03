@@ -15,7 +15,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   // to do: taken from database
 
-  late String name = "berry lafci";
+  late String name = "Berru Lafcı";
   late String surname = "aaa@gtu.edu.tr";
   late String password = "abcd";
 
@@ -71,7 +71,7 @@ class _ProfilePageState extends State<ProfilePage> {
               SizedBox(
                 width: 100, height: 100,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(100), child: Image.network("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png")),
+                  borderRadius: BorderRadius.circular(100), child: Image.asset('images/blue_profile.jpg')),
               ),
               const SizedBox(height: 40,),
               SizedBox(
@@ -144,10 +144,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           });
                         },
                         style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0),),
-                            primary: Colors.yellow
+                            //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0),),
+                            primary: Colors.white
                         ),
-                        child: const Text("Profili Düzenle", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                        child: const Text("Profili Düzenle", style: TextStyle(fontSize: 17),),
                     ),
                   ),
                   IconButton(
@@ -159,7 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
               const SizedBox(height: 20,),
-              const Divider(),
+              const Divider(color: Colors.white54,),
 
               // MENU
               const SizedBox(height: 10,),
@@ -177,7 +177,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       //mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: const [
-                        Text("Cezalar", style: TextStyle(color: Colors.white ),),
+                        Text("Cezalar", style: TextStyle(color: Colors.white, fontSize: 15),),
                         Icon(Icons.keyboard_arrow_right_rounded, color: Colors.grey,)
                       ],
                     ),
@@ -200,7 +200,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         //mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: const [
-                          Text("Okunmuş Kitaplar", style: TextStyle(color: Colors.white ),),
+                          Text("Okunmuş Kitaplar", style: TextStyle(color: Colors.white,fontSize: 15 ),),
                           Icon(Icons.keyboard_arrow_right_rounded, color: Colors.grey,)
                         ],
                       ),
@@ -222,7 +222,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       //mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: const[
-                        Text("Çıkış Yap", style: TextStyle(color: Colors.red ),),
+                        Text("Çıkış Yap", style: TextStyle(color: Colors.red, fontSize: 15 ),),
                         Icon(Icons.keyboard_arrow_right_rounded, color: Colors.grey,)
                       ],
                     ),
