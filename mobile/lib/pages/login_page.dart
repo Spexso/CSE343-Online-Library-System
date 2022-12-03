@@ -101,7 +101,9 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         hintText: "Email",
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10))),
+                            borderRadius: BorderRadius.circular(10)
+                        ),
+                    ),
                   ),
                 ),
                 Padding(
@@ -243,6 +245,7 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
+          primary: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
           ),
@@ -252,7 +255,7 @@ class CustomButton extends StatelessWidget {
         onPressed: () => {},
         child: Text(
           title,
-          style: const TextStyle(fontSize: 20, color: Colors.white),
+          style: const TextStyle(fontSize: 20, color: Colors.black),
         ));
   }
 }
@@ -288,7 +291,7 @@ class CustomTitle extends StatelessWidget {
         str,
         style: const TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 30,
+          fontSize: 35,
           color: Colors.white,
         ),
       ),

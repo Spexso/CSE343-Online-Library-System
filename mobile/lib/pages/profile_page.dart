@@ -15,7 +15,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   // to do: taken from database
 
-  late String name = "berry lafci";
+  late String name = "Berru Lafcı";
   late String surname = "aaa@gtu.edu.tr";
   late String password = "abcd";
 
@@ -71,7 +71,7 @@ class _ProfilePageState extends State<ProfilePage> {
               SizedBox(
                 width: 100, height: 100,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(100), child: Image.network("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png")),
+                  borderRadius: BorderRadius.circular(100), child: Image.asset('images/blue_profile.jpg')),
               ),
               const SizedBox(height: 40,),
               SizedBox(

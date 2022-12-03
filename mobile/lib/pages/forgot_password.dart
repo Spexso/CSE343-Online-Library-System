@@ -13,12 +13,12 @@ class ForgotPassword extends StatelessWidget {
       decoration: ProjectUtility().customgradient(),
       child: Center(
         child: Container(
-          height: MediaQuery.of(context).size.height / 5 * 2,
+          height: MediaQuery.of(context).size.height / 5 * 2.5,
           width: MediaQuery.of(context).size.width / 5 * 4,
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: const Color.fromRGBO(100, 100, 100, 1),
+            color: Colors.transparent,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -30,7 +30,20 @@ class ForgotPassword extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: TextField(
                     decoration: InputDecoration(
-                        suffixIcon: Icon(Icons.email),
+                        filled: true,
+                        fillColor: const Color.fromRGBO(42, 43, 46, 1),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                          const BorderSide(width: 1.5, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                          const BorderSide(width: 2, color: Colors.white),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        hintStyle: const TextStyle(color: Colors.white),
+                        suffixIcon: const Icon(Icons.email, color: Colors.white,),
                         hintText: "Email Address",
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10))),
