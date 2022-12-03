@@ -144,10 +144,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           });
                         },
                         style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0),),
+                            //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0),),
                             backgroundColor: Colors.yellow
                         ),
-                        child: const Text("Profili Düzenle", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                        child: const Text("Profili Düzenle", style: TextStyle(fontSize: 17),),
                     ),
                   ),
                   IconButton(
@@ -159,7 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
               const SizedBox(height: 20,),
-              const Divider(),
+              const Divider(color: Colors.white54,),
 
               // MENU
               const SizedBox(height: 10,),
@@ -177,7 +177,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       //mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: const [
-                        Text("Cezalar", style: TextStyle(color: Colors.white ),),
+                        Text("Cezalar", style: TextStyle(color: Colors.white, fontSize: 15),),
                         Icon(Icons.keyboard_arrow_right_rounded, color: Colors.grey,)
                       ],
                     ),
@@ -193,14 +193,14 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                          primary: const Color.fromRGBO(100, 100, 100, 1),
+                          backgroundColor: const Color.fromRGBO(100, 100, 100, 1),
                           side: const BorderSide(color: Colors.grey)
                       ),
                       child: Row(
                         //mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: const [
-                          Text("Okunmuş Kitaplar", style: TextStyle(color: Colors.white ),),
+                          Text("Okunmuş Kitaplar", style: TextStyle(color: Colors.white,fontSize: 15 ),),
                           Icon(Icons.keyboard_arrow_right_rounded, color: Colors.grey,)
                         ],
                       ),
@@ -222,7 +222,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       //mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: const[
-                        Text("Çıkış Yap", style: TextStyle(color: Colors.red ),),
+                        Text("Çıkış Yap", style: TextStyle(color: Colors.red, fontSize: 15 ),),
                         Icon(Icons.keyboard_arrow_right_rounded, color: Colors.grey,)
                       ],
                     ),

@@ -4,7 +4,9 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:login_page/manager/requests.dart';
+import 'package:login_page/model/isbn_picture.dart';
 import 'package:login_page/model/isbn_profile.dart';
+import 'dart:typed_data';
 
 import 'book_page.dart';
 
@@ -14,6 +16,8 @@ class LibraryPage extends StatefulWidget {
   final String token;
   const LibraryPage({Key? key, required this.token}) : super(key: key);
 
+
+
   @override
   State<LibraryPage> createState() => _LibraryPageState();
 }
@@ -21,17 +25,22 @@ class LibraryPage extends StatefulWidget {
 class _LibraryPageState extends State<LibraryPage> {
   bool isGridView = false;
 
-  String bookName = "";
-  String bookAuthor = "";
-  String bookPublisher = "";
+  //String bookName = "";
+  //String bookAuthor = "";
+  //String bookPublisher = "";
 
+  //String pictureBase64 = "";
+  var pictureList = List<String>.filled(4, "", growable: false);
   var nameList = List<String>.filled(4, "", growable: false);
   var authorList = List<String>.filled(4, "", growable: false);
   var publisherList = List<String>.filled(4, "", growable: false);
+  var yearList = List<String>.filled(4, "", growable: false);
+  var classNumList = List<String>.filled(4, "", growable: false);
+  var cutterNumList = List<String>.filled(4, "", growable: false);
+  var isbnList = ["0201558025", "0486240614", "0761997601", "9783527308378"];
 
 
   //======================================================
-
   Future<void> isbnProfileState() async {
 
     var url = Uri.parse("http://10.0.2.2:8080/user/isbn-profile");
@@ -102,18 +111,30 @@ class _LibraryPageState extends State<LibraryPage> {
       nameList[0] = resp1.name;
       authorList[0] = resp1.author;
       publisherList[0] = resp1.publisher;
+      yearList[0] = resp1.publicationYear;
+      classNumList[0] = resp1.classNumber;
+      cutterNumList[0] = resp1.cutterNumber;
 
       nameList[1] = resp2.name;
       authorList[1] = resp2.author;
       publisherList[1] = resp2.publisher;
+      yearList[1] = resp2.publicationYear;
+      classNumList[1] = resp2.classNumber;
+      cutterNumList[1] = resp2.cutterNumber;
 
       nameList[2] = resp3.name;
       authorList[2] = resp3.author;
       publisherList[2] = resp3.publisher;
+      yearList[2] = resp3.publicationYear;
+      classNumList[2] = resp3.classNumber;
+      cutterNumList[2] = resp3.cutterNumber;
 
       nameList[3] = resp4.name;
       authorList[3] = resp4.author;
       publisherList[3] = resp4.publisher;
+      yearList[3] = resp4.publicationYear;
+      classNumList[3] = resp4.classNumber;
+      cutterNumList[3] = resp4.cutterNumber;
 
       /*
       bookName = resp.name;
@@ -130,13 +151,94 @@ class _LibraryPageState extends State<LibraryPage> {
       print(resp.message);
 
     }
-    //return resp;
   }
-//======================================================
+  //======================================================
+
+  Future<void> isbnPicture() async {
+
+    var url = Uri.parse("http://10.0.2.2:8080/user/isbn-picture");
+
+    var data1 = {
+      "isbn": "0201558025",
+    };
+    var data2 = {
+      "isbn": "0486240614",
+    };
+    var data3 = {
+      "isbn": "0761997601",
+    };
+    var data4 = {
+      "isbn": "9783527308378",
+    };
+
+    var body1 = json.encode(data1);
+    var body2 = json.encode(data2);
+    var body3 = json.encode(data3);
+    var body4 = json.encode(data4);
+
+
+    print("in picture:");
+    print(widget.token);
+
+    var answer1 = await http.post(
+        url,
+        body: body1,
+        headers: {
+          "Authorization": "Bearer ${widget.token}"}
+    );
+    var answer2 = await http.post(
+        url,
+        body: body2,
+        headers: {
+          "Authorization": "Bearer ${widget.token}"}
+    );
+    var answer3 = await http.post(
+        url,
+        body: body3,
+        headers: {
+          "Authorization": "Bearer ${widget.token}"}
+    );
+    var answer4 = await http.post(
+        url,
+        body: body4,
+        headers: {
+          "Authorization": "Bearer ${widget.token}"}
+    );
+
+
+    IsbnPicture resp1 = IsbnPicture("");
+    IsbnPicture resp2 = IsbnPicture("");
+    IsbnPicture resp3 = IsbnPicture("");
+    IsbnPicture resp4 = IsbnPicture("");
+
+    if((answer1.statusCode == 200) && (answer2.statusCode == 200) && (answer3.statusCode == 200) && (answer4.statusCode == 200)){
+      print("isbn picture success");
+      resp1 = IsbnPicture.fromJson(json.decode(answer1.body));
+      resp2 = IsbnPicture.fromJson(json.decode(answer2.body));
+      resp3 = IsbnPicture.fromJson(json.decode(answer3.body));
+      resp4 = IsbnPicture.fromJson(json.decode(answer4.body));
+      pictureList[0] = resp1.picture;
+      pictureList[1] = resp2.picture;
+      pictureList[2] = resp3.picture;
+      pictureList[3] = resp4.picture;
+      //pictureBase64 = resp1.picture;
+    }
+    else if((answer1.statusCode == 400) || (answer2.statusCode == 400) || (answer3.statusCode == 400) || (answer4.statusCode == 400)){
+      print("isbn picture not success");
+      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer1.body));
+      print(resp.message);
+    }
+  }
+  //======================================================
 
   @override
   void initState() {
-    isbnProfileState();
+    isbnProfileState().then((value){
+
+    });
+    isbnPicture().then((value){
+
+    });
     super.initState();
   }
 
@@ -259,7 +361,16 @@ class _LibraryPageState extends State<LibraryPage> {
                       childAspectRatio: 0.5
                 ),
                 itemBuilder: (context,index){
-                    return BookingGrid(name: nameList[index], author: authorList[index], publisher: publisherList[index],);
+                    return BookingGrid(
+                      name: nameList[index],
+                      author: authorList[index],
+                      publisher: publisherList[index],
+                      picture: pictureList[index],
+                      year: yearList[index],
+                      classNum: classNumList[index],
+                      cutterNum: cutterNumList[index],
+                      isbn: isbnList[index],
+                    );
                 }
               )
             ],
@@ -305,6 +416,7 @@ class _LibraryPageState extends State<LibraryPage> {
                           child: InkWell(
                             borderRadius: BorderRadius.circular(5),
                             onTap: (() {
+
                               setState(() {
                                 isGridView = true;
                               });
@@ -372,7 +484,16 @@ class _LibraryPageState extends State<LibraryPage> {
                 physics: const ClampingScrollPhysics(),
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  return BookingList(name: nameList[index], author: authorList[index], publisher: publisherList[index],);
+                  return BookingList(
+                    name: nameList[index],
+                    author: authorList[index],
+                    publisher: publisherList[index],
+                    picture: pictureList[index],
+                    year: yearList[index],
+                    classNum: classNumList[index],
+                    cutterNum: cutterNumList[index],
+                    isbn: isbnList[index],
+                  );
                 },
               ),
             ],
@@ -386,7 +507,16 @@ class BookingList extends StatefulWidget {
   final String name;
   final String author;
   final String publisher;
-  const BookingList({Key? key,required this.name, required this.author, required this.publisher}) : super(key: key);
+  final String picture;
+  final String year;
+  final String classNum;
+  final String cutterNum;
+  final String isbn;
+  const BookingList({Key? key,
+    required this.name, required this.author,
+    required this.publisher, required this.picture,
+    required this.classNum, required this.cutterNum,
+    required this.isbn, required this.year}) : super(key: key);
 
   @override
   State<BookingList> createState() => _BookingListState();
@@ -408,39 +538,56 @@ class _BookingListState extends State<BookingList> {
           child: InkWell(
             customBorder:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            onTap: () =>{
+            onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const BookPage()),
-              )
+                    builder: (context) =>
+                        BookPage(
+                          name: widget.name,
+                          author: widget.author,
+                          publisher: widget.publisher,
+                          year: widget.year,
+                          classNum: widget.classNum,
+                          cutterNum: widget.cutterNum,
+                          isbn: widget.isbn,
+                          picture: widget.picture,
+                        ),
+                ),
+              );
             },
             child: Row(
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  //child: Image.network("https://kbimages1-a.akamaihd.net/a5312ed2-bc80-4f4c-972b-c24dc5990bd5/1200/1200/False/george-orwell-1984-4.jpg"),
+                  child: SizedBox(
+                    height: 200, width: 150,
+                      child: Image.memory(base64Decode(widget.picture))
+                  ),
                 ),
                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        widget.name,
-                        style: const TextStyle(color: Colors.white, fontSize: 20),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                      Padding(
+                        padding: const EdgeInsets.only(left: 13, right: 13),
+                        child: Text(
+                          widget.name,
+                          style: const TextStyle(color: Colors.white, fontSize: 23, fontWeight: FontWeight.bold),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       Text(
                         widget.author,
-                        style: const TextStyle(color: Colors.white, fontSize: 20),
+                        style: const TextStyle(color: Colors.white, fontSize: 18),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         widget.publisher,
-                        style: const TextStyle(color: Colors.white, fontSize: 20),
+                        style: const TextStyle(color: Colors.white, fontSize: 18),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -462,7 +609,16 @@ class BookingGrid extends StatefulWidget {
   final String name;
   final String author;
   final String publisher;
-  const BookingGrid({Key? key,required this.name, required this.author, required this.publisher}) : super(key: key);
+  final String picture;
+  final String year;
+  final String classNum;
+  final String cutterNum;
+  final String isbn;
+  const BookingGrid({Key? key,
+    required this.name, required this.author,
+    required this.publisher, required this.picture,
+    required this.classNum, required this.cutterNum,
+    required this.isbn, required this.year}) : super(key: key);
 
   @override
   State<BookingGrid> createState() => _BookingGridState();
@@ -484,38 +640,62 @@ class _BookingGridState extends State<BookingGrid> {
         child: InkWell(
           customBorder:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => BookPage(
+                    name: widget.name,
+                    author: widget.author,
+                    publisher: widget.publisher,
+                    year: widget.year,
+                    classNum: widget.classNum,
+                    cutterNum: widget.cutterNum,
+                    isbn: widget.isbn,
+                    picture: widget.picture,
+                  ),),
+            );
+          },
           child: Column(
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(5),
-                //child: Image.network("https://kbimages1-a.akamaihd.net/a5312ed2-bc80-4f4c-972b-c24dc5990bd5/1200/1200/False/george-orwell-1984-4.jpg"),
+                child: SizedBox(
+                  height: 200, width: 150,
+                    child: Image.memory(base64Decode(widget.picture))
+                ),
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
+                  padding: const EdgeInsets.only(top: 7.0, left: 8, right: 8),
                   child: Text(
                     widget.name,
-                    style: const TextStyle(color: Colors.white, fontSize: 20),
+                    style: const TextStyle(color: Colors.white, fontSize: 23, fontWeight: FontWeight.bold),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
               Expanded(
-                child: Text(
-                  widget.author,
-                  style: const TextStyle(color: Colors.white, fontSize: 20),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10,left: 8, right: 8),
+                  child: Text(
+                    widget.author,
+                    style: const TextStyle(color: Colors.white, fontSize: 18),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 )
               ),
               Expanded(
-                child: Text(
-                  widget.publisher,
-                  style: const TextStyle(color: Colors.white, fontSize: 20),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8, right: 8),
+                  child: Text(
+                    widget.publisher,
+                    style: const TextStyle(color: Colors.white, fontSize: 18),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
             ],

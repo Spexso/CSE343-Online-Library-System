@@ -1,8 +1,22 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'new_home_page.dart';
 
 class BookPage extends StatefulWidget {
-  const BookPage({Key? key}) : super(key: key);
+  final String name;
+  final String author;
+  final String publisher;
+  final String picture;
+  final String year;
+  final String classNum;
+  final String cutterNum;
+  final String isbn;
+  const BookPage({Key? key,
+    required this.name, required this.author,
+    required this.publisher, required this.picture,
+    required this.classNum, required this.cutterNum,
+    required this.isbn, required this.year}) : super(key: key);
 
   @override
   State<BookPage> createState() => _BookPageState();
@@ -19,7 +33,7 @@ class _BookPageState extends State<BookPage> {
             Navigator.pop(context);
           },
           icon: const Icon(
-            Icons.chevron_left,
+            Icons.arrow_back,
             color: Colors.white,
           ),
         ),
@@ -42,44 +56,74 @@ class _BookPageState extends State<BookPage> {
             SizedBox(
               height: MediaQuery.of(context).size.width,
               width: MediaQuery.of(context).size.width,
-              child: Image.network(
-                "https://kbimages1-a.akamaihd.net/a5312ed2-bc80-4f4c-972b-c24dc5990bd5/1200/1200/False/george-orwell-1984-4.jpg",
-                fit: BoxFit.contain,
-              ),
+              child: Image.memory(base64Decode(widget.picture), fit: BoxFit.contain,)
             ),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: SizedBox(
                   width: double.infinity,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      const Text(
-                        "Name",
-                        style: TextStyle(
+                      Text(
+                        widget.name,
+                        style: const TextStyle(
                             color: Colors.white,
                             overflow: TextOverflow.ellipsis,
-                            fontSize: 20),
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold
+                        ),
                         maxLines: 2,
                         textAlign: TextAlign.center,
                       ),
-                      const Text(
-                        "Author",
-                        style: TextStyle(
+                      Text(
+                        "by ${widget.author}",
+                        style: const TextStyle(
                             color: Colors.white,
                             overflow: TextOverflow.ellipsis,
-                            fontSize: 20),
+                            fontSize: 20,
+                            fontStyle: FontStyle.italic
+                        ),
                         maxLines: 2,
                         textAlign: TextAlign.center,
                       ),
-                      const Text(
-                        "Publisher",
+                      Text(
+                        "Publisher:  ${widget.publisher}",
                         style: TextStyle(
-                            color: Colors.white,
+                            color: Colors.grey[400],
                             overflow: TextOverflow.ellipsis,
-                            fontSize: 20),
+                            fontSize: 18,
+                        ),
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        "ISBN:  ${widget.isbn}",
+                        style: TextStyle(
+                            color: Colors.grey[400],
+                            overflow: TextOverflow.ellipsis,
+                            fontSize: 18
+                        ),
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        "Class Number:  ${widget.classNum}",
+                        style: TextStyle(
+                            color: Colors.grey[400],
+                            overflow: TextOverflow.ellipsis,
+                            fontSize: 18),
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        "Cutter Number:  ${widget.cutterNum}",
+                        style: TextStyle(
+                            color: Colors.grey[400],
+                            overflow: TextOverflow.ellipsis,
+                            fontSize: 18),
                         maxLines: 2,
                         textAlign: TextAlign.center,
                       ),
@@ -87,20 +131,20 @@ class _BookPageState extends State<BookPage> {
                         alignment: Alignment.center,
                         child: ElevatedButton(
                           style: ButtonStyle(
-                              foregroundColor:
-                              MaterialStateProperty.all(Colors.white),
+                              foregroundColor: MaterialStateProperty.all(Colors.white),
                               overlayColor: MaterialStateProperty.all(
                                   const Color.fromRGBO(80, 80, 80, 1)),
                               backgroundColor: MaterialStateProperty.all(
-                                const Color.fromRGBO(42, 43, 46, 1),
-                              )),
+                                Colors.yellow,
+                              )
+                          ),
                           onPressed: () {},
                           child: const Padding(
                               padding: EdgeInsets.symmetric(
-                                  vertical: 11, horizontal: 35),
+                                  vertical: 13, horizontal: 35),
                               child: Text(
                                 "Talep Et",
-                                style: TextStyle(fontSize: 20),
+                                style: TextStyle(fontSize: 20, color: Colors.black),
                               )),
                         ),
                       ),
