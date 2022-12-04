@@ -17,7 +17,7 @@ class Sidebar extends Component{
 			{index:0, icon:"a", text:"Kitap Ver", content:<InputField fieldName="Kitap Ver" inputFields={["E-mail:", "Kitap ID:"]}/>},
 			{index:1, icon:"b", text:"Kitap Al", content:<InputField fieldName="Kitap Al" inputFields={["E-mail:", "Kitap ID:"]}/>},
 			{index:2, icon:"c", text:"Kitap Kaydet", content:<InputField fieldName="Kitap Kaydet" inputFields={["ISBN:"]}/>},
-			{index:3, icon:"d", text:"Kitap Sil", content:<InputField fieldName="Kitap Sil" inputFields={["Kitap ID:"]}/>},
+			/*{index:3, icon:"d", text:"Kitap Sil", content:<InputField fieldName="Kitap Sil" inputFields={["Kitap ID:"]}/>},*/
 		];
 
 		this.parOnClick=function(index){
