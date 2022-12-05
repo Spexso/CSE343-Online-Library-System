@@ -27,8 +27,5 @@ type IsbnProfile struct {
 	PublicationYear string `json:"publication-year"`
 	ClassNumber     string `json:"class-number"`
 	CutterNumber    string `json:"cutter-number"`
-}
-
-type IsbnPicture struct {
-	Picture string `json:"picture"`
+	Picture         string `json:"picture"`
 }

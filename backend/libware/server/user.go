@@ -15,7 +15,6 @@ import (
 func (l *LibraryHandler) userHandler() http.Handler {
 	router := http.NewServeMux()
 	router.HandleFunc("/isbn-profile", l.isbnProfile)
-	router.HandleFunc("/isbn-picture", l.isbnPicture)
 	router.HandleFunc("/user-profile", l.userProfile)
 	router.HandleFunc("/change-user-name", l.changeUserName)
 	router.HandleFunc("/change-user-email", l.changeUserEmail)

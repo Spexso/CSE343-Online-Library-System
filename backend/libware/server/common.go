@@ -34,41 +34,6 @@ func (l *LibraryHandler) authorize(w http.ResponseWriter, r *http.Request, secre
 	return subject, nil
 }
 
-func (l *LibraryHandler) isbnPicture(w http.ResponseWriter, r *http.Request) {
-	var req requests.IsbnPicture
-	err := helpers.ReadRequest(r.Body, &req)
-	if err != nil || req.Isbn == "" {
-		w.WriteHeader(http.StatusBadRequest)
-		helpers.WriteError(w, errlist.ErrJsonDecoder)
-		if err == nil {
-			err = errlist.ErrJsonDecoder
-		}
-		log.Printf("error: isbn-picture: %v", err)
-		return
-	}
-
-	pictureBlob, err := l.db.IsbnPicture(req.Isbn)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		if errors.Is(err, errlist.ErrIsbnNotExist) {
-			helpers.WriteError(w, errlist.ErrIsbnNotExist)
-		} else {
-			helpers.WriteError(w, errlist.ErrGeneric)
-		}
-		log.Printf("error: isbn-picture: %v", err)
-		return
-	}
-
-	picture := base64.StdEncoding.EncodeToString(pictureBlob)
-
-	response := responses.IsbnPicture{
-		Picture: picture,
-	}
-	helpers.WriteResponse(w, response)
-
-	w.WriteHeader(http.StatusOK)
-}
-
 func (l *LibraryHandler) isbnProfile(w http.ResponseWriter, r *http.Request) {
 	var req requests.IsbnProfile
 	err := helpers.ReadRequest(r.Body, &req)
@@ -78,11 +43,11 @@ func (l *LibraryHandler) isbnProfile(w http.ResponseWriter, r *http.Request) {
 		if err == nil {
 			err = errlist.ErrJsonDecoder
 		}
-		log.Printf("error: isbn-picture: %v", err)
+		log.Printf("error: isbn-profile: %v", err)
 		return
 	}
 
-	name, author, publisher, publicationYear, classNumber, cutterNumber, err := l.db.IsbnProfile(req.Isbn)
+	name, author, publisher, publicationYear, classNumber, cutterNumber, pictureBytes, err := l.db.IsbnProfile(req.Isbn)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		if errors.Is(err, errlist.ErrIsbnNotExist) {
@@ -90,7 +55,7 @@ func (l *LibraryHandler) isbnProfile(w http.ResponseWriter, r *http.Request) {
 		} else {
 			helpers.WriteError(w, errlist.ErrGeneric)
 		}
-		log.Printf("error: isbn-picture: %v", err)
+		log.Printf("error: isbn-profile: %v", err)
 		return
 	}
 
@@ -101,6 +66,7 @@ func (l *LibraryHandler) isbnProfile(w http.ResponseWriter, r *http.Request) {
 		PublicationYear: strconv.FormatInt(int64(publicationYear), 10),
 		ClassNumber:     classNumber,
 		CutterNumber:    cutterNumber,
+		Picture:         base64.StdEncoding.EncodeToString(pictureBytes),
 	}
 	helpers.WriteResponse(w, response)
 

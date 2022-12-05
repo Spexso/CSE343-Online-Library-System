@@ -20,7 +20,6 @@ func (l *LibraryHandler) adminHandler() http.Handler {
 	router.HandleFunc("/isbn-insert", l.isbnInsert)
 	router.HandleFunc("/book-add", l.bookAdd)
 	router.HandleFunc("/isbn-profile", l.isbnProfile)
-	router.HandleFunc("/isbn-picture", l.isbnPicture)
 	router.HandleFunc("/user-profile-with-id", l.userProfileWithId)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		subject, err := l.authorize(w, r, l.adminSecret)

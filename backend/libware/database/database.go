@@ -433,7 +433,7 @@ func (d *Database) UserProfile(id int64) (name string, surname string, email str
 	return
 }
 
-func (d *Database) IsbnProfile(isbn string) (name string, author string, publisher string, publicationYear int16, classNumber string, cutterNumber string, err error) {
+func (d *Database) IsbnProfile(isbn string) (name string, author string, publisher string, publicationYear int16, classNumber string, cutterNumber string, picture []byte, err error) {
 	yes, err := d.IsIsbnExist(isbn)
 	if !yes {
 		err = errlist.ErrIsbnNotExist
@@ -442,33 +442,13 @@ func (d *Database) IsbnProfile(isbn string) (name string, author string, publish
 		return
 	}
 
-	userRow := d.db.QueryRow(`SELECT name, author, publisher, publicationyear, classnumber, cutternumber FROM isbndata WHERE isbn = ?`, isbn)
+	userRow := d.db.QueryRow(`SELECT name, author, publisher, publicationyear, classnumber, cutternumber, picture FROM isbndata WHERE isbn = ?`, isbn)
 	err = userRow.Err()
 	if err != nil {
 		return
 	}
 
-	err = userRow.Scan(&name, &author, &publisher, &publicationYear, &classNumber, &cutterNumber)
-
-	return
-}
-
-func (d *Database) IsbnPicture(isbn string) (picture []byte, err error) {
-	yes, err := d.IsIsbnExist(isbn)
-	if !yes {
-		err = errlist.ErrIsbnNotExist
-		return
-	} else if err != nil {
-		return
-	}
-
-	userRow := d.db.QueryRow(`SELECT picture FROM isbndata WHERE isbn = ?`, isbn)
-	err = userRow.Err()
-	if err != nil {
-		return
-	}
-
-	err = userRow.Scan(&picture)
+	err = userRow.Scan(&name, &author, &publisher, &publicationYear, &classNumber, &cutterNumber, &picture)
 
 	return
 }
