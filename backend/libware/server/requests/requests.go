@@ -41,10 +41,6 @@ type IsbnProfile struct {
 	Isbn string `json:"isbn"`
 }
 
-type IsbnPicture struct {
-	Isbn string `json:"isbn"`
-}
-
 type ChangeUserName struct {
 	NewName    string `json:"new-name"`
 	NewSurname string `json:"new-surname"`
