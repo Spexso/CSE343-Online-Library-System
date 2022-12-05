@@ -291,6 +291,7 @@ empty
       "name": "Concrete mathematics",
       "author": "Ronald L. Graham",
       "publisher": "Addison-Wesley",
+      "publication-year": "1994",
       "class-number": "QA 39.2",
       "cutter-number": "G73",
       "picture": "eWVzc2ly"
