@@ -285,7 +285,17 @@ empty
 
 ```json
 {
-  "isbn-list": ["0201558025"]
+  "isbn-list": [
+    {
+      "isbn": "0201558025",
+      "name": "Concrete mathematics",
+      "author": "Ronald L. Graham",
+      "publisher": "Addison-Wesley",
+      "class-number": "QA 39.2",
+      "cutter-number": "G73",
+      "picture": "eWVzc2ly"
+    }
+  ]
 }
 ```
 
@@ -293,8 +303,9 @@ empty
 
 ```json
 {
-  "name": "Mathematics",
-  "class-number": "QA 37.2"
+  "name": "systems",
+  "year-start": "1996",
+  "year-end": "2007"
 }
 ```
 
@@ -302,7 +313,28 @@ empty
 
 ```json
 {
-  "isbn-list": ["0521406498", "0521406501", "0135641543"]
+  "isbn-list": [
+    {
+      "isbn": "9780471758235",
+      "name": "Urban transit systems and technology",
+      "author": "Vukan R. Vuchic",
+      "publisher": "John Wiley & Sons",
+      "publication-year": "2007",
+      "class-number": "HE 308",
+      "cutter-number": "V83",
+      "picture": "eWVzc2ly"
+    },
+    {
+      "isbn": "0132346265",
+      "name": "Wireless and personal communications systems",
+      "author": "Vijay Kumar. Garg",
+      "publisher": "Prentice-Hall",
+      "publication-year": "1996",
+      "class-number": "TK 5103.2",
+      "cutter-number": "G37",
+      "picture": "eWVzc2ly"
+    }
+  ]
 }
 ```
 
@@ -353,27 +385,7 @@ empty
   "publisher": "Addison-Wesley",
   "publication-year": "1994",
   "class-number": "QA 39.2",
-  "cutter-number": "G73"
-}
-```
-
-### Possible Errors
-
-- err-isbn-not-exist
-
-## isbn-picture
-### Request
-
-```json
-{
-  "isbn": "0201558025"
-}
-```
-
-### Response
-
-```json
-{
+  "cutter-number": "G73",
   "picture": "eWVzc2ly"
 }
 ```
