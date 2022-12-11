@@ -3,6 +3,7 @@ package database
 import (
 	"bytes"
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"strconv"
 	"time"
@@ -10,6 +11,7 @@ import (
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/errlist"
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/helpers"
 	_ "github.com/mattn/go-sqlite3"
+	"golang.org/x/exp/slices"
 )
 
 var ()
@@ -42,7 +44,7 @@ CREATE TABLE users (
 	salt BLOB NOT NULL,
 	queuedbooks TEXT NOT NULL,
 	savedbooks TEXT NOT NULL,
-	forbiddenuntil INTEGER,
+	suspendeduntil INTEGER NOT NULL,
 	accounthistory TEXT NOT NULL,
 	PRIMARY KEY(id),
 	UNIQUE(id, email)
@@ -199,14 +201,14 @@ func (d *Database) UserInsert(name, surname, email, phone, password string) (int
 	hash := helpers.GenerateHash([]byte(password), salt)
 
 	sqlStmt := `
-INSERT INTO users (id, name, surname, email, phone, hash, salt, queuedbooks, savedbooks, forbiddenuntil, accounthistory)
+INSERT INTO users (id, name, surname, email, phone, hash, salt, queuedbooks, savedbooks, suspendeduntil, accounthistory)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 UPDATE configs
 SET value = ?
 WHERE key = "nextuserid";
 `
-	_, err = d.db.Exec(sqlStmt, id, name, surname, email, phone, hash, salt, "[]", "[]", time.Now(), "[]", nextIdValue)
+	_, err = d.db.Exec(sqlStmt, id, name, surname, email, phone, hash, salt, "[]", "[]", time.Now().Unix(), "[]", nextIdValue)
 	if err != nil {
 		return -1, err
 	}
@@ -543,4 +545,195 @@ func (d *Database) ChangeUserPhone(id int64, password string, newPhone string) e
 	}
 
 	return nil
+}
+
+func (d *Database) UserSuspendedUntil(id int64) (timestamp int64, err error) {
+	yes, err := d.IsUserExistWithId(id)
+	if !yes {
+		err = errlist.ErrUserIdNotExist
+		return
+	} else if err != nil {
+		return
+	}
+
+	userRow := d.db.QueryRow(`SELECT suspendeduntil FROM users WHERE id = ?`, id)
+	err = userRow.Err()
+	if err != nil {
+		return
+	}
+
+	err = userRow.Scan(&timestamp)
+	return
+}
+
+func (d *Database) UserAddToSuspension(id int64, seconds int64) error {
+	timestamp, err := d.UserSuspendedUntil(id)
+	if err != nil {
+		return err
+	}
+
+	until := time.Unix(timestamp, 0)
+	now := time.Now()
+	if until.After(now) {
+		until = until.Add(time.Duration(seconds) * time.Second)
+	} else {
+		until = now.Add(time.Duration(seconds) * time.Second)
+	}
+
+	sqlStmt := `UPDATE users
+	SET suspendeduntil = ?
+	WHERE id = ?;
+	`
+	_, err = d.db.Exec(sqlStmt, until.Unix(), id)
+	return err
+}
+
+func (d *Database) IsbnQueue(isbn string) (queue []int64, err error) {
+	yes, err := d.IsIsbnExist(isbn)
+	if !yes {
+		err = errlist.ErrIsbnNotExist
+		return
+	} else if err != nil {
+		return
+	}
+
+	isbnRow := d.db.QueryRow(`SELECT requestqueue FROM isbndata WHERE isbn = ?`, isbn)
+	err = isbnRow.Err()
+	if err != nil {
+		return
+	}
+
+	var queueJson string
+	err = isbnRow.Scan(&queueJson)
+	if err != nil {
+		return
+	}
+
+	err = json.Unmarshal([]byte(queueJson), &queue)
+	return
+}
+
+func (d *Database) UserQueuedBooks(id int64) (queuedBooks []string, err error) {
+	yes, err := d.IsUserExistWithId(id)
+	if !yes {
+		err = errlist.ErrUserIdNotExist
+		return
+	} else if err != nil {
+		return
+	}
+
+	userRow := d.db.QueryRow(`SELECT queuedbooks FROM users WHERE id = ?`, id)
+	err = userRow.Err()
+	if err != nil {
+		return
+	}
+
+	var queuedBooksJson string
+	err = userRow.Scan(&queuedBooksJson)
+	if err != nil {
+		return
+	}
+
+	err = json.Unmarshal([]byte(queuedBooksJson), &queuedBooks)
+	return
+}
+
+func (d *Database) UserEnqueue(id int64, isbn string) error {
+	timestamp, err := d.UserSuspendedUntil(id)
+	if err != nil {
+		return err
+	}
+
+	instant := time.Unix(timestamp, 0)
+	if time.Now().Before(instant) {
+		return errlist.ErrUserSuspended
+	}
+
+	queuedBooks, err := d.UserQueuedBooks(id)
+	if err != nil {
+		return err
+	}
+
+	queue, err := d.IsbnQueue(isbn)
+	if err != nil {
+		return err
+	}
+
+	if slices.Contains(queue, id) {
+		return errlist.ErrUserInQueue
+	}
+
+	queuedBooks = append(queuedBooks, isbn)
+	queue = append(queue, id)
+
+	queuedBooksJson, err := json.Marshal(&queuedBooks)
+	if err != nil {
+		return err
+	}
+
+	queueJson, err := json.Marshal(&queue)
+	if err != nil {
+		return err
+	}
+
+	sqlStmt := `UPDATE users
+	SET queuedbooks = ?
+	WHERE id = ?;
+
+	UPDATE isbndata
+	SET requestqueue = ?
+	WHERE isbn = ?;
+	`
+	_, err = d.db.Exec(sqlStmt, string(queuedBooksJson), id, string(queueJson), isbn)
+	return err
+}
+
+func (d *Database) UserDequeue(id int64, isbn string) error {
+	yes, err := d.IsUserExistWithId(id)
+	if !yes {
+		return errlist.ErrUserIdNotExist
+	} else if err != nil {
+		return err
+	}
+
+	queuedBooks, err := d.UserQueuedBooks(id)
+	if err != nil {
+		return err
+	}
+
+	queue, err := d.IsbnQueue(isbn)
+	if err != nil {
+		return err
+	}
+
+	userIndex := slices.Index(queue, id)
+	if userIndex == -1 {
+		return errlist.ErrUserNotInQueue
+	}
+
+	isbnIndex := slices.Index(queuedBooks, isbn)
+
+	queuedBooks = append(queuedBooks[:isbnIndex], queuedBooks[isbnIndex+1:]...)
+	queue = append(queue[:userIndex], queue[userIndex+1:]...)
+
+	queuedBooksJson, err := json.Marshal(&queuedBooks)
+	if err != nil {
+		return err
+	}
+
+	queueJson, err := json.Marshal(&queue)
+	if err != nil {
+		return err
+	}
+
+	sqlStmt := `UPDATE users
+	SET queuedbooks = ?
+	WHERE id = ?;
+
+	UPDATE isbndata
+	SET requestqueue = ?
+	WHERE isbn = ?;
+	`
+	_, err = d.db.Exec(sqlStmt, string(queuedBooksJson), id, string(queueJson), isbn)
+	return err
 }

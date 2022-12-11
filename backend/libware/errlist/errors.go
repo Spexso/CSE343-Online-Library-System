@@ -39,4 +39,7 @@ var (
 	ErrUserIdNotExist  = New("err-user-id-not-exist", "user id does not exist")
 	ErrAdminIdNotExist = New("err-admin-id-not-exist", "admin id does not exist")
 	ErrBookIdNotExist  = New("err-book-id-not-exist", "book id does not exist")
+	ErrUserSuspended   = New("err-user-suspended", "user is suspended")
+	ErrUserInQueue     = New("err-user-in-queue", "user is already in queue")
+	ErrUserNotInQueue  = New("err-user-not-in-queue", "user is not in queue")
 )
