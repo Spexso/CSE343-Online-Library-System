@@ -16,7 +16,7 @@ import (
 
 const (
 	queueExpirationDuration = time.Duration(2*24) * time.Hour
-	bookBorrowDuration      = time.Duration(14*24) * time.Hour
+	bookBorrowDuration      = time.Second //time.Duration(14*24) * time.Hour
 )
 
 type Database struct {
@@ -958,5 +958,44 @@ func (d *Database) BookBorrow(id int64, userid int64) error {
 	}
 
 	err = d.UserDequeue(userid, isbn)
+	return err
+}
+
+func (d *Database) BookReturn(id int64, userId int64) error {
+	yes, err := d.IsUserExistWithId(userId)
+	if !yes {
+		err = errlist.ErrUserIdNotExist
+		return err
+	} else if err != nil {
+		return err
+	}
+
+	borrowerId, dueDate, err := d.BookBorrowerAndDueDate(id)
+	if err != nil {
+		return err
+	} else if borrowerId != userId {
+		return errlist.ErrUserNotBorrower
+	}
+
+	sqlStmt := `UPDATE books
+	SET userid = ?, duedate = ?
+	WHERE id = ?;
+	`
+	_, err = d.db.Exec(sqlStmt, nil, nil, id)
+	if err != nil {
+		return err
+	}
+
+	now := time.Now()
+	due := time.Unix(dueDate, 0)
+	if now.After(due) {
+		err = d.UserAddToSuspension(userId, now.Sub(due))
+		if err != nil {
+			return err
+		}
+
+		err = d.UserDequeueAll(userId)
+	}
+
 	return err
 }

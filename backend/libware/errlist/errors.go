@@ -45,4 +45,5 @@ var (
 	ErrBookHasNoBorrower = New("err-book-has-no-borrower", "book currently has no borrowers")
 	ErrBookHasBorrower   = New("err-book-has-borrower", "book is currently borrowed")
 	ErrUserNotEligible   = New("err-user-not-eligible", "no books available for user position in queue")
+	ErrUserNotBorrower   = New("err-user-not-borrower", "user is not the borrower of the book")
 )
