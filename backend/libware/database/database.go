@@ -14,7 +14,10 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-const queueExpirationDuration = time.Duration(2*24) * time.Hour
+const (
+	queueExpirationDuration = time.Duration(2*24) * time.Hour
+	bookBorrowDuration      = time.Duration(14*24) * time.Hour
+)
 
 type Database struct {
 	db *sql.DB
@@ -776,7 +779,7 @@ func (d *Database) UserDequeueAll(id int64) error {
 	return err
 }
 
-func (d *Database) IsbnAvailableBooks(isbn string) (count int64, err error) {
+func (d *Database) IsbnAvailableBooksCount(isbn string) (count int64, err error) {
 	yes, err := d.IsIsbnExist(isbn)
 	if !yes {
 		err = errlist.ErrIsbnNotExist
@@ -797,7 +800,7 @@ func (d *Database) IsbnAvailableBooks(isbn string) (count int64, err error) {
 
 func (d *Database) IsbnQueueEnforceInvariants(isbn string) error {
 	now := time.Now()
-	available, err := d.IsbnAvailableBooks(isbn)
+	available, err := d.IsbnAvailableBooksCount(isbn)
 	if err != nil {
 		return err
 	}
@@ -830,5 +833,130 @@ func (d *Database) IsbnQueueEnforceInvariants(isbn string) error {
 	}
 
 	err = d.isbnSetQueue(isbn, queue)
+	return err
+}
+
+func (d *Database) IsbnQueueUserIndex(isbn string, userid int64) (index int64, err error) {
+	yes, err := d.IsUserExistWithId(userid)
+	if !yes {
+		err = errlist.ErrUserIdNotExist
+		return
+	} else if err != nil {
+		return
+	}
+
+	queue, err := d.IsbnQueue(isbn)
+	if err != nil {
+		return
+	}
+
+	index = int64(slices.IndexFunc(queue, func(e QueueEntry) bool {
+		return e.Id == userid
+	}))
+
+	if index == -1 {
+		err = errlist.ErrUserNotInQueue
+	}
+
+	return
+}
+
+func (d *Database) IsbnAvailableToUser(isbn string, userid int64) (availability bool, err error) {
+	// TODO: lacks a check if user has not returned a book that has past due date
+	available, err := d.IsbnAvailableBooksCount(isbn)
+	if err != nil {
+		return
+	}
+
+	index, err := d.IsbnQueueUserIndex(isbn, userid)
+	if err != nil {
+		return
+	}
+
+	availability = index < available
+	return
+}
+
+func (d *Database) IsbnFromBookId(id int64) (isbn string, err error) {
+	yes, err := d.IsBookExistWithId(id)
+	if !yes {
+		err = errlist.ErrBookIdNotExist
+		return
+	} else if err != nil {
+		return
+	}
+
+	row := d.db.QueryRow(`SELECT isbn FROM books WHERE id = ?`, id)
+	err = row.Err()
+	if err != nil {
+		return
+	}
+
+	err = row.Scan(&isbn)
+	return
+}
+
+func (d *Database) BookBorrowerAndDueDate(id int64) (userId int64, dueDate int64, err error) {
+	yes, err := d.IsBookExistWithId(id)
+	if !yes {
+		err = errlist.ErrBookIdNotExist
+		return
+	} else if err != nil {
+		return
+	}
+
+	row := d.db.QueryRow(`SELECT userid, duedate FROM books WHERE id = ?`, id)
+	err = row.Err()
+	if err != nil {
+		return
+	}
+
+	var useridNull, duedateNull sql.NullInt64
+	err = row.Scan(&useridNull, &duedateNull)
+	if err != nil {
+		return
+	} else if !useridNull.Valid {
+		err = errlist.ErrBookHasNoBorrower
+		return
+	} else {
+		userId = useridNull.Int64
+		dueDate = duedateNull.Int64
+	}
+
+	return
+}
+
+func (d *Database) BookBorrow(id int64, userid int64) error {
+	_, _, err := d.BookBorrowerAndDueDate(id)
+	if errors.Is(err, errlist.ErrBookHasNoBorrower) {
+		err = nil
+	} else if err != nil {
+		return err
+	} else {
+		return errlist.ErrBookHasBorrower
+	}
+
+	isbn, err := d.IsbnFromBookId(id)
+	if err != nil {
+		return err
+	}
+
+	availability, err := d.IsbnAvailableToUser(isbn, userid)
+	if err != nil {
+		return err
+	} else if !availability {
+		return errlist.ErrUserNotEligible
+	}
+
+	sqlStmt := `UPDATE books
+	SET userid = ?, duedate = ?
+	WHERE id = ?;
+	`
+	_, err = d.db.Exec(sqlStmt, userid, time.Now().Add(bookBorrowDuration).Unix(), id)
+	if err != nil {
+		return err
+	}
+
+	err = d.UserDequeue(userid, isbn)
 	return err
 }
