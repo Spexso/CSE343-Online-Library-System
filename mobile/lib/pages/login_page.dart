@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
@@ -16,7 +18,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  var snackBar = const SnackBar(content: Text("Login Error", style: TextStyle(fontSize: 25),), width: 10,);
+  var snackBar = const SnackBar(content: Text("Login Error"));
   final _tfEmailController = TextEditingController();
   final _tfKeyController = TextEditingController();
 
@@ -79,36 +81,37 @@ class _LoginPageState extends State<LoginPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: TextField(
+                    keyboardType: TextInputType.emailAddress,
                     style: const TextStyle(color: Colors.white, fontSize: 20),
                     controller: _tfEmailController,
                     decoration: InputDecoration(
-                        filled: true,
-                        fillColor: const Color.fromRGBO(42, 43, 46, 1),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(width: 1.5, color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(width: 2, color: Colors.white),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        hintStyle: const TextStyle(color: Colors.white),
-                        suffixIcon: const Icon(
-                          Icons.mail,
-                          color: Colors.white,
-                        ),
-                        hintText: "Email",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)
-                        ),
+                      filled: true,
+                      fillColor: const Color.fromRGBO(42, 43, 46, 1),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            const BorderSide(width: 1.5, color: Colors.grey),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            const BorderSide(width: 2, color: Colors.white),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      hintStyle: const TextStyle(color: Colors.white),
+                      suffixIcon: const Icon(
+                        Icons.mail,
+                        color: Colors.white,
+                      ),
+                      hintText: "Email",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
                     ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: TextField(
+                    keyboardType: TextInputType.visiblePassword,
                     style: const TextStyle(color: Colors.white, fontSize: 20),
                     obscureText: true,
                     controller: _tfKeyController,
@@ -202,7 +205,7 @@ class _LoginPageState extends State<LoginPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => SignUpPage()),
+                                      builder: (context) => const SignUpPage()),
                                 )
                               },
                           child: const Text('Kayıt Ol',

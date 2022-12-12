@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -17,7 +19,6 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
 
   var snackBar = const SnackBar(
-    width: 10,
       content: Text("Sign Up Error")
   );
 /*
