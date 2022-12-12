@@ -37,8 +37,6 @@ func tryMain() error {
 	}
 	defer db.Close()
 
-	fmt.Println(db.IsbnQueueEnforceInvariants("0201896834"))
-
 	srv := server.New(":8080", db)
 
 	go handleSigint(srv)
