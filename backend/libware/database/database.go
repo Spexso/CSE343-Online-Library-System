@@ -14,7 +14,7 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-var ()
+const queueExpirationDuration = time.Duration(2*24) * time.Hour
 
 type Database struct {
 	db *sql.DB
@@ -773,5 +773,62 @@ func (d *Database) UserDequeueAll(id int64) error {
 
 	queuedBooks = []string{}
 	err = d.userSetQueuedBooks(id, queuedBooks)
+	return err
+}
+
+func (d *Database) IsbnAvailableBooks(isbn string) (count int64, err error) {
+	yes, err := d.IsIsbnExist(isbn)
+	if !yes {
+		err = errlist.ErrIsbnNotExist
+		return
+	} else if err != nil {
+		return
+	}
+
+	row := d.db.QueryRow(`select COUNT(*) from books where isbn = ? and userid is null`, isbn)
+	err = row.Err()
+	if err != nil {
+		return
+	}
+
+	err = row.Scan(&count)
+	return
+}
+
+func (d *Database) IsbnQueueEnforceInvariants(isbn string) error {
+	now := time.Now()
+	available, err := d.IsbnAvailableBooks(isbn)
+	if err != nil {
+		return err
+	}
+
+	queue, err := d.IsbnQueue(isbn)
+	if err != nil {
+		return err
+	}
+
+	for _, entry := range queue {
+		if entry.Until != 0 && now.After(time.Unix(entry.Until, 0)) {
+			d.UserDequeue(entry.Id, isbn)
+		}
+	}
+
+	queue, err = d.IsbnQueue(isbn)
+	if err != nil {
+		return err
+	}
+
+	for i := int64(0); i < available; i++ {
+		if queue[i].Until == 0 {
+			queue[i].Until = now.Add(queueExpirationDuration).Unix()
+		}
+	}
+
+	// because a book was removed
+	for i := available; i < int64(len(queue)); i++ {
+		queue[i].Until = 0
+	}
+
+	err = d.isbnSetQueue(isbn, queue)
 	return err
 }
