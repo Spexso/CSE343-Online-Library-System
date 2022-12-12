@@ -7,23 +7,19 @@ import MainPage from './MainPage';
 
 function App() {
 
-  const adminUser = {
-    email: "admin@admin.com",
-    password: "admin123"
-  }
+  
 
-
-  const [user, setUser] = useState({email: ""});
+  const [guest, setGuest] = useState({name: "", password: ""});
   const [error, setError] = useState("");
 
   const Login = details => {
     console.log(details);
 
-    if(details.email === "" && details.password === "" ){
+    if(details.name === "" && details.password === "" ){
       console.log("Empty Sections");
       setError("E-mail and password are empty");
     }
-    else if(details.email === "" ){
+    else if(details.name === "" ){
       console.log("Empty E-mail");
       setError("E-mail is empty");
     }
@@ -31,30 +27,30 @@ function App() {
       console.log("Empty password");
       setError("Password is empty");
     }
-    else if(details.email === adminUser.email && details.password === adminUser.password){
+    else if(details.name === guest.name && details.password === guest.password){
     console.log("Details matched");
-    setUser({
-      email: details.email,
+    setGuest({
+      name: details.name,
       password: details.password,
     });
-  } else if( details.password === adminUser.password && details.email !== adminUser.email){
-    console.log("Email invalid");
-    setError("Email is wrong");
+  } else if( details.password === guest.password && details.name !== guest.name){
+    console.log("name invalid");
+    setError("name is wrong");
   } 
-    else if( details.password !== adminUser.password && details.email === adminUser.email){
+    else if( details.password !== guest.password && details.name === guest.name){
     console.log("Password invalid");
     setError("Password is wrong");
   }
-  else if( details.password !== adminUser.password && details.email !== adminUser.email){
-    console.log("Email and password invalid");
-    setError("Wrong email and password");
+  else if( details.password !== guest.password && details.name !== guest.name){
+    console.log("name and password invalid");
+    setError("Wrong name and password");
   }
 }
 
 
   const Logout = () => {
     console.log("Logout");
-    setUser({
+    setGuest({
       email: "",
       password: "",
     });
@@ -70,7 +66,7 @@ function App() {
     
     <Route exact path="/CSE343-Online-Library-System" component={LoginForm}>
     <div className="App">
-      { (user.email !== "") ? (
+      { (guest.email !== "") ? (
         <div className="welcome">
           <Link to="/main"> HERE </Link>
           <button onClick={Logout}> Logout </button>
