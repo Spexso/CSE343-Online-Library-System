@@ -566,7 +566,7 @@ func (d *Database) UserSuspendedUntil(id int64) (timestamp int64, err error) {
 	return
 }
 
-func (d *Database) UserAddToSuspension(id int64, seconds int64) error {
+func (d *Database) UserAddToSuspension(id int64, duration time.Duration) error {
 	timestamp, err := d.UserSuspendedUntil(id)
 	if err != nil {
 		return err
@@ -575,9 +575,9 @@ func (d *Database) UserAddToSuspension(id int64, seconds int64) error {
 	until := time.Unix(timestamp, 0)
 	now := time.Now()
 	if until.After(now) {
-		until = until.Add(time.Duration(seconds) * time.Second)
+		until = until.Add(duration)
 	} else {
-		until = now.Add(time.Duration(seconds) * time.Second)
+		until = now.Add(duration)
 	}
 
 	sqlStmt := `UPDATE users
@@ -588,7 +588,12 @@ func (d *Database) UserAddToSuspension(id int64, seconds int64) error {
 	return err
 }
 
-func (d *Database) IsbnQueue(isbn string) (queue []int64, err error) {
+type QueueEntry struct {
+	Until int64 `json:"until"`
+	Id    int64 `json:"id"`
+}
+
+func (d *Database) IsbnQueue(isbn string) (queue []QueueEntry, err error) {
 	yes, err := d.IsIsbnExist(isbn)
 	if !yes {
 		err = errlist.ErrIsbnNotExist
@@ -638,6 +643,34 @@ func (d *Database) UserQueuedBooks(id int64) (queuedBooks []string, err error) {
 	return
 }
 
+func (d *Database) isbnSetQueue(isbn string, queue []QueueEntry) error {
+	queueJson, err := json.Marshal(&queue)
+	if err != nil {
+		return err
+	}
+
+	sqlStmt := `UPDATE isbndata
+	SET requestqueue = ?
+	WHERE isbn = ?;
+	`
+	_, err = d.db.Exec(sqlStmt, string(queueJson), isbn)
+	return err
+}
+
+func (d *Database) userSetQueuedBooks(id int64, queuedBooks []string) error {
+	queuedBooksJson, err := json.Marshal(&queuedBooks)
+	if err != nil {
+		return err
+	}
+
+	sqlStmt := `UPDATE users
+	SET queuedbooks = ?
+	WHERE id = ?;
+	`
+	_, err = d.db.Exec(sqlStmt, string(queuedBooksJson), id)
+	return err
+}
+
 func (d *Database) UserEnqueue(id int64, isbn string) error {
 	timestamp, err := d.UserSuspendedUntil(id)
 	if err != nil {
@@ -659,32 +692,21 @@ func (d *Database) UserEnqueue(id int64, isbn string) error {
 		return err
 	}
 
-	if slices.Contains(queue, id) {
+	if slices.ContainsFunc(queue, func(u QueueEntry) bool {
+		return u.Id == id
+	}) {
 		return errlist.ErrUserInQueue
 	}
 
 	queuedBooks = append(queuedBooks, isbn)
-	queue = append(queue, id)
+	queue = append(queue, QueueEntry{Until: 0, Id: id})
 
-	queuedBooksJson, err := json.Marshal(&queuedBooks)
+	err = d.isbnSetQueue(isbn, queue)
 	if err != nil {
 		return err
 	}
 
-	queueJson, err := json.Marshal(&queue)
-	if err != nil {
-		return err
-	}
-
-	sqlStmt := `UPDATE users
-	SET queuedbooks = ?
-	WHERE id = ?;
-
-	UPDATE isbndata
-	SET requestqueue = ?
-	WHERE isbn = ?;
-	`
-	_, err = d.db.Exec(sqlStmt, string(queuedBooksJson), id, string(queueJson), isbn)
+	err = d.userSetQueuedBooks(id, queuedBooks)
 	return err
 }
 
@@ -706,7 +728,9 @@ func (d *Database) UserDequeue(id int64, isbn string) error {
 		return err
 	}
 
-	userIndex := slices.Index(queue, id)
+	userIndex := slices.IndexFunc(queue, func(e QueueEntry) bool {
+		return e.Id == id
+	})
 	if userIndex == -1 {
 		return errlist.ErrUserNotInQueue
 	}
@@ -716,24 +740,38 @@ func (d *Database) UserDequeue(id int64, isbn string) error {
 	queuedBooks = append(queuedBooks[:isbnIndex], queuedBooks[isbnIndex+1:]...)
 	queue = append(queue[:userIndex], queue[userIndex+1:]...)
 
-	queuedBooksJson, err := json.Marshal(&queuedBooks)
+	err = d.isbnSetQueue(isbn, queue)
 	if err != nil {
 		return err
 	}
 
-	queueJson, err := json.Marshal(&queue)
+	err = d.userSetQueuedBooks(id, queuedBooks)
+	return err
+}
+
+func (d *Database) UserDequeueAll(id int64) error {
+	yes, err := d.IsUserExistWithId(id)
+	if !yes {
+		return errlist.ErrUserIdNotExist
+	} else if err != nil {
+		return err
+	}
+
+	queuedBooks, err := d.UserQueuedBooks(id)
 	if err != nil {
 		return err
 	}
 
-	sqlStmt := `UPDATE users
-	SET queuedbooks = ?
-	WHERE id = ?;
+	for _, isbn := range queuedBooks {
+		queue, _ := d.IsbnQueue(isbn)
+		userIndex := slices.IndexFunc(queue, func(e QueueEntry) bool {
+			return e.Id == id
+		})
+		queue = append(queue[:userIndex], queue[userIndex+1:]...)
+		d.isbnSetQueue(isbn, queue)
+	}
 
-	UPDATE isbndata
-	SET requestqueue = ?
-	WHERE isbn = ?;
-	`
-	_, err = d.db.Exec(sqlStmt, string(queuedBooksJson), id, string(queueJson), isbn)
+	queuedBooks = []string{}
+	err = d.userSetQueuedBooks(id, queuedBooks)
 	return err
 }
