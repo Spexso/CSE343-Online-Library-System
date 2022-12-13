@@ -16,7 +16,7 @@ import (
 
 const (
 	queueExpirationDuration = time.Duration(2*24) * time.Hour
-	bookBorrowDuration      = time.Minute //time.Duration(14*24) * time.Hour
+	bookBorrowDuration      = time.Duration(14*24) * time.Hour
 )
 
 type Database struct {
