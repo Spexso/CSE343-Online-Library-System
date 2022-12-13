@@ -16,7 +16,7 @@ import (
 
 const (
 	queueExpirationDuration = time.Duration(2*24) * time.Hour
-	bookBorrowDuration      = time.Second //time.Duration(14*24) * time.Hour
+	bookBorrowDuration      = time.Minute //time.Duration(14*24) * time.Hour
 )
 
 type Database struct {
@@ -244,14 +244,14 @@ func (d *Database) UserValidate(email, password string) (int64, error) {
 	return id, nil
 }
 
-func (d *Database) UserValidateWithId(id int64, password string) error {
-	if yes, err := d.IsUserExistWithId(id); !yes {
+func (d *Database) UserValidateWithId(userId int64, password string) error {
+	if yes, err := d.IsUserExistWithId(userId); !yes {
 		return errlist.ErrUserIdNotExist
 	} else if err != nil {
 		return err
 	}
 
-	row := d.db.QueryRow(`SELECT hash, salt FROM users WHERE id = ?`, id)
+	row := d.db.QueryRow(`SELECT hash, salt FROM users WHERE id = ?`, userId)
 	var savedHash, salt []byte
 	if err := row.Scan(&savedHash, &salt); err != nil {
 		return err
@@ -418,8 +418,8 @@ WHERE key = "nextbookid";
 	return id, nil
 }
 
-func (d *Database) UserProfile(id int64) (name string, surname string, email string, phone string, err error) {
-	yes, err := d.IsUserExistWithId(id)
+func (d *Database) UserProfile(userId int64) (name string, surname string, email string, phone string, err error) {
+	yes, err := d.IsUserExistWithId(userId)
 	if !yes {
 		err = errlist.ErrUserIdNotExist
 		return
@@ -427,7 +427,7 @@ func (d *Database) UserProfile(id int64) (name string, surname string, email str
 		return
 	}
 
-	userRow := d.db.QueryRow(`SELECT name, surname, email, phone FROM users WHERE id = ?`, id)
+	userRow := d.db.QueryRow(`SELECT name, surname, email, phone FROM users WHERE id = ?`, userId)
 	err = userRow.Err()
 	if err != nil {
 		return
@@ -458,8 +458,8 @@ func (d *Database) IsbnProfile(isbn string) (name string, author string, publish
 	return
 }
 
-func (d *Database) ChangeUserName(id int64, newName string, newSurname string) error {
-	yes, err := d.IsUserExistWithId(id)
+func (d *Database) ChangeUserName(userId int64, newName string, newSurname string) error {
+	yes, err := d.IsUserExistWithId(userId)
 	if !yes {
 		return errlist.ErrUserIdNotExist
 	} else if err != nil {
@@ -471,7 +471,7 @@ func (d *Database) ChangeUserName(id int64, newName string, newSurname string) e
 	SET name = ?, surname = ?
 	WHERE id = ?;
 	`
-	_, err = d.db.Exec(sqlStmt, newName, newSurname, id)
+	_, err = d.db.Exec(sqlStmt, newName, newSurname, userId)
 	if err != nil {
 		return err
 	}
@@ -479,8 +479,8 @@ func (d *Database) ChangeUserName(id int64, newName string, newSurname string) e
 	return nil
 }
 
-func (d *Database) ChangeUserPassword(id int64, oldPassword string, newPassword string) error {
-	err := d.UserValidateWithId(id, oldPassword)
+func (d *Database) ChangeUserPassword(userId int64, oldPassword string, newPassword string) error {
+	err := d.UserValidateWithId(userId, oldPassword)
 	if err != nil {
 		return err
 	}
@@ -497,7 +497,7 @@ func (d *Database) ChangeUserPassword(id int64, oldPassword string, newPassword 
 	SET hash = ?, salt = ?
 	WHERE id = ?;
 	`
-	_, err = d.db.Exec(sqlStmt, hash, salt, id)
+	_, err = d.db.Exec(sqlStmt, hash, salt, userId)
 	if err != nil {
 		return err
 	}
@@ -505,8 +505,8 @@ func (d *Database) ChangeUserPassword(id int64, oldPassword string, newPassword 
 	return nil
 }
 
-func (d *Database) ChangeUserEmail(id int64, password string, newEmail string) error {
-	err := d.UserValidateWithId(id, password)
+func (d *Database) ChangeUserEmail(userId int64, password string, newEmail string) error {
+	err := d.UserValidateWithId(userId, password)
 	if err != nil {
 		return err
 	}
@@ -523,7 +523,7 @@ func (d *Database) ChangeUserEmail(id int64, password string, newEmail string) e
 	SET email = ?
 	WHERE id = ?;
 	`
-	_, err = d.db.Exec(sqlStmt, newEmail, id)
+	_, err = d.db.Exec(sqlStmt, newEmail, userId)
 	if err != nil {
 		return err
 	}
@@ -531,8 +531,8 @@ func (d *Database) ChangeUserEmail(id int64, password string, newEmail string) e
 	return nil
 }
 
-func (d *Database) ChangeUserPhone(id int64, password string, newPhone string) error {
-	err := d.UserValidateWithId(id, password)
+func (d *Database) ChangeUserPhone(userId int64, password string, newPhone string) error {
+	err := d.UserValidateWithId(userId, password)
 	if err != nil {
 		return err
 	}
@@ -542,7 +542,7 @@ func (d *Database) ChangeUserPhone(id int64, password string, newPhone string) e
 	SET phone = ?
 	WHERE id = ?;
 	`
-	_, err = d.db.Exec(sqlStmt, newPhone, id)
+	_, err = d.db.Exec(sqlStmt, newPhone, userId)
 	if err != nil {
 		return err
 	}
@@ -550,8 +550,8 @@ func (d *Database) ChangeUserPhone(id int64, password string, newPhone string) e
 	return nil
 }
 
-func (d *Database) UserSuspendedUntil(id int64) (timestamp int64, err error) {
-	yes, err := d.IsUserExistWithId(id)
+func (d *Database) UserSuspendedUntil(userId int64) (timestamp int64, err error) {
+	yes, err := d.IsUserExistWithId(userId)
 	if !yes {
 		err = errlist.ErrUserIdNotExist
 		return
@@ -559,7 +559,7 @@ func (d *Database) UserSuspendedUntil(id int64) (timestamp int64, err error) {
 		return
 	}
 
-	userRow := d.db.QueryRow(`SELECT suspendeduntil FROM users WHERE id = ?`, id)
+	userRow := d.db.QueryRow(`SELECT suspendeduntil FROM users WHERE id = ?`, userId)
 	err = userRow.Err()
 	if err != nil {
 		return
@@ -569,8 +569,8 @@ func (d *Database) UserSuspendedUntil(id int64) (timestamp int64, err error) {
 	return
 }
 
-func (d *Database) UserAddToSuspension(id int64, duration time.Duration) error {
-	timestamp, err := d.UserSuspendedUntil(id)
+func (d *Database) UserAddToSuspension(userId int64, duration time.Duration) error {
+	timestamp, err := d.UserSuspendedUntil(userId)
 	if err != nil {
 		return err
 	}
@@ -587,7 +587,7 @@ func (d *Database) UserAddToSuspension(id int64, duration time.Duration) error {
 	SET suspendeduntil = ?
 	WHERE id = ?;
 	`
-	_, err = d.db.Exec(sqlStmt, until.Unix(), id)
+	_, err = d.db.Exec(sqlStmt, until.Unix(), userId)
 	return err
 }
 
@@ -621,8 +621,8 @@ func (d *Database) IsbnQueue(isbn string) (queue []QueueEntry, err error) {
 	return
 }
 
-func (d *Database) UserQueuedBooks(id int64) (queuedBooks []string, err error) {
-	yes, err := d.IsUserExistWithId(id)
+func (d *Database) UserQueuedBooks(userId int64) (queuedBooks []string, err error) {
+	yes, err := d.IsUserExistWithId(userId)
 	if !yes {
 		err = errlist.ErrUserIdNotExist
 		return
@@ -630,7 +630,7 @@ func (d *Database) UserQueuedBooks(id int64) (queuedBooks []string, err error) {
 		return
 	}
 
-	userRow := d.db.QueryRow(`SELECT queuedbooks FROM users WHERE id = ?`, id)
+	userRow := d.db.QueryRow(`SELECT queuedbooks FROM users WHERE id = ?`, userId)
 	err = userRow.Err()
 	if err != nil {
 		return
@@ -660,7 +660,7 @@ func (d *Database) isbnSetQueue(isbn string, queue []QueueEntry) error {
 	return err
 }
 
-func (d *Database) userSetQueuedBooks(id int64, queuedBooks []string) error {
+func (d *Database) userSetQueuedBooks(userId int64, queuedBooks []string) error {
 	queuedBooksJson, err := json.Marshal(&queuedBooks)
 	if err != nil {
 		return err
@@ -670,14 +670,30 @@ func (d *Database) userSetQueuedBooks(id int64, queuedBooks []string) error {
 	SET queuedbooks = ?
 	WHERE id = ?;
 	`
-	_, err = d.db.Exec(sqlStmt, string(queuedBooksJson), id)
+	_, err = d.db.Exec(sqlStmt, string(queuedBooksJson), userId)
 	return err
 }
 
-func (d *Database) UserEnqueue(id int64, isbn string) error {
-	timestamp, err := d.UserSuspendedUntil(id)
+func (d *Database) UserEnqueue(userId int64, isbn string) error {
+	timestamp, err := d.UserSuspendedUntil(userId)
 	if err != nil {
 		return err
+	}
+
+	pastDue, err := d.UserHasPastDueBooks(userId)
+	if err != nil {
+		return err
+	} else if pastDue {
+		d.UserDequeueAll(userId)
+		return errlist.ErrPastDue
+	}
+
+	_, isbns, _, err := d.UserBorrowedBooks(userId)
+	if err != nil {
+		return err
+	}
+	if slices.Contains(isbns, isbn) {
+		return errlist.ErrAlreadyBorrowed
 	}
 
 	instant := time.Unix(timestamp, 0)
@@ -685,7 +701,7 @@ func (d *Database) UserEnqueue(id int64, isbn string) error {
 		return errlist.ErrUserSuspended
 	}
 
-	queuedBooks, err := d.UserQueuedBooks(id)
+	queuedBooks, err := d.UserQueuedBooks(userId)
 	if err != nil {
 		return err
 	}
@@ -696,32 +712,32 @@ func (d *Database) UserEnqueue(id int64, isbn string) error {
 	}
 
 	if slices.ContainsFunc(queue, func(u QueueEntry) bool {
-		return u.Id == id
+		return u.Id == userId
 	}) {
 		return errlist.ErrUserInQueue
 	}
 
 	queuedBooks = append(queuedBooks, isbn)
-	queue = append(queue, QueueEntry{Until: 0, Id: id})
+	queue = append(queue, QueueEntry{Until: 0, Id: userId})
 
 	err = d.isbnSetQueue(isbn, queue)
 	if err != nil {
 		return err
 	}
 
-	err = d.userSetQueuedBooks(id, queuedBooks)
+	err = d.userSetQueuedBooks(userId, queuedBooks)
 	return err
 }
 
-func (d *Database) UserDequeue(id int64, isbn string) error {
-	yes, err := d.IsUserExistWithId(id)
+func (d *Database) UserDequeue(userId int64, isbn string) error {
+	yes, err := d.IsUserExistWithId(userId)
 	if !yes {
 		return errlist.ErrUserIdNotExist
 	} else if err != nil {
 		return err
 	}
 
-	queuedBooks, err := d.UserQueuedBooks(id)
+	queuedBooks, err := d.UserQueuedBooks(userId)
 	if err != nil {
 		return err
 	}
@@ -732,7 +748,7 @@ func (d *Database) UserDequeue(id int64, isbn string) error {
 	}
 
 	userIndex := slices.IndexFunc(queue, func(e QueueEntry) bool {
-		return e.Id == id
+		return e.Id == userId
 	})
 	if userIndex == -1 {
 		return errlist.ErrUserNotInQueue
@@ -748,7 +764,7 @@ func (d *Database) UserDequeue(id int64, isbn string) error {
 		return err
 	}
 
-	err = d.userSetQueuedBooks(id, queuedBooks)
+	err = d.userSetQueuedBooks(userId, queuedBooks)
 	return err
 }
 
@@ -821,7 +837,7 @@ func (d *Database) IsbnQueueEnforceInvariants(isbn string) error {
 		return err
 	}
 
-	for i := int64(0); i < available; i++ {
+	for i := int64(0); i < int64(len(queue)) && i < available; i++ {
 		if queue[i].Until == 0 {
 			queue[i].Until = now.Add(queueExpirationDuration).Unix()
 		}
@@ -836,8 +852,8 @@ func (d *Database) IsbnQueueEnforceInvariants(isbn string) error {
 	return err
 }
 
-func (d *Database) IsbnQueueUserIndex(isbn string, userid int64) (index int64, err error) {
-	yes, err := d.IsUserExistWithId(userid)
+func (d *Database) IsbnQueueUserIndex(isbn string, userId int64) (index int64, err error) {
+	yes, err := d.IsUserExistWithId(userId)
 	if !yes {
 		err = errlist.ErrUserIdNotExist
 		return
@@ -851,7 +867,7 @@ func (d *Database) IsbnQueueUserIndex(isbn string, userid int64) (index int64, e
 	}
 
 	index = int64(slices.IndexFunc(queue, func(e QueueEntry) bool {
-		return e.Id == userid
+		return e.Id == userId
 	}))
 
 	if index == -1 {
@@ -861,14 +877,13 @@ func (d *Database) IsbnQueueUserIndex(isbn string, userid int64) (index int64, e
 	return
 }
 
-func (d *Database) IsbnAvailableToUser(isbn string, userid int64) (availability bool, err error) {
-	// TODO: lacks a check if user has not returned a book that has past due date
+func (d *Database) IsbnAvailableToUser(isbn string, userId int64) (availability bool, err error) {
 	available, err := d.IsbnAvailableBooksCount(isbn)
 	if err != nil {
 		return
 	}
 
-	index, err := d.IsbnQueueUserIndex(isbn, userid)
+	index, err := d.IsbnQueueUserIndex(isbn, userId)
 	if err != nil {
 		return
 	}
@@ -877,8 +892,8 @@ func (d *Database) IsbnAvailableToUser(isbn string, userid int64) (availability 
 	return
 }
 
-func (d *Database) IsbnFromBookId(id int64) (isbn string, err error) {
-	yes, err := d.IsBookExistWithId(id)
+func (d *Database) IsbnFromBookId(bookId int64) (isbn string, err error) {
+	yes, err := d.IsBookExistWithId(bookId)
 	if !yes {
 		err = errlist.ErrBookIdNotExist
 		return
@@ -886,7 +901,7 @@ func (d *Database) IsbnFromBookId(id int64) (isbn string, err error) {
 		return
 	}
 
-	row := d.db.QueryRow(`SELECT isbn FROM books WHERE id = ?`, id)
+	row := d.db.QueryRow(`SELECT isbn FROM books WHERE id = ?`, bookId)
 	err = row.Err()
 	if err != nil {
 		return
@@ -896,8 +911,8 @@ func (d *Database) IsbnFromBookId(id int64) (isbn string, err error) {
 	return
 }
 
-func (d *Database) BookBorrowerAndDueDate(id int64) (userId int64, dueDate int64, err error) {
-	yes, err := d.IsBookExistWithId(id)
+func (d *Database) BookBorrowerAndDueDate(bookId int64) (userId int64, dueDate int64, err error) {
+	yes, err := d.IsBookExistWithId(bookId)
 	if !yes {
 		err = errlist.ErrBookIdNotExist
 		return
@@ -905,7 +920,7 @@ func (d *Database) BookBorrowerAndDueDate(id int64) (userId int64, dueDate int64
 		return
 	}
 
-	row := d.db.QueryRow(`SELECT userid, duedate FROM books WHERE id = ?`, id)
+	row := d.db.QueryRow(`SELECT userid, duedate FROM books WHERE id = ?`, bookId)
 	err = row.Err()
 	if err != nil {
 		return
@@ -926,8 +941,16 @@ func (d *Database) BookBorrowerAndDueDate(id int64) (userId int64, dueDate int64
 	return
 }
 
-func (d *Database) BookBorrow(id int64, userid int64) error {
-	_, _, err := d.BookBorrowerAndDueDate(id)
+func (d *Database) BookBorrow(bookId int64, userId int64) error {
+	pastDue, err := d.UserHasPastDueBooks(userId)
+	if err != nil {
+		return err
+	} else if pastDue {
+		d.UserDequeueAll(userId)
+		return errlist.ErrPastDue
+	}
+
+	_, _, err = d.BookBorrowerAndDueDate(bookId)
 	if errors.Is(err, errlist.ErrBookHasNoBorrower) {
 		err = nil
 	} else if err != nil {
@@ -936,12 +959,12 @@ func (d *Database) BookBorrow(id int64, userid int64) error {
 		return errlist.ErrBookHasBorrower
 	}
 
-	isbn, err := d.IsbnFromBookId(id)
+	isbn, err := d.IsbnFromBookId(bookId)
 	if err != nil {
 		return err
 	}
 
-	availability, err := d.IsbnAvailableToUser(isbn, userid)
+	availability, err := d.IsbnAvailableToUser(isbn, userId)
 	if err != nil {
 		return err
 	} else if !availability {
@@ -952,12 +975,12 @@ func (d *Database) BookBorrow(id int64, userid int64) error {
 	SET userid = ?, duedate = ?
 	WHERE id = ?;
 	`
-	_, err = d.db.Exec(sqlStmt, userid, time.Now().Add(bookBorrowDuration).Unix(), id)
+	_, err = d.db.Exec(sqlStmt, userId, time.Now().Add(bookBorrowDuration).Unix(), bookId)
 	if err != nil {
 		return err
 	}
 
-	err = d.UserDequeue(userid, isbn)
+	err = d.UserDequeue(userId, isbn)
 	return err
 }
 
@@ -998,4 +1021,58 @@ func (d *Database) BookReturn(id int64, userId int64) error {
 	}
 
 	return err
+}
+
+func (d *Database) UserBorrowedBooks(userId int64) (bookIds []int64, isbns []string, dueDates []int64, err error) {
+	yes, err := d.IsUserExistWithId(userId)
+	if !yes {
+		err = errlist.ErrUserIdNotExist
+		return
+	} else if err != nil {
+		return
+	}
+
+	rows, err := d.db.Query(`SELECT id, isbn, duedate FROM books WHERE userid = ?`, userId)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			bookId  int64
+			isbn    string
+			dueDate int64
+		)
+
+		err = rows.Scan(&bookId, &isbn, &dueDate)
+		if err != nil {
+			return
+		}
+
+		bookIds = append(bookIds, bookId)
+		isbns = append(isbns, isbn)
+		dueDates = append(dueDates, dueDate)
+	}
+	err = rows.Err()
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+func (d *Database) UserHasPastDueBooks(userId int64) (truth bool, err error) {
+	_, _, dueDates, err := d.UserBorrowedBooks(userId)
+	if err != nil {
+		return
+	}
+
+	now := time.Now()
+	truth = slices.ContainsFunc(dueDates, func(dueDate int64) bool {
+		due := time.Unix(dueDate, 0)
+		return now.After(due)
+	})
+
+	return
 }
