@@ -104,7 +104,7 @@ empty
 
 ### Possible Errors
 
-- err-user-id-not-exist
+empty
 
 ## change-user-name
 ### Request
@@ -122,7 +122,7 @@ empty
 
 ### Possible Errors
 
-- err-user-id-not-exist
+empty
 
 ## change-user-email
 ### Request
@@ -140,7 +140,6 @@ empty
 
 ### Possible Errors
 
-- err-user-id-not-exist
 - err-email-exist
 - err-invalid-password
 
@@ -160,7 +159,6 @@ empty
 
 ### Possible Errors
 
-- err-user-id-not-exist
 - err-invalid-password
 
 ## change-user-password
@@ -179,8 +177,103 @@ empty
 
 ### Possible Errors
 
-- err-user-id-not-exist
 - err-invalid-password
+
+## enqueue
+### Request
+
+```json
+{
+  "isbn": "0486240614"
+}
+```
+
+### Response
+
+empty
+
+### Possible Errors
+
+- err-user-suspended
+- err-past-due
+- err-user-in-queue
+- err-isbn-not-exist
+- err-already-borrowed
+
+## dequeue
+### Request
+
+```json
+{
+  "isbn": "0486240614"
+}
+```
+
+### Response
+
+empty
+
+### Possible Errors
+
+- err-user-not-in-queue
+- err-isbn-not-exist
+
+## suspended-until
+### Request
+
+empty
+
+### Response
+
+```json
+{
+  "timestamp": "1670963325"
+}
+```
+
+**NOTE:** If `timestamp` is in the future, the user won't be able to borrow books or enqueue until then.
+
+### Possible Errors
+
+empty
+
+## queued-books
+### Request
+
+empty
+
+### Response
+
+```json
+{
+  "entries": [
+    {
+      "isbn": "0201896834",
+      "available-books": "1",
+      "position": "1",
+      "valid-until": "1671205349"
+    },
+    {
+      "isbn": "9757929166",
+      "available-books": "2",
+      "position": "1",
+      "valid-until": "1671205525"
+    },
+    {
+      "isbn": "0486240614",
+      "available-books": "1",
+      "position": "2",
+      "valid-until": "0"
+    }
+  ]
+}
+```
+
+**NOTE:** If `valid-until` isn't 0, at `valid-until` moment, the user will be removed from the queue.
+
+### Possible Errors
+
+empty
 
 # /admin/
 
@@ -256,7 +349,6 @@ empty
 ### Possible Errors
 
 - err-user-id-not-exist
-
 
 # /user/ and /admin/
 
