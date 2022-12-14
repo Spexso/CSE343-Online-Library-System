@@ -852,7 +852,7 @@ func (d *Database) IsbnQueueEnforceInvariants(isbn string) error {
 	return err
 }
 
-func (d *Database) IsbnQueueUserIndex(isbn string, userId int64) (index int64, err error) {
+func (d *Database) IsbnQueueUserEntry(isbn string, userId int64) (index int64, validUntil int64, err error) {
 	yes, err := d.IsUserExistWithId(userId)
 	if !yes {
 		err = errlist.ErrUserIdNotExist
@@ -872,6 +872,8 @@ func (d *Database) IsbnQueueUserIndex(isbn string, userId int64) (index int64, e
 
 	if index == -1 {
 		err = errlist.ErrUserNotInQueue
+	} else {
+		validUntil = queue[index].Until
 	}
 
 	return
@@ -883,7 +885,7 @@ func (d *Database) IsbnAvailableToUser(isbn string, userId int64) (availability 
 		return
 	}
 
-	index, err := d.IsbnQueueUserIndex(isbn, userId)
+	index, _, err := d.IsbnQueueUserEntry(isbn, userId)
 	if err != nil {
 		return
 	}
@@ -1073,6 +1075,31 @@ func (d *Database) UserHasPastDueBooks(userId int64) (truth bool, err error) {
 		due := time.Unix(dueDate, 0)
 		return now.After(due)
 	})
+
+	return
+}
+
+func (d *Database) UserQueuedBooksDetailed(userId int64) (isbns []string, availableBooks []int64, indexes []int64, validUntils []int64, err error) {
+	isbns, err = d.UserQueuedBooks(userId)
+	if err != nil {
+		return
+	}
+
+	indexes = make([]int64, len(isbns))
+	validUntils = make([]int64, len(isbns))
+	availableBooks = make([]int64, len(isbns))
+
+	for i, isbn := range isbns {
+		indexes[i], validUntils[i], err = d.IsbnQueueUserEntry(isbn, userId)
+		if err != nil {
+			return
+		}
+
+		availableBooks[i], err = d.IsbnAvailableBooksCount(isbn)
+		if err != nil {
+			return
+		}
+	}
 
 	return
 }

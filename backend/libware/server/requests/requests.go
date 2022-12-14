@@ -60,3 +60,11 @@ type ChangeUserPassword struct {
 	OldPassword string `json:"old-password"`
 	NewPassword string `json:"new-password"`
 }
+
+type Enqueue struct {
+	Isbn string `json:"isbn"`
+}
+
+type Dequeue struct {
+	Isbn string `json:"isbn"`
+}
