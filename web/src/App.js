@@ -4,11 +4,12 @@ import { BrowserRouter as Router, Route, Switch, } from 'react-router-dom';
 import { Link } from "react-router-dom"; 
 import Loading from "./components/Loading";
 import MainPage from './MainPage';
+import Booklist from "./components/Booklist";
+import Userlist from "./components/Userlist";
 
 function App() {
 
   
-
   const [guest, setGuest] = useState({name: "", password: ""});
   const [error, setError] = useState("");
 
@@ -81,6 +82,14 @@ function App() {
 
     <Route exact path="/main">
       <MainPage/>
+    </Route>
+
+    <Route exact path="/bookList">
+      <Booklist/>
+    </Route>
+
+    <Route exact path="/userlist">
+      <Userlist/>
     </Route>
     
     </Switch>
