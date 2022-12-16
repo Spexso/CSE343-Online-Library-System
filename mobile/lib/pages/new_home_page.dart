@@ -30,7 +30,7 @@ class _NewHomePageState extends State<NewHomePage> {
 
     _children = [
       LibraryPage(token: _token),
-      const SavedPage(),
+       SavedPage(token: _token),
       const RequestsPage(),
       const ProfilePage(),
     ];
