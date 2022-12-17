@@ -275,6 +275,19 @@ empty
 
 empty
 
+## mark-presence
+### Request
+
+empty
+
+### Response
+
+empty
+
+### Possible Errors
+
+empty
+
 # /admin/
 
 The client must put the token returned with admin-login response in the Authorization header using the Bearer schema.\
@@ -349,6 +362,52 @@ empty
 ### Possible Errors
 
 - err-user-id-not-exist
+
+## book-borrow
+### Request
+
+```json
+{
+  "book-id": "13",
+  "user-id": "4"
+}
+```
+
+### Response
+
+empty
+
+### Possible Errors
+
+- err-user-id-not-exist
+- err-book-id-not-exist
+- err-session-not-exist
+- err-user-not-present
+- err-past-due
+- err-book-has-borrower
+- err-user-not-eligible
+- err-user-not-in-queue
+
+## book-return
+### Request
+
+```json
+{
+  "book-id": "13",
+  "user-id": "4"
+}
+```
+
+### Response
+
+empty
+
+### Possible Errors
+
+- err-user-id-not-exist
+- err-book-id-not-exist
+- err-book-has-no-borrower
+- err-user-not-borrower
 
 # /user/ and /admin/
 
