@@ -20,10 +20,11 @@ func (l *LibraryHandler) userHandler() http.Handler {
 	router.HandleFunc("/change-user-email", l.changeUserEmail)
 	router.HandleFunc("/change-user-phone", l.changeUserPhone)
 	router.HandleFunc("/change-user-password", l.changeUserPassword)
-	router.HandleFunc("/enqueue", l.Enqueue)
-	router.HandleFunc("/dequeue", l.Dequeue)
-	router.HandleFunc("/suspended-until", l.SuspendedUntil)
-	router.HandleFunc("/queued-books", l.QueuedBooks)
+	router.HandleFunc("/enqueue", l.enqueue)
+	router.HandleFunc("/dequeue", l.dequeue)
+	router.HandleFunc("/suspended-until", l.suspendedUntil)
+	router.HandleFunc("/queued-books", l.queuedBooks)
+	router.HandleFunc("/mark-presence", l.markPresence)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		subject, err := l.authorize(w, r, l.userSecret)
 		if err != nil {
@@ -216,7 +217,7 @@ func (l *LibraryHandler) changeUserPassword(w http.ResponseWriter, r *http.Reque
 	w.WriteHeader(http.StatusOK)
 }
 
-func (l *LibraryHandler) Enqueue(w http.ResponseWriter, r *http.Request) {
+func (l *LibraryHandler) enqueue(w http.ResponseWriter, r *http.Request) {
 	var req requests.Enqueue
 	err := helpers.ReadRequest(r.Body, &req)
 	if err != nil || req.Isbn == "" {
@@ -262,7 +263,7 @@ func (l *LibraryHandler) Enqueue(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (l *LibraryHandler) Dequeue(w http.ResponseWriter, r *http.Request) {
+func (l *LibraryHandler) dequeue(w http.ResponseWriter, r *http.Request) {
 	var req requests.Dequeue
 	err := helpers.ReadRequest(r.Body, &req)
 	if err != nil || req.Isbn == "" {
@@ -302,7 +303,7 @@ func (l *LibraryHandler) Dequeue(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (l *LibraryHandler) SuspendedUntil(w http.ResponseWriter, r *http.Request) {
+func (l *LibraryHandler) suspendedUntil(w http.ResponseWriter, r *http.Request) {
 	idString := r.Header.Get("Subject")
 
 	id, err := strconv.ParseInt(idString, 10, 64)
@@ -329,7 +330,7 @@ func (l *LibraryHandler) SuspendedUntil(w http.ResponseWriter, r *http.Request) 
 	w.WriteHeader(http.StatusOK)
 }
 
-func (l *LibraryHandler) QueuedBooks(w http.ResponseWriter, r *http.Request) {
+func (l *LibraryHandler) queuedBooks(w http.ResponseWriter, r *http.Request) {
 	idString := r.Header.Get("Subject")
 
 	id, err := strconv.ParseInt(idString, 10, 64)
@@ -370,6 +371,32 @@ func (l *LibraryHandler) QueuedBooks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	helpers.WriteResponse(w, response)
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func (l *LibraryHandler) markPresence(w http.ResponseWriter, r *http.Request) {
+	idString := r.Header.Get("Subject")
+
+	id, err := strconv.ParseInt(idString, 10, 64)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrGeneric)
+		log.Printf("error: mark-presence: %v", err)
+		return
+	}
+
+	err = l.userSessions.ResetCanBorrowUntil(id)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		if errors.Is(err, errlist.ErrSessionNotExist) {
+			helpers.WriteError(w, errlist.ErrSessionNotExist)
+		} else {
+			helpers.WriteError(w, errlist.ErrGeneric)
+		}
+		log.Printf("error: mark-presence: %v", err)
+		return
+	}
 
 	w.WriteHeader(http.StatusOK)
 }

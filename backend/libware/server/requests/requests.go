@@ -68,3 +68,13 @@ type Enqueue struct {
 type Dequeue struct {
 	Isbn string `json:"isbn"`
 }
+
+type BookBorrow struct {
+	BookId string `json:"book-id"`
+	UserId string `json:"user-id"`
+}
+
+type BookReturn struct {
+	BookId string `json:"book-id"`
+	UserId string `json:"user-id"`
+}

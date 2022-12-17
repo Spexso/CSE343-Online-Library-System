@@ -33,6 +33,7 @@ var (
 	ErrInvalidPassword   = New("err-invalid-password", "password is invalid")
 	ErrJsonDecoder       = New("err-json-decoder", "malformed json input")
 	ErrSessionExist      = New("err-session-exist", "session already exists")
+	ErrSessionNotExist   = New("err-sesion-not-exist", "session does not exist")
 	ErrToken             = New("err-token", "token is invalid")
 	ErrAuthorization     = New("err-authorization", "authorization header or bearer schema is malformed")
 	ErrBase64Decoder     = New("err-base64-decoder", "malformed base64 input")
@@ -48,4 +49,5 @@ var (
 	ErrUserNotBorrower   = New("err-user-not-borrower", "user is not the borrower of the book")
 	ErrPastDue           = New("err-past-due", "user has not returned a book in time")
 	ErrAlreadyBorrowed   = New("err-already-borrowed", "user has already borrowed the book")
+	ErrUserNotPresent    = New("err-user-not-present", "user has not marked their presence")
 )
