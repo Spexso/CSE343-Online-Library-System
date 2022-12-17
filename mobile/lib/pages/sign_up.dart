@@ -17,7 +17,6 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
 
   var snackBar = const SnackBar(
-    width: 10,
       content: Text("Sign Up Error")
   );
 /*

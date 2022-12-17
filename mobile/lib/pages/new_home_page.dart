@@ -53,8 +53,8 @@ class _NewHomePageState extends State<NewHomePage> {
         automaticallyImplyLeading: false,
         backgroundColor: const Color.fromRGBO(42, 43, 46, 1),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.notifications)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.settings))
+          IconButton(onPressed: () {}, icon: const Icon(Icons.notifications, color: Colors.white,)),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.settings, color: Colors.white,))
         ],
       ),
       body: _children[_selectedIndex],

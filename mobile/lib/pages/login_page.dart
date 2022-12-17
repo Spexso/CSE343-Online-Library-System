@@ -16,7 +16,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  var snackBar = const SnackBar(content: Text("Login Error", style: TextStyle(fontSize: 25),), width: 10,);
+  var snackBar = const SnackBar(content: Text("Login Error"));
   final _tfEmailController = TextEditingController();
   final _tfKeyController = TextEditingController();
 
