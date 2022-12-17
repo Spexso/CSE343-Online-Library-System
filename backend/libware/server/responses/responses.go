@@ -27,8 +27,19 @@ type IsbnProfile struct {
 	PublicationYear string `json:"publication-year"`
 	ClassNumber     string `json:"class-number"`
 	CutterNumber    string `json:"cutter-number"`
+	Picture         string `json:"picture"`
 }
 
-type IsbnPicture struct {
-	Picture string `json:"picture"`
+type SuspendedUntil struct {
+	Timestamp string `json:"timestamp"`
+}
+
+type QueuedBookEntry struct {
+	Isbn           string `json:"isbn"`
+	AvailableBooks string `json:"available-books"`
+	Position       string `json:"position"`
+	ValidUntil     string `json:"valid-until"`
+}
+type QueuedBooks struct {
+	Entries []QueuedBookEntry `json:"entries"`
 }

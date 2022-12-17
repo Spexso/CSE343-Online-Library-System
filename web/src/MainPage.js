@@ -1,5 +1,6 @@
 import React from "react";
-import './MainPage.css'
+import './components/Sidebar'
+import { Sidebar } from "./components/Sidebar";
 
 const MainPage = () => {
 
@@ -7,7 +8,7 @@ const MainPage = () => {
     return (
         <div className="text">
             <h1>
-            <h2> MAIN PAGE <span> ,Admin </span></h2>
+            <Sidebar></Sidebar>
             </h1>
         </div>
     );

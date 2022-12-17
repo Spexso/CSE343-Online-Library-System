@@ -1,0 +1,17 @@
+.inputField{
+	/*display: flex;
+	flex-direction: column;
+	text-align: center;*/
+	border: 3px solid rgb(226, 231, 221);
+	/*margin: 10px 5px;*/
+}
+
+ul{
+	list-style-type: none;
+}
+
+button{
+	background-color: white;
+	width: 100px;
+	align-self: center;
+}

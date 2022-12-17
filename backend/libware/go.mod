@@ -9,5 +9,6 @@ require (
 
 require (
 	github.com/golang-jwt/jwt/v4 v4.4.2
+	golang.org/x/exp v0.0.0-20221211140036-ad323defaf05
 	golang.org/x/sys v0.1.0 // indirect
 )

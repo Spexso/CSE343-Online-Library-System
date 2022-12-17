@@ -25,7 +25,7 @@ class ForgotPassword extends StatelessWidget {
             children: [
               const CustomTitle(str: 'Şifremi Unuttum'),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 25),
+                padding: const EdgeInsets.symmetric(vertical: 25),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: TextField(
@@ -34,16 +34,19 @@ class ForgotPassword extends StatelessWidget {
                         fillColor: const Color.fromRGBO(42, 43, 46, 1),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                          const BorderSide(width: 1.5, color: Colors.grey),
+                              const BorderSide(width: 1.5, color: Colors.grey),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                          const BorderSide(width: 2, color: Colors.white),
+                              const BorderSide(width: 2, color: Colors.white),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         hintStyle: const TextStyle(color: Colors.white),
-                        suffixIcon: const Icon(Icons.email, color: Colors.white,),
+                        suffixIcon: const Icon(
+                          Icons.email,
+                          color: Colors.white,
+                        ),
                         hintText: "Email Address",
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10))),

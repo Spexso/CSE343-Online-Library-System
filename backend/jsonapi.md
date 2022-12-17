@@ -104,7 +104,7 @@ empty
 
 ### Possible Errors
 
-- err-user-id-not-exist
+empty
 
 ## change-user-name
 ### Request
@@ -122,7 +122,7 @@ empty
 
 ### Possible Errors
 
-- err-user-id-not-exist
+empty
 
 ## change-user-email
 ### Request
@@ -140,7 +140,6 @@ empty
 
 ### Possible Errors
 
-- err-user-id-not-exist
 - err-email-exist
 - err-invalid-password
 
@@ -160,7 +159,6 @@ empty
 
 ### Possible Errors
 
-- err-user-id-not-exist
 - err-invalid-password
 
 ## change-user-password
@@ -179,8 +177,116 @@ empty
 
 ### Possible Errors
 
-- err-user-id-not-exist
 - err-invalid-password
+
+## enqueue
+### Request
+
+```json
+{
+  "isbn": "0486240614"
+}
+```
+
+### Response
+
+empty
+
+### Possible Errors
+
+- err-user-suspended
+- err-past-due
+- err-user-in-queue
+- err-isbn-not-exist
+- err-already-borrowed
+
+## dequeue
+### Request
+
+```json
+{
+  "isbn": "0486240614"
+}
+```
+
+### Response
+
+empty
+
+### Possible Errors
+
+- err-user-not-in-queue
+- err-isbn-not-exist
+
+## suspended-until
+### Request
+
+empty
+
+### Response
+
+```json
+{
+  "timestamp": "1670963325"
+}
+```
+
+**NOTE:** If `timestamp` is in the future, the user won't be able to borrow books or enqueue until then.
+
+### Possible Errors
+
+empty
+
+## queued-books
+### Request
+
+empty
+
+### Response
+
+```json
+{
+  "entries": [
+    {
+      "isbn": "0201896834",
+      "available-books": "1",
+      "position": "1",
+      "valid-until": "1671205349"
+    },
+    {
+      "isbn": "9757929166",
+      "available-books": "2",
+      "position": "1",
+      "valid-until": "1671205525"
+    },
+    {
+      "isbn": "0486240614",
+      "available-books": "1",
+      "position": "2",
+      "valid-until": "0"
+    }
+  ]
+}
+```
+
+**NOTE:** If `valid-until` isn't 0, at `valid-until` moment, the user will be removed from the queue.
+
+### Possible Errors
+
+empty
+
+## mark-presence
+### Request
+
+empty
+
+### Response
+
+empty
+
+### Possible Errors
+
+empty
 
 # /admin/
 
@@ -257,6 +363,51 @@ empty
 
 - err-user-id-not-exist
 
+## book-borrow
+### Request
+
+```json
+{
+  "book-id": "13",
+  "user-id": "4"
+}
+```
+
+### Response
+
+empty
+
+### Possible Errors
+
+- err-user-id-not-exist
+- err-book-id-not-exist
+- err-session-not-exist
+- err-user-not-present
+- err-past-due
+- err-book-has-borrower
+- err-user-not-eligible
+- err-user-not-in-queue
+
+## book-return
+### Request
+
+```json
+{
+  "book-id": "13",
+  "user-id": "4"
+}
+```
+
+### Response
+
+empty
+
+### Possible Errors
+
+- err-user-id-not-exist
+- err-book-id-not-exist
+- err-book-has-no-borrower
+- err-user-not-borrower
 
 # /user/ and /admin/
 
@@ -285,7 +436,18 @@ empty
 
 ```json
 {
-  "isbn-list": ["0201558025"]
+  "isbn-list": [
+    {
+      "isbn": "0201558025",
+      "name": "Concrete mathematics",
+      "author": "Ronald L. Graham",
+      "publisher": "Addison-Wesley",
+      "publication-year": "1994",
+      "class-number": "QA 39.2",
+      "cutter-number": "G73",
+      "picture": "eWVzc2ly"
+    }
+  ]
 }
 ```
 
@@ -293,8 +455,9 @@ empty
 
 ```json
 {
-  "name": "Mathematics",
-  "class-number": "QA 37.2"
+  "name": "systems",
+  "year-start": "1996",
+  "year-end": "2007"
 }
 ```
 
@@ -302,7 +465,28 @@ empty
 
 ```json
 {
-  "isbn-list": ["0521406498", "0521406501", "0135641543"]
+  "isbn-list": [
+    {
+      "isbn": "9780471758235",
+      "name": "Urban transit systems and technology",
+      "author": "Vukan R. Vuchic",
+      "publisher": "John Wiley & Sons",
+      "publication-year": "2007",
+      "class-number": "HE 308",
+      "cutter-number": "V83",
+      "picture": "eWVzc2ly"
+    },
+    {
+      "isbn": "0132346265",
+      "name": "Wireless and personal communications systems",
+      "author": "Vijay Kumar. Garg",
+      "publisher": "Prentice-Hall",
+      "publication-year": "1996",
+      "class-number": "TK 5103.2",
+      "cutter-number": "G37",
+      "picture": "eWVzc2ly"
+    }
+  ]
 }
 ```
 
@@ -353,27 +537,7 @@ empty
   "publisher": "Addison-Wesley",
   "publication-year": "1994",
   "class-number": "QA 39.2",
-  "cutter-number": "G73"
-}
-```
-
-### Possible Errors
-
-- err-isbn-not-exist
-
-## isbn-picture
-### Request
-
-```json
-{
-  "isbn": "0201558025"
-}
-```
-
-### Response
-
-```json
-{
+  "cutter-number": "G73",
   "picture": "eWVzc2ly"
 }
 ```

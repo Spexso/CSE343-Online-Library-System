@@ -7,33 +7,58 @@ import '../Loading.css';
 
 function LoginForm({Login, error}) {
     
+
+    const [name, setName] = useState("");
+    const [password, setPassword] = useState("");
     const history = useHistory();
-    const [details, setDetails] = useState({email: "", password: ""});
     const [isPending, setIsPending] = useState('false');
     
 
     const submitHandler = e => {
+        console.log(name);
+        console.log(password);
+        setIsPending(true);
         e.preventDefault();
         
-        setIsPending(true);
-
-        Login(details);
-        
-        if(details.email === "admin@admin.com" && details.password === "admin123")
-        {
             fetch('http://localhost:8080/guest/admin-login', {
                 method: 'POST',
                 headers: { "Content-Type": "application/json"},
                 body: JSON.stringify({
-                    name: details.email,
-                    password: details.password,
+                    name: name,
+                    password: password,
                 }),
-            }).then(() => {
-                console.log("Details sent to Server");
-                setIsPending(false);
+            }).then( res => {
+                return res.json();
             })
-            history.push('/main');
-        }
+            .then((data) => {
+                console.log("Requested login to Server");
+                console.log(data);
+
+                if(data.message === "name is not registered") 
+                {
+                    console.log("Invalid name");
+                    setIsPending(true);
+                }
+                else if(data.message === "malformed json input")
+                {
+                    console.log("Empty string");
+                    setIsPending(true);
+                }
+                else
+                {   
+                    const token = data.token;
+                    console.log("------------");
+                    console.log(token);
+                    console.log("------------");
+                    setIsPending(false);
+                    history.push('/main');
+                    console.log(data.message);
+                }               
+            }).catch( err => {
+                console.log("Catch here");
+                console.log(err);
+            })
+            
     }
 
   return (
@@ -44,12 +69,12 @@ function LoginForm({Login, error}) {
             </div>
             
             <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <input type="email" name="email" id="email" onChange={e => setDetails({...details, email: e.target.value})} value={details.email}/>
+                <label htmlFor="name">Name</label>
+                <input type="name" name="name" onChange={ (e) => setName(e.target.value)} />
             </div>
             <div className="form-group">
                 <label htmlFor="password">Password</label>
-                <input type="password" name="password" id="password" onChange={e => setDetails({...details, password: e.target.value})} value={details.password} />
+                <input type="password" name="password"  onChange={ (e) => setPassword(e.target.value)}  />
             </div>
 
             {(error !== "") ? ( 

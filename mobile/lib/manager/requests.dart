@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
@@ -7,7 +9,6 @@ import '../model/isbn_profile.dart';
 import '../model/login.dart';
 
 class Requests {
-
   String email = "";
   String password = "";
   late String token;
@@ -15,7 +16,6 @@ class Requests {
   static Requests singleInstance = Requests();
 
   static Requests getInstance() {
-
     singleInstance = Requests();
     return singleInstance;
   }
@@ -36,16 +36,12 @@ class Requests {
       "password": password,
     };
 
-    var answer = await http.post(
-      url,
-      body: data
-    );
+    var answer = await http.post(url, body: data);
 
     if (answer.statusCode == 200) {
       print("sucsesss signup 200");
       return true;
-    }
-    else {
+    } else {
       print("errorr signup");
       ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
 
@@ -54,7 +50,6 @@ class Requests {
   }
 
   Future<Login> loginState() async {
-
     var url = Uri.parse("http://10.0.2.2:8080/guest/user-login");
     var data = {
       "email": email,
@@ -63,30 +58,25 @@ class Requests {
 
     var body = json.encode(data);
 
-    var answer = await http.post(
-        url,
-        body: body
-    );
+    var answer = await http.post(url, body: body);
 
     Login resp = Login("");
 
     print("all log in");
 
-    if(answer.statusCode == 200){
+    if (answer.statusCode == 200) {
       print("login success");
       resp = Login.fromJson(json.decode(answer.body));
       token = resp.token;
       print("in login:");
       print(token);
       return resp;
-    }
-    else if(answer.statusCode == 400){
+    } else if (answer.statusCode == 400) {
       print("login not success");
       ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
       print(resp.message);
       //return false;
-    }
-    else {
+    } else {
       print("not 200 and 400");
       //return false;
     }
@@ -100,7 +90,6 @@ class Requests {
   //String bookPublisher = "";
 
   Future<IsbnProfile> isbnProfileState() async {
-
     var url = Uri.parse("http://10.0.2.2:8080/user/isbn-profile");
     var data = {
       "isbn": "0201558025",
@@ -111,16 +100,12 @@ class Requests {
     print("in isbn:");
     print(token);
 
-    var answer = await http.post(
-        url,
-        body: body,
-        headers: {
-          "Authorization": "Bearer $token"}
-    );
+    var answer = await http
+        .post(url, body: body, headers: {"Authorization": "Bearer $token"});
 
     IsbnProfile resp = IsbnProfile("", "", "", "", "", "");
 
-    if(answer.statusCode == 200){
+    if (answer.statusCode == 200) {
       print("isbn profile success");
       resp = IsbnProfile.fromJson(json.decode(answer.body));
       return resp;
@@ -130,17 +115,14 @@ class Requests {
       print(bookName);
       print(bookAuthor);
       print(bookPublisher); */
-    }
-    else if(answer.statusCode == 400){
+    } else if (answer.statusCode == 400) {
       print("isbn profile not success");
       ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
       print(resp.message);
-
     }
 
     return resp;
   }
 //======================================================
-
 
 }

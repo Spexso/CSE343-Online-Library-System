@@ -20,8 +20,9 @@ func (l *LibraryHandler) adminHandler() http.Handler {
 	router.HandleFunc("/isbn-insert", l.isbnInsert)
 	router.HandleFunc("/book-add", l.bookAdd)
 	router.HandleFunc("/isbn-profile", l.isbnProfile)
-	router.HandleFunc("/isbn-picture", l.isbnPicture)
 	router.HandleFunc("/user-profile-with-id", l.userProfileWithId)
+	router.HandleFunc("/book-borrow", l.bookBorrow)
+	router.HandleFunc("/book-return", l.bookReturn)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		subject, err := l.authorize(w, r, l.adminSecret)
 		if err != nil {
@@ -149,6 +150,127 @@ func (l *LibraryHandler) userProfileWithId(w http.ResponseWriter, r *http.Reques
 		Phone:   phone,
 	}
 	helpers.WriteResponse(w, response)
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func (l *LibraryHandler) bookBorrow(w http.ResponseWriter, r *http.Request) {
+	var req requests.BookBorrow
+	err := helpers.ReadRequest(r.Body, &req)
+	if err != nil || req.BookId == "" || req.UserId == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrJsonDecoder)
+		if err == nil {
+			err = errlist.ErrJsonDecoder
+		}
+		log.Printf("error: book-borrow: %v", err)
+		return
+	}
+
+	bookId, err := strconv.ParseInt(req.BookId, 10, 64)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrGeneric)
+		log.Printf("error: book-borrow: %v", err)
+		return
+	}
+
+	userId, err := strconv.ParseInt(req.UserId, 10, 64)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrGeneric)
+		log.Printf("error: book-borrow: %v", err)
+		return
+	}
+
+	yes, err := l.userSessions.IsCanBorrowUntil(userId)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		if errors.Is(err, errlist.ErrSessionNotExist) {
+			helpers.WriteError(w, errlist.ErrSessionNotExist)
+		} else {
+			helpers.WriteError(w, errlist.ErrGeneric)
+		}
+		log.Printf("error: book-borrow: %v", err)
+		return
+	} else if !yes {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrUserNotPresent)
+		log.Printf("error: book-borrow: %v", errlist.ErrUserNotPresent)
+		return
+	}
+
+	err = l.db.BookBorrow(bookId, userId)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		if errors.Is(err, errlist.ErrUserIdNotExist) {
+			helpers.WriteError(w, errlist.ErrUserIdNotExist)
+		} else if errors.Is(err, errlist.ErrBookIdNotExist) {
+			helpers.WriteError(w, errlist.ErrBookIdNotExist)
+		} else if errors.Is(err, errlist.ErrPastDue) {
+			helpers.WriteError(w, errlist.ErrPastDue)
+		} else if errors.Is(err, errlist.ErrBookHasBorrower) {
+			helpers.WriteError(w, errlist.ErrBookHasBorrower)
+		} else if errors.Is(err, errlist.ErrUserNotEligible) {
+			helpers.WriteError(w, errlist.ErrUserNotEligible)
+		} else if errors.Is(err, errlist.ErrUserNotInQueue) {
+			helpers.WriteError(w, errlist.ErrUserNotInQueue)
+		} else {
+			helpers.WriteError(w, errlist.ErrGeneric)
+		}
+		log.Printf("error: book-borrow: %v", err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func (l *LibraryHandler) bookReturn(w http.ResponseWriter, r *http.Request) {
+	var req requests.BookReturn
+	err := helpers.ReadRequest(r.Body, &req)
+	if err != nil || req.BookId == "" || req.UserId == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrJsonDecoder)
+		if err == nil {
+			err = errlist.ErrJsonDecoder
+		}
+		log.Printf("error: book-return: %v", err)
+		return
+	}
+
+	bookId, err := strconv.ParseInt(req.BookId, 10, 64)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrGeneric)
+		log.Printf("error: book-return: %v", err)
+		return
+	}
+
+	userId, err := strconv.ParseInt(req.UserId, 10, 64)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrGeneric)
+		log.Printf("error: book-return: %v", err)
+		return
+	}
+
+	err = l.db.BookReturn(bookId, userId)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		if errors.Is(err, errlist.ErrUserIdNotExist) {
+			helpers.WriteError(w, errlist.ErrUserIdNotExist)
+		} else if errors.Is(err, errlist.ErrBookIdNotExist) {
+			helpers.WriteError(w, errlist.ErrBookIdNotExist)
+		} else if errors.Is(err, errlist.ErrBookHasNoBorrower) {
+			helpers.WriteError(w, errlist.ErrBookHasNoBorrower)
+		} else if errors.Is(err, errlist.ErrUserNotBorrower) {
+			helpers.WriteError(w, errlist.ErrUserNotBorrower)
+		} else {
+			helpers.WriteError(w, errlist.ErrGeneric)
+		}
+		log.Printf("error: book-return: %v", err)
+		return
+	}
 
 	w.WriteHeader(http.StatusOK)
 }

@@ -2,8 +2,13 @@ package userstore
 
 import (
 	"sync"
+	"time"
 
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/errlist"
+)
+
+const (
+	defaultCanBorrowDuration = time.Duration(5) * time.Minute
 )
 
 type UserStore struct {
@@ -12,6 +17,7 @@ type UserStore struct {
 }
 
 type userSession struct {
+	canBorrowUntil time.Time
 }
 
 func New() *UserStore {
@@ -52,4 +58,30 @@ func (s *UserStore) contains(id int64) bool {
 
 func (s *UserStore) remove(id int64) {
 	delete(s.sessions, id)
+}
+
+func (s *UserStore) ResetCanBorrowUntil(id int64) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	session, ok := s.sessions[id]
+	if !ok {
+		return errlist.ErrSessionNotExist
+	}
+
+	session.canBorrowUntil = time.Now().Add(defaultCanBorrowDuration)
+	s.sessions[id] = session
+	return nil
+}
+
+func (s *UserStore) IsCanBorrowUntil(id int64) (bool, error) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	session, ok := s.sessions[id]
+	if !ok {
+		return false, errlist.ErrSessionNotExist
+	}
+
+	return time.Now().Before(session.canBorrowUntil), nil
 }

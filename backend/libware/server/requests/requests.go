@@ -41,10 +41,6 @@ type IsbnProfile struct {
 	Isbn string `json:"isbn"`
 }
 
-type IsbnPicture struct {
-	Isbn string `json:"isbn"`
-}
-
 type ChangeUserName struct {
 	NewName    string `json:"new-name"`
 	NewSurname string `json:"new-surname"`
@@ -63,4 +59,22 @@ type ChangeUserPhone struct {
 type ChangeUserPassword struct {
 	OldPassword string `json:"old-password"`
 	NewPassword string `json:"new-password"`
+}
+
+type Enqueue struct {
+	Isbn string `json:"isbn"`
+}
+
+type Dequeue struct {
+	Isbn string `json:"isbn"`
+}
+
+type BookBorrow struct {
+	BookId string `json:"book-id"`
+	UserId string `json:"user-id"`
+}
+
+type BookReturn struct {
+	BookId string `json:"book-id"`
+	UserId string `json:"user-id"`
 }
