@@ -233,7 +233,7 @@ class _SavedPageState extends State<SavedPage> {
         }
 
         // By default, show a loading spinner.
-        return const CircularProgressIndicator();
+        return Center(child: const CircularProgressIndicator(color: Colors.white,));
       },
     );
 
