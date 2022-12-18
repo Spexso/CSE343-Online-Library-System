@@ -25,104 +25,81 @@ class _SavedPageState extends State<SavedPage> {
 
   var pictureList = List<String>.filled(4, "", growable: false);
   var nameList = List<String>.filled(4, "", growable: false);
- /* var authorList = List<String>.filled(4, "", growable: false);
-  var publisherList = List<String>.filled(4, "", growable: false);
-  var yearList = List<String>.filled(4, "", growable: false);
-  var classNumList = List<String>.filled(4, "", growable: false);
-  var cutterNumList = List<String>.filled(4, "", growable: false);*/
   var isbnList = ["0201558025", "0486240614", "0761997601", "9783527308378"];
 
 
-  Future<void> isbnProfileState() async {
+  Future<List<IsbnProfile>> isbnProfileState() async {
 
     var url = Uri.parse("http://10.0.2.2:8080/user/isbn-profile");
-    var data1 = {
+    var data = List.filled(4, {"isbn": "0201558025"});
+    data[0] = {
       "isbn": "0201558025",
     };
-    var data2 = {
+    data[1] = {
       "isbn": "0486240614",
     };
-    var data3 = {
+    data[2] = {
       "isbn": "0761997601",
     };
-    var data4 = {
+    data[3] = {
       "isbn": "9783527308378",
     };
-
-    var body1 = json.encode(data1);
-    var body2 = json.encode(data2);
-    var body3 = json.encode(data3);
-    var body4 = json.encode(data4);
-
-
+    var body = List.filled(4, json.encode(data[0]));
+    for (int i=0;i<4;++i)
+      {
+        body[i] = json.encode(data[i]);
+      }
+    var answer = List.filled(4, await http.post(
+        url,
+        body: body[0],
+        headers: {
+          "Authorization": "Bearer ${widget.token}"}
+    ));
     print("in isbn:");
     print(widget.token);
+    for (int i=0;i<4;++i)
+      {
+        answer[i] = await http.post(
+            url,
+            body: body[i],
+            headers: {
+              "Authorization": "Bearer ${widget.token}"}
+        );
+      }
+    var resp = List.filled(4, IsbnProfile("", "", "", "", "", ""));
 
-    var answer1 = await http.post(
-        url,
-        body: body1,
-        headers: {
-          "Authorization": "Bearer ${widget.token}"}
-    );
-
-    var answer2 = await http.post(
-        url,
-        body: body2,
-        headers: {
-          "Authorization": "Bearer ${widget.token}"}
-    );
-
-    var answer3 = await http.post(
-        url,
-        body: body3,
-        headers: {
-          "Authorization": "Bearer ${widget.token}"}
-    );
-
-    var answer4 = await http.post(
-        url,
-        body: body4,
-        headers: {
-          "Authorization": "Bearer ${widget.token}"}
-    );
-
-    IsbnProfile resp1 = IsbnProfile("", "", "", "", "", "");
-    IsbnProfile resp2 = IsbnProfile("", "", "", "", "", "");
-    IsbnProfile resp3 = IsbnProfile("", "", "", "", "", "");
-    IsbnProfile resp4 = IsbnProfile("", "", "", "", "", "");
-
-
-    if((answer1.statusCode == 200) && (answer2.statusCode == 200) && (answer3.statusCode == 200) && (answer4.statusCode == 200)){
+    if((answer[0].statusCode == 200) && (answer[1].statusCode == 200) && (answer[2].statusCode == 200) && (answer[3].statusCode == 200)){
       print("isbn profile success");
-      resp1 = IsbnProfile.fromJson(json.decode(answer1.body));
-      resp2 = IsbnProfile.fromJson(json.decode(answer2.body));
-      resp3 = IsbnProfile.fromJson(json.decode(answer3.body));
-      resp4 = IsbnProfile.fromJson(json.decode(answer4.body));
+      for(int i=0;i<4;++i)
+        {
+          resp[i] = IsbnProfile.fromJson(json.decode(answer[i].body));
+        }
 
 
-      nameList[0] = resp1.name;
-      /*authorList[0] = resp1.author;
+
+      /*nameList[0] = resp1.name;
+      authorList[0] = resp1.author;
       publisherList[0] = resp1.publisher;
       yearList[0] = resp1.publicationYear;
       classNumList[0] = resp1.classNumber;
       cutterNumList[0] = resp1.cutterNumber;*/
 
-      nameList[1] = resp2.name;
-      /*authorList[1] = resp2.author;
+      /*nameList[1] = resp2.name;
+      authorList[1] = resp2.author;
       publisherList[1] = resp2.publisher;
       yearList[1] = resp2.publicationYear;
       classNumList[1] = resp2.classNumber;
       cutterNumList[1] = resp2.cutterNumber;*/
 
-      nameList[2] = resp3.name;
-     /* authorList[2] = resp3.author;
+      /*nameList[2] = resp3.name;
+      authorList[2] = resp3.author;
       publisherList[2] = resp3.publisher;
       yearList[2] = resp3.publicationYear;
       classNumList[2] = resp3.classNumber;
       cutterNumList[2] = resp3.cutterNumber;*/
 
-      nameList[3] = resp4.name;
-     /*authorList[3] = resp4.author;
+      /*nameList[3] = resp4.name;
+      authorList[3] = resp4.author;
       publisherList[3] = resp4.publisher;
       yearList[3] = resp4.publicationYear;
       classNumList[3] = resp4.classNumber;
@@ -136,13 +113,15 @@ class _SavedPageState extends State<SavedPage> {
       print(bookName);
       print(bookAuthor);
       print(bookPublisher); */
+
     }
-    else if((answer1.statusCode == 400) || (answer2.statusCode == 400) || (answer3.statusCode == 400) || (answer4.statusCode == 400)){
+    else if((answer[0].statusCode == 400) || (answer[1].statusCode == 400) || (answer[2].statusCode == 400) || (answer[3].statusCode == 400)){
       print("isbn profile not success");
-      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer1.body));
+      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer[0].body));
       print(resp.message);
 
     }
+    return resp;
   }
 
 
@@ -235,16 +214,31 @@ class _SavedPageState extends State<SavedPage> {
   }
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: nameList.length,
-      physics: const ClampingScrollPhysics(),
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        return _BookInList(
-        name: nameList[index], picture: pictureList[index],
-        );
+    return FutureBuilder<List<IsbnProfile>>(
+      future: isbnProfileState(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            physics: const ClampingScrollPhysics(),
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return _BookInList(
+                name: snapshot.data![index].name, picture: pictureList[index],
+              );
+            },
+          );
+        } else if (snapshot.hasError) {
+          return Text('${snapshot.error}');
+        }
+
+        // By default, show a loading spinner.
+        return const CircularProgressIndicator();
       },
     );
+
+
+
   }
 }
 
@@ -288,33 +282,36 @@ class _RequestsInListState extends State<_BookInList> {
                     child: Image.memory(base64Decode(widget.picture))),
               ),
               Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
 
-                    Text(
-                      widget.name,
-                      style: const TextStyle(color: Colors.white, fontSize: 18),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        OutlinedButton(
-                          onPressed: () {},
-                          child: Icon(Icons.bookmark_outline),
-                          style: buildButtonStyle(),
-                        ),
-                        OutlinedButton(
-                          onPressed: () {},
-                          child: Icon(Icons.delete),
-                          style: buildButtonStyle(),
-                        ),
-                      ],
-                    ),
-                  ],
+                      Text(
+                        widget.name,
+                        style: const TextStyle(color: Colors.white, fontSize: 18),
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          OutlinedButton(
+                            onPressed: () {},
+                            child: Icon(Icons.bookmark_outline),
+                            style: buildButtonStyle(),
+                          ),
+                          OutlinedButton(
+                            onPressed: () {},
+                            child: Icon(Icons.delete),
+                            style: buildButtonStyle(),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               )
             ],

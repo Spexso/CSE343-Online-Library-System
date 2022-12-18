@@ -4,7 +4,7 @@ import 'pages/login_page.dart';
 void main() {
   runApp(const MyApp());
 }
-/*AAAAAAA*/
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   final bool value = true;
