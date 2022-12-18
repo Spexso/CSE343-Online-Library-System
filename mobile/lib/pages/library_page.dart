@@ -41,8 +41,68 @@ class _LibraryPageState extends State<LibraryPage> {
   var cutterNumList = List<String>.filled(4, "", growable: false);
   var isbnList = ["0201558025", "0486240614", "0761997601", "9783527308378"];
 
+  Future<List<IsbnProfile>> isbnProfileState() async {
+
+    var url = Uri.parse("http://10.0.2.2:8080/user/isbn-profile");
+
+    var data = List.filled(4, {"isbn": "0201558025"});
+
+    data[0] = {
+      "isbn": "0201558025",
+    };
+    data[1] = {
+      "isbn": "0486240614",
+    };
+    data[2] = {
+      "isbn": "0761997601",
+    };
+    data[3] = {
+      "isbn": "9783527308378",
+    };
+
+    var body = List.filled(4, json.encode(data[0]));
+
+    for (int i=0;i<4;++i) {
+      body[i] = json.encode(data[i]);
+    }
+    var answer = List.filled(4, await http.post(
+        url,
+        body: body[0],
+        headers: {
+          "Authorization": "Bearer ${widget.token}"}
+    ));
+    print("in isbn:");
+    print(widget.token);
+    for (int i=0;i<4;++i) {
+      answer[i] = await http.post(
+          url,
+          body: body[i],
+          headers: {
+            "Authorization": "Bearer ${widget.token}"}
+      );
+    }
+    var resp = List.filled(4, IsbnProfile("", "", "", "", "", "", ""));
+
+    if((answer[0].statusCode == 200) && (answer[1].statusCode == 200) && (answer[2].statusCode == 200) && (answer[3].statusCode == 200)){
+      print("isbn profile success");
+      for(int i=0;i<4;++i)
+      {
+        resp[i] = IsbnProfile.fromJson(json.decode(answer[i].body));
+      }
+
+    }
+    else if((answer[0].statusCode == 400) || (answer[1].statusCode == 400) || (answer[2].statusCode == 400) || (answer[3].statusCode == 400)){
+      print("isbn profile not success");
+      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer[0].body));
+      print(resp.message);
+
+    }
+    return resp;
+  }
+
 
   //======================================================
+  /*
   Future<void> isbnProfileState() async {
 
     var url = Uri.parse("http://10.0.2.2:8080/user/isbn-profile");
@@ -154,8 +214,10 @@ class _LibraryPageState extends State<LibraryPage> {
 
     }
   }
-  //======================================================
 
+   */
+  //======================================================
+/*
   Future<void> isbnPicture() async {
 
     var url = Uri.parse("http://10.0.2.2:8080/user/isbn-picture");
@@ -231,6 +293,8 @@ class _LibraryPageState extends State<LibraryPage> {
       print(resp.message);
     }
   }
+
+ */
   //======================================================
 
   @override
@@ -238,9 +302,8 @@ class _LibraryPageState extends State<LibraryPage> {
     isbnProfileState().then((value){
 
     });
-    isbnPicture().then((value){
-
-    });
+    //isbnPicture().then((value){
+    //});
     super.initState();
   }
 
@@ -353,28 +416,38 @@ class _LibraryPageState extends State<LibraryPage> {
                 ),
               ),
 
-              GridView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                physics: const ClampingScrollPhysics(),
-                itemCount: nameList.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 0.5
-                ),
-                itemBuilder: (context,index){
-                    return BookingGrid(
-                      name: nameList[index],
-                      author: authorList[index],
-                      publisher: publisherList[index],
-                      picture: pictureList[index],
-                      year: yearList[index],
-                      classNum: classNumList[index],
-                      cutterNum: cutterNumList[index],
-                      isbn: isbnList[index],
+              FutureBuilder<List<IsbnProfile>>(
+                future: isbnProfileState(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return GridView.builder(
+                      scrollDirection: Axis.vertical,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,      childAspectRatio: 0.5),
+                      itemCount: snapshot.data!.length,
+                      physics: const ClampingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return BookingGrid(
+                            name: snapshot.data![index].name,
+                            author: snapshot.data![index].author,
+                            publisher: snapshot.data![index].publisher,
+                            picture: snapshot.data![index].picture,
+                            classNum: snapshot.data![index].classNumber,
+                            cutterNum: snapshot.data![index].cutterNumber,
+                            isbn: isbnList[index],
+                            year: snapshot.data![index].publicationYear
+                        );
+                      },
                     );
-                }
-              )
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+
+                  // By default, show a loading spinner.
+                  return Center(child: const CircularProgressIndicator(color: Colors.white,));
+                },
+              ),
             ],
           )
         : ListView(
@@ -481,21 +554,33 @@ class _LibraryPageState extends State<LibraryPage> {
                   ],
                 ),
               ),
-              ListView.builder(
-                itemCount: nameList.length,
-                physics: const ClampingScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return BookingList(
-                    name: nameList[index],
-                    author: authorList[index],
-                    publisher: publisherList[index],
-                    picture: pictureList[index],
-                    year: yearList[index],
-                    classNum: classNumList[index],
-                    cutterNum: cutterNumList[index],
-                    isbn: isbnList[index],
-                  );
+              FutureBuilder<List<IsbnProfile>>(
+                future: isbnProfileState(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      physics: const ClampingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return BookingList(
+                            name: snapshot.data![index].name,
+                            author: snapshot.data![index].author,
+                            publisher: snapshot.data![index].publisher,
+                            picture: snapshot.data![index].picture,
+                            classNum: snapshot.data![index].classNumber,
+                            cutterNum: snapshot.data![index].cutterNumber,
+                            isbn: isbnList[index],
+                            year: snapshot.data![index].publicationYear
+                        );
+                      },
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+
+                  // By default, show a loading spinner.
+                  return Center(child: const CircularProgressIndicator(color: Colors.white,));
                 },
               ),
             ],

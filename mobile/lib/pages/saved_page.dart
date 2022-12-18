@@ -66,7 +66,7 @@ class _SavedPageState extends State<SavedPage> {
               "Authorization": "Bearer ${widget.token}"}
         );
       }
-    var resp = List.filled(4, IsbnProfile("", "", "", "", "", ""));
+    var resp = List.filled(4, IsbnProfile("", "", "", "", "", "", ""));
 
     if((answer[0].statusCode == 200) && (answer[1].statusCode == 200) && (answer[2].statusCode == 200) && (answer[3].statusCode == 200)){
       print("isbn profile success");
@@ -125,91 +125,13 @@ class _SavedPageState extends State<SavedPage> {
   }
 
 
-  Future<void> isbnPicture() async {
-
-    var url = Uri.parse("http://10.0.2.2:8080/user/isbn-picture");
-
-    var data1 = {
-      "isbn": "0201558025",
-    };
-    var data2 = {
-      "isbn": "0486240614",
-    };
-    var data3 = {
-      "isbn": "0761997601",
-    };
-    var data4 = {
-      "isbn": "9783527308378",
-    };
-
-    var body1 = json.encode(data1);
-    var body2 = json.encode(data2);
-    var body3 = json.encode(data3);
-    var body4 = json.encode(data4);
-
-
-    print("in picture:");
-    print(widget.token);
-
-    var answer1 = await http.post(
-        url,
-        body: body1,
-        headers: {
-          "Authorization": "Bearer ${widget.token}"}
-    );
-    var answer2 = await http.post(
-        url,
-        body: body2,
-        headers: {
-          "Authorization": "Bearer ${widget.token}"}
-    );
-    var answer3 = await http.post(
-        url,
-        body: body3,
-        headers: {
-          "Authorization": "Bearer ${widget.token}"}
-    );
-    var answer4 = await http.post(
-        url,
-        body: body4,
-        headers: {
-          "Authorization": "Bearer ${widget.token}"}
-    );
-
-
-    IsbnPicture resp1 = IsbnPicture("");
-    IsbnPicture resp2 = IsbnPicture("");
-    IsbnPicture resp3 = IsbnPicture("");
-    IsbnPicture resp4 = IsbnPicture("");
-
-    if((answer1.statusCode == 200) && (answer2.statusCode == 200) && (answer3.statusCode == 200) && (answer4.statusCode == 200)){
-      print("isbn picture success");
-      resp1 = IsbnPicture.fromJson(json.decode(answer1.body));
-      resp2 = IsbnPicture.fromJson(json.decode(answer2.body));
-      resp3 = IsbnPicture.fromJson(json.decode(answer3.body));
-      resp4 = IsbnPicture.fromJson(json.decode(answer4.body));
-      pictureList[0] = resp1.picture;
-      pictureList[1] = resp2.picture;
-      pictureList[2] = resp3.picture;
-      pictureList[3] = resp4.picture;
-      //pictureBase64 = resp1.picture;
-    }
-    else if((answer1.statusCode == 400) || (answer2.statusCode == 400) || (answer3.statusCode == 400) || (answer4.statusCode == 400)){
-      print("isbn picture not success");
-      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer1.body));
-      print(resp.message);
-    }
-  }
-
-
   @override
   void initState() {
     isbnProfileState().then((value){
 
     });
-    isbnPicture().then((value){
-
-    });
+    //isbnPicture().then((value){
+    //});
     super.initState();
   }
   @override
@@ -224,7 +146,8 @@ class _SavedPageState extends State<SavedPage> {
             shrinkWrap: true,
             itemBuilder: (context, index) {
               return _BookInList(
-                name: snapshot.data![index].name, picture: pictureList[index],
+                name: snapshot.data![index].name,
+                picture: snapshot.data![index].picture,
               );
             },
           );
