@@ -136,9 +136,11 @@ img {
     height: auto;
 }
 
-.error {
+form .form-inner .error {
     font-size: 15px;
-    padding: 5px;
+    padding: 3px 0 0 10px;
+    color: coral;
 }
+
 
 
