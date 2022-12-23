@@ -1103,3 +1103,85 @@ func (d *Database) UserQueuedBooksDetailed(userId int64) (isbns []string, availa
 
 	return
 }
+
+func (d *Database) UserSavedBooks(userId int64) (isbns []string, err error) {
+	yes, err := d.IsUserExistWithId(userId)
+	if !yes {
+		err = errlist.ErrUserIdNotExist
+		return
+	} else if err != nil {
+		return
+	}
+
+	userRow := d.db.QueryRow(`SELECT savedbooks FROM users WHERE id = ?`, userId)
+
+	var savedBooksJson string
+	err = userRow.Scan(&savedBooksJson)
+	if err != nil {
+		return
+	}
+
+	err = json.Unmarshal([]byte(savedBooksJson), &isbns)
+	return
+}
+
+func (d *Database) userSetSavedBooks(userId int64, isbns []string) error {
+	savedBooksJson, err := json.Marshal(&isbns)
+	if err != nil {
+		return err
+	}
+
+	sqlStmt := `UPDATE users
+SET savedbooks = ?
+WHERE id = ?;
+`
+	_, err = d.db.Exec(sqlStmt, string(savedBooksJson), userId)
+	return err
+}
+
+func (d *Database) UserSaveBook(userId int64, isbn string) error {
+	yes, err := d.IsIsbnExist(isbn)
+	if !yes {
+		return errlist.ErrIsbnNotExist
+	} else if err != nil {
+		return err
+	}
+
+	isbns, err := d.UserSavedBooks(userId)
+	if err != nil {
+		return err
+	}
+
+	if slices.Contains(isbns, isbn) {
+		return errlist.ErrBookIsSaved
+	}
+
+	isbns = append(isbns, isbn)
+
+	err = d.userSetSavedBooks(userId, isbns)
+	return err
+}
+
+func (d *Database) UserUnsaveBook(userId int64, isbn string) error {
+	yes, err := d.IsIsbnExist(isbn)
+	if !yes {
+		return errlist.ErrIsbnNotExist
+	} else if err != nil {
+		return err
+	}
+
+	isbns, err := d.UserSavedBooks(userId)
+	if err != nil {
+		return err
+	}
+
+	pos := slices.Index(isbns, isbn)
+	if pos == -1 {
+		return errlist.ErrBookIsNotSaved
+	}
+
+	isbns = append(isbns[:pos], isbns[pos+1:]...)
+
+	err = d.userSetSavedBooks(userId, isbns)
+	return err
+}
