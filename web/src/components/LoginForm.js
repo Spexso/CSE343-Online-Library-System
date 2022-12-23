@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import logo from '../assets/books-stack-of-three.png';
 import '../Loading.css';
+import './LoginForm.css';
 
 
 function LoginForm() {
     
-
+    const serverAdd = "http://localhost:8080/guest/admin-login";
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const history = useHistory();
@@ -20,7 +21,7 @@ function LoginForm() {
         e.preventDefault();
         
 
-            fetch('http://localhost:8080/guest/admin-login', {
+            fetch(serverAdd, {
                 method: 'POST',
                 headers: { "Content-Type": "application/json"},
                 body: JSON.stringify({
@@ -61,8 +62,10 @@ function LoginForm() {
                     console.log(data.message);
                 }               
             }).catch( err => {
-                console.log("Catch here");
+                setError("Can not reach to server!");
+                console.log("Server is offline");
                 console.log(err);
+                console.log(serverAdd);
             })
             
     }

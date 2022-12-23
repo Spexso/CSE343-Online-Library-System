@@ -1,5 +1,7 @@
 import { useState } from "react";
 import '../components/Booklist.css';
+import background from '../assets/book-icon-145.png';
+import Board from "./Board";
 
 const Booklist = () => {
     // eslint-disable-next-line
@@ -8,19 +10,36 @@ const Booklist = () => {
         { title: 'Kurak Günler', body: 'lorem ipsum...', author: 'yoshi', id: 2 },
         { title: 'Rüyaların Yorumu', body: 'lorem ipsum', author: 'Freud', id: 3 }
     ]);
+    
 
     return(  
-        <div className="Books">
-            <h2>
-                {books.map((books) => (
-                    <div className="book-display" key={books.id}>
-                        <h2> { books.title }</h2>
-                        <h2> { books.body  }</h2>
-                        <p> Written By { books.author}</p>
+        <>
+            <div className="header">
+            
+                <div className="row1"></div>
+
+                <div className="row2">
+                    <h2>Search for book</h2>
+                    <div className="search">
+                        <input type="text" placeholder="Enter Information" />
+                        <button><i class="fas fa-search"></i> </button>
                     </div>
-                ))}
-            </h2>
+                    <img src={background} alt="Background of Search Page" />
+                </div>
+
+            </div>
+        <div className="container">
+            <Board/>
+            <Board/>
+            <Board/>
+            <Board/>
+            <Board/>
+            <Board/>
+            <Board/>
+            <Board/>
+            <Board/>
         </div>
+        </>
     );
 }
  

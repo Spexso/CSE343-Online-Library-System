@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Fjalla+One&display=swap');
+
 .book-display{
     padding: 10px 16px;
     margin: 20px 0;
@@ -12,4 +14,136 @@
     font-size: 20px;
     color: aqua;
     margin-bottom: 8px;
+}
+
+*{
+    padding: 0;
+    margin: 0;
+    font-family: 'Fjalla One';
+}
+
+:root{
+    --primary-color:#dfb19f;
+    --secondary-color:#e9bd98;
+}
+
+body{
+    background-color: var(--primary-color);
+}
+
+html{
+    font-size: 70%;
+}
+
+.header{
+    width: 100%;
+    height: 500px;
+    color: black;
+    box-shadow: 0 5px 10px var(--secondary-color);
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.header::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),url(../assets/241676-825-auto.webp);
+    clip-path: circle(60% at left 300px);
+    z-index: -1;
+}
+
+.row2{
+    position: absolute;
+    top: 10px;
+    right: 150px;
+    text-align: center;
+}
+
+.row2 h2{
+    font-size: 3rem;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+.row2 img{
+    margin-top: 30px;
+    width: 250px;
+}
+
+.search{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 5px 14px 5px rgb(112, 111, 111);
+}
+
+.search input{
+    outline: 0;
+    border: 0;
+    width: 350px;
+    height: 35px;
+    padding: 0 0.5rem;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.search button{
+    outline: 0;
+    border: none;
+    height: 35px;
+    padding: 0 0.5rem;
+}
+
+.container{
+    width: 65%;
+    margin: 0 auto;
+    margin-top: 25px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(200px,0.5fr));
+    grid-gap: 20px;
+    box-sizing: border-box;
+}
+
+.board{
+    background-color: rgb(143, 205, 224);
+    border-radius: 1rem;
+    padding: 0.5rem;
+    margin-bottom: 10px;
+    box-shadow: 0 5px 5px rgba(212,185,150,.5);
+    transition: .5s;
+    text-align: center;
+    position: relative;
+}
+
+.board img{
+    width: 100%;
+    height: 200px;
+    border-radius: 1rem 1rem 0 0;
+}
+
+.board .bottom{
+    display: flex;
+    flex-direction: column;
+}
+
+.board .bottom .title{
+    font-size: 14px;
+    margin-bottom: 32px;
+}
+
+.board .bottom .amount{
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    background-color: rgb(250, 250, 250);
+    color: black;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 0.2rem;
 }
