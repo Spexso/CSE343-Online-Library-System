@@ -30,13 +30,23 @@ class _NotificationsState extends State<NotificationsPage> {
           child: Column(
             children: const [
               Notification(
-                  str: "NameNameNameNameNameNameNameNameNameNameNameName"),
-              Notification(str: "Name"),
-              Notification(str: "Name"),
-              Notification(str: "Name"),
-              Notification(str: "Name"),
-              Notification(str: "Name"),
-              Notification(str: "Name"),
+                  str:
+                      "Designing embedded systems with PIC microcontrollers : principles and applications kitabı için sıranız gelmiştir."),
+              Notification(
+                  str: "Concrete mathematics kitabı için sıranız gelmiştir."),
+              Notification(
+                  str:
+                      "XI. Ulusal Matematik Sempozyumu, 7-11 Eylül 1998 kitabı için sıranız gelmiştir."),
+              Notification(
+                  str:
+                      "An introduction to information theory : symbols, signals & noise kitabı için sıranız gelmiştir."),
+              Notification(
+                  str:
+                      "Japon yönetim tarzı ve kalite çemberleri kitabı için sıranız gelmiştir."),
+              Notification(
+                  str:
+                      "Artificial intelligence : a modern approach kitabı için sıranız gelmiştir."),
+              Notification(str: "1984 kitabı için sıranız gelmiştir"),
             ],
           ),
         ),
@@ -57,22 +67,23 @@ class Notification extends StatelessWidget {
       child: Container(
         height: 110,
         width: MediaQuery.of(context).size.width,
-
         //color: Colors.red,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              str,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 25,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                str,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 25,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
-            const Spacer(),
             const Divider(
               color: Color.fromRGBO(42, 43, 46, 1),
               thickness: 2,
