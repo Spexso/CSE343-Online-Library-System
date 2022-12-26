@@ -288,6 +288,63 @@ empty
 
 empty
 
+## saved-books
+### Request
+
+empty
+
+### Response
+
+```json
+{
+  "isbn-list": [
+    "0201896834",
+    "9757929166",
+    "0486240614"
+  ]
+}
+```
+
+### Possible Errors
+
+empty
+
+## save-book
+### Request
+
+```json
+{
+  "isbn": "0486240614"
+}
+```
+
+### Response
+
+empty
+
+### Possible Errors
+
+- err-isbn-not-exist
+- err-book-is-saved
+
+## unsave-book
+### Request
+
+```json
+{
+  "isbn": "0486240614"
+}
+```
+
+### Response
+
+empty
+
+### Possible Errors
+
+- err-isbn-not-exist
+- err-book-is-not-saved
+
 # /admin/
 
 The client must put the token returned with admin-login response in the Authorization header using the Bearer schema.\
