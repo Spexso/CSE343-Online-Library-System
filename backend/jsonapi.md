@@ -466,6 +466,70 @@ empty
 - err-book-has-no-borrower
 - err-user-not-borrower
 
+## user-list
+### Request 1
+
+```json
+{
+  "name": "Jesse",
+  "surname": "Pinkman",
+  "per-page": "20",
+  "page": "1"
+}
+```
+
+**NOTE:** `per-page` will be the maximum number of entries per response. `page` is the index of the response (if `per-page` is 20, and current `page` is 3; pages 1 and 2 have been shown so far; current page will have entries starting at 41st entry.). Last page has less than `per-page` entries.
+
+### Response 1
+
+```json
+{
+  "user-list": [
+    {
+      "name": "Jesse",
+      "surname": "Pinkman",
+      "email": "jesse@pinkman.com",
+      "phone": "+123456789"
+    }
+  ]
+}
+```
+
+### Request 2
+
+```json
+{
+  "name": "Walter",
+  "per-page": "20",
+  "page": "1"
+}
+```
+
+### Response 2
+
+```json
+{
+  "user-list": [
+    {
+      "name": "Walter",
+      "surname": "White",
+      "email": "ww@albuquerque.us",
+      "phone": "+123456789"
+    },
+    {
+      "name": "Walter",
+      "surname": "Whitman",
+      "email": "ww@ww.ww",
+      "phone": "+987654321"
+    }
+  ]
+}
+```
+
+### Possible Errors
+
+empty
+
 # /user/ and /admin/
 
 ## isbn-list
