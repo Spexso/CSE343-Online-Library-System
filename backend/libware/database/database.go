@@ -6,10 +6,12 @@ import (
 	"encoding/json"
 	"errors"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/errlist"
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/helpers"
+	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/server/responses"
 	_ "github.com/mattn/go-sqlite3"
 	"golang.org/x/exp/slices"
 )
@@ -1184,4 +1186,79 @@ func (d *Database) UserUnsaveBook(userId int64, isbn string) error {
 
 	err = d.userSetSavedBooks(userId, isbns)
 	return err
+}
+
+func (d *Database) IsbnList(name string, author string, publisher string, yearStart string, yearEnd string, classNumber string, cutterNumber string, perPage int, page int) (entries []responses.IsbnListEntry, err error) {
+	var parameters []string
+	var parametersList []any
+	if name != "" {
+		parameters = append(parameters, "instr(name, ?)")
+		parametersList = append(parametersList, name)
+	}
+
+	if author != "" {
+		parameters = append(parameters, "author = ?")
+		parametersList = append(parametersList, author)
+	}
+
+	if publisher != "" {
+		parameters = append(parameters, "publisher = ?")
+		parametersList = append(parametersList, publisher)
+	}
+
+	if yearStart != "" {
+		parameters = append(parameters, "publicationyear >= ?")
+		parametersList = append(parametersList, yearStart)
+	}
+
+	if yearEnd != "" {
+		parameters = append(parameters, "publicationyear <= ?")
+		parametersList = append(parametersList, yearEnd)
+	}
+
+	if classNumber != "" {
+		parameters = append(parameters, "classnumber = ?")
+		parametersList = append(parametersList, classNumber)
+	}
+
+	if cutterNumber != "" {
+		parameters = append(parameters, "cutternumber = ?")
+		parametersList = append(parametersList, cutterNumber)
+	}
+
+	parametersJoined := strings.Join(parameters, " AND ")
+
+	var whereClause string
+	if parametersJoined != "" {
+		whereClause = "WHERE " + parametersJoined
+	}
+
+	parametersList = append(parametersList, perPage, perPage*(page-1))
+	rows, err := d.db.Query(`SELECT isbn, name, author, publisher, publicationyear, classnumber, cutternumber, picture FROM isbndata `+whereClause+" LIMIT ? OFFSET ?", parametersList...)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			entry        responses.IsbnListEntry
+			pictureBytes []byte
+		)
+
+		err = rows.Scan(&entry.Isbn, &entry.Name, &entry.Author, &entry.Publisher, &entry.PublicationYear, &entry.ClassNumber, &entry.CutterNumber, &pictureBytes)
+		if err != nil {
+			return
+		}
+
+		//entry.Picture = base64.StdEncoding.EncodeToString(pictureBytes)
+
+		entries = append(entries, entry)
+	}
+	err = rows.Err()
+	if err != nil {
+		return
+	}
+
+	return
 }
