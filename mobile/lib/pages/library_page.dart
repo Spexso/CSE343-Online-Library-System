@@ -18,8 +18,6 @@ class LibraryPage extends StatefulWidget {
   final String token;
   const LibraryPage({Key? key, required this.token}) : super(key: key);
 
-
-
   @override
   State<LibraryPage> createState() => _LibraryPageState();
 }
@@ -95,7 +93,6 @@ class _LibraryPageState extends State<LibraryPage> {
       print("isbn profile not success");
       ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer[0].body));
       print(resp.message);
-
     }
     return resp;
   }
