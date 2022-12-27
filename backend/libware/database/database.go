@@ -3,6 +3,7 @@ package database
 import (
 	"bytes"
 	"database/sql"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"strconv"
@@ -1251,8 +1252,7 @@ func (d *Database) IsbnList(name string, author string, publisher string, yearSt
 			return
 		}
 
-		//entry.Picture = base64.StdEncoding.EncodeToString(pictureBytes)
-
+		entry.Picture = base64.StdEncoding.EncodeToString(pictureBytes)
 		entries = append(entries, entry)
 	}
 	err = rows.Err()
