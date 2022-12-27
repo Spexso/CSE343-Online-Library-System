@@ -78,3 +78,11 @@ type BookReturn struct {
 	BookId string `json:"book-id"`
 	UserId string `json:"user-id"`
 }
+
+type SaveBook struct {
+	Isbn string `json:"isbn"`
+}
+
+type UnsaveBook struct {
+	Isbn string `json:"isbn"`
+}

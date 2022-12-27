@@ -1,48 +1,55 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import logo from '../assets/books-stack-of-three.png';
-import Loading from './Loading';
 import '../Loading.css';
+import './LoginForm.css';
 
 
-function LoginForm({Login, error}) {
+function LoginForm() {
     
-
+    const serverAdd = "http://localhost:8080/guest/admin-login";
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const history = useHistory();
-    const [isPending, setIsPending] = useState('false');
+    /*const [isPending, setIsPending] = useState('false');*/
+    const [error, setError] = useState("");
     
 
     const submitHandler = e => {
         console.log(name);
         console.log(password);
-        setIsPending(true);
         e.preventDefault();
         
-            fetch('http://localhost:8080/guest/admin-login', {
+
+            fetch(serverAdd, {
                 method: 'POST',
                 headers: { "Content-Type": "application/json"},
                 body: JSON.stringify({
                     name: name,
                     password: password,
                 }),
-            }).then( res => {
-                return res.json();
+            }).then( res => {   
+                return res.json();  
             })
             .then((data) => {
                 console.log("Requested login to Server");
+                setError("");
                 console.log(data);
 
                 if(data.message === "name is not registered") 
                 {
+                    setError("Invalid Name");
                     console.log("Invalid name");
-                    setIsPending(true);
                 }
                 else if(data.message === "malformed json input")
                 {
+                    setError("Missing Information");
                     console.log("Empty string");
-                    setIsPending(true);
+                }
+                else if(data.message === "password is invalid")
+                {
+                    setError("Password is invalid");
+                    console.log("Empty string");
                 }
                 else
                 {   
@@ -50,13 +57,15 @@ function LoginForm({Login, error}) {
                     console.log("------------");
                     console.log(token);
                     console.log("------------");
-                    setIsPending(false);
+
                     history.push('/main');
                     console.log(data.message);
                 }               
             }).catch( err => {
-                console.log("Catch here");
+                setError("Can not reach to server!");
+                console.log("Server is offline");
                 console.log(err);
+                console.log(serverAdd);
             })
             
     }
@@ -76,22 +85,19 @@ function LoginForm({Login, error}) {
                 <label htmlFor="password">Password</label>
                 <input type="password" name="password"  onChange={ (e) => setPassword(e.target.value)}  />
             </div>
-
-            {(error !== "") ? ( 
-            <div className="error">
-                {error}
+            <div>
+                <h1 className='error' >{error}</h1>
             </div>
-            ) : ""}
 
-            { !isPending && <Loading></Loading> }
-            <input type="submit" value="LOGIN" />
+            
+            <input type="submit" value="LOGIN"/>
             <div className="form-logo">
                 <img src={logo} alt="LoginPageLogo"/>
             </div>
-        
+            
         </div>
     </form>
   )
 }
 
-export default LoginForm
+export default LoginForm;

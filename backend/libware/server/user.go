@@ -25,6 +25,9 @@ func (l *LibraryHandler) userHandler() http.Handler {
 	router.HandleFunc("/suspended-until", l.suspendedUntil)
 	router.HandleFunc("/queued-books", l.queuedBooks)
 	router.HandleFunc("/mark-presence", l.markPresence)
+	router.HandleFunc("/saved-books", l.savedBooks)
+	router.HandleFunc("/save-book", l.saveBook)
+	router.HandleFunc("/unsave-book", l.unsaveBook)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		subject, err := l.authorize(w, r, l.userSecret)
 		if err != nil {
@@ -395,6 +398,114 @@ func (l *LibraryHandler) markPresence(w http.ResponseWriter, r *http.Request) {
 			helpers.WriteError(w, errlist.ErrGeneric)
 		}
 		log.Printf("error: mark-presence: %v", err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func (l *LibraryHandler) savedBooks(w http.ResponseWriter, r *http.Request) {
+	idString := r.Header.Get("Subject")
+
+	id, err := strconv.ParseInt(idString, 10, 64)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrGeneric)
+		log.Printf("error: saved-books: %v", err)
+		return
+	}
+
+	isbns, err := l.db.UserSavedBooks(id)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrGeneric)
+		log.Printf("error: saved-books: %v", err)
+		return
+	}
+
+	response := responses.SavedBooks{
+		IsbnList: isbns,
+	}
+
+	helpers.WriteResponse(w, response)
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func (l *LibraryHandler) saveBook(w http.ResponseWriter, r *http.Request) {
+	var req requests.SaveBook
+	err := helpers.ReadRequest(r.Body, &req)
+	if err != nil || req.Isbn == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrJsonDecoder)
+		if err == nil {
+			err = errlist.ErrJsonDecoder
+		}
+		log.Printf("error: save-book: %v", err)
+		return
+	}
+
+	idString := r.Header.Get("Subject")
+
+	userId, err := strconv.ParseInt(idString, 10, 64)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrGeneric)
+		log.Printf("error: save-book: %v", err)
+		return
+	}
+
+	err = l.db.UserSaveBook(userId, req.Isbn)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		if errors.Is(err, errlist.ErrBookIsSaved) {
+			helpers.WriteError(w, errlist.ErrBookIsSaved)
+		} else if errors.Is(err, errlist.ErrIsbnNotExist) {
+			helpers.WriteError(w, errlist.ErrIsbnNotExist)
+		} else {
+			helpers.WriteError(w, errlist.ErrGeneric)
+		}
+		log.Printf("error: save-book: %v", err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func (l *LibraryHandler) unsaveBook(w http.ResponseWriter, r *http.Request) {
+	var req requests.UnsaveBook
+	err := helpers.ReadRequest(r.Body, &req)
+	if err != nil || req.Isbn == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrJsonDecoder)
+		if err == nil {
+			err = errlist.ErrJsonDecoder
+		}
+		log.Printf("error: unsave-book: %v", err)
+		return
+	}
+
+	idString := r.Header.Get("Subject")
+
+	userId, err := strconv.ParseInt(idString, 10, 64)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrGeneric)
+		log.Printf("error: unsave-book: %v", err)
+		return
+	}
+
+	err = l.db.UserUnsaveBook(userId, req.Isbn)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		if errors.Is(err, errlist.ErrBookIsNotSaved) {
+			helpers.WriteError(w, errlist.ErrBookIsNotSaved)
+		} else if errors.Is(err, errlist.ErrIsbnNotExist) {
+			helpers.WriteError(w, errlist.ErrIsbnNotExist)
+		} else {
+			helpers.WriteError(w, errlist.ErrGeneric)
+		}
+		log.Printf("error: unsave-book: %v", err)
 		return
 	}
 

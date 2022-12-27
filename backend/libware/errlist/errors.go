@@ -50,4 +50,6 @@ var (
 	ErrPastDue           = New("err-past-due", "user has not returned a book in time")
 	ErrAlreadyBorrowed   = New("err-already-borrowed", "user has already borrowed the book")
 	ErrUserNotPresent    = New("err-user-not-present", "user has not marked their presence")
+	ErrBookIsSaved       = New("err-book-is-saved", "book is already in saved books")
+	ErrBookIsNotSaved    = New("err-book-is-not-saved", "book is not in saved books")
 )

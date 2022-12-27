@@ -1,17 +1,22 @@
 import { useState } from "react";
 
 const Userlist = () => {
-    
-    const [users, setBooks] = useState([
-        { name: '1984', body: 'lorem ipsum...', author: 'mario', id: 1 },
-        { title: 'Kurak Günler', body: 'lorem ipsum...', author: 'yoshi', id: 2 },
-        { title: 'Rüyaların Yorumu', body: 'lorem ipsum', author: 'Freud', id: 3 }
+    // eslint-disable-next-line
+    const [users, setUsers] = useState([
+        { name: 'Mario', body: 'student', author: 'mario', id: 1 },
+        { name: 'Kurak Günler', body: 'teacher', author: 'yoshi', id: 2 },
+        { name: 'Rüyaların Yorumu', body: 'student', author: 'Freud', id: 3 }
     ]);
     
     return ( 
-        <div>
+        <div className="Users">
             <h2>
-                Users
+                {users.map((users) => (
+                <div className="user-display" key={users.id}>
+                    <h2>{ users.name }</h2>
+                    <h2>{ users.body }</h2>
+                </div>
+                ))}
             </h2>
         </div>
      );

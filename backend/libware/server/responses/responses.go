@@ -40,6 +40,11 @@ type QueuedBookEntry struct {
 	Position       string `json:"position"`
 	ValidUntil     string `json:"valid-until"`
 }
+
 type QueuedBooks struct {
 	Entries []QueuedBookEntry `json:"entries"`
+}
+
+type SavedBooks struct {
+	IsbnList []string `json:"isbn-list"`
 }

@@ -9,6 +9,7 @@ import "./SingleInput.css";
  * (str) value: content of the input filed
  */
 class SingleInput extends Component{
+	// eslint-disable-next-line
 	constructor(props){
 		super(props);
 		//this.state={value:''};

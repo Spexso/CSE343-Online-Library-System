@@ -156,7 +156,7 @@ class _SavedPageState extends State<SavedPage> {
         }
 
         // By default, show a loading spinner.
-        return Center(child: const CircularProgressIndicator(color: Colors.white,));
+        return const Center(child:  CircularProgressIndicator(color: Colors.white,));
       },
     );
 
@@ -223,12 +223,12 @@ class _RequestsInListState extends State<_BookInList> {
                         children: [
                           OutlinedButton(
                             onPressed: () {},
-                            child: Icon(Icons.bookmark_outline),
+                            child: const Icon(Icons.bookmark_outline),
                             style: buildButtonStyle(),
                           ),
                           OutlinedButton(
                             onPressed: () {},
-                            child: Icon(Icons.delete),
+                            child: const Icon(Icons.delete),
                             style: buildButtonStyle(),
                           ),
                         ],
