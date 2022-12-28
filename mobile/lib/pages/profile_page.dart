@@ -24,11 +24,11 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   // to do: taken from database
 
-  String? name;
-  String? surname;
-  String? email;
-  String? phone;
-  String? password;
+  late String name;
+  late String surname;
+  late String email;
+  late String phone;
+  late String password;
   
   Future<UserProfile> userProfile() async {
     
@@ -62,15 +62,20 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
+
+
+
+
+    /*
     userProfile().then((value){
       name = value.name;
       surname = value.surname;
       email = value.email;
       print(name);
       print(surname);
-    });
-    print(name);
-    print(surname);
+    }); */
+    //print(name);
+    //print(surname);
     super.initState();
   }
 
@@ -135,64 +140,77 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(
               height: 40,
             ),
-            SizedBox(
-              width: 250,
-              child: Column(
-                children: [
-                  TextField(
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25,
-                        color: Colors.white),
-                    controller: nameController,
-                    enabled: _isEnable,
-                    decoration: const InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
+            FutureBuilder(
+              future: userProfile(),
+              builder: (context, snapshot){
+                if(snapshot.hasData){
+                  return SizedBox(
+                    width: 250,
+                    child: Column(
+                      children: [
+                        TextField(
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 25,
+                              color: Colors.white),
+                          controller: nameController,
+                          enabled: _isEnable,
+                          decoration: const InputDecoration(
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        TextField(
+                          style: const TextStyle(fontSize: 15, color: Colors.white),
+                          controller: emailController,
+                          enabled: _isEnable,
+                          decoration: const InputDecoration(
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        TextField(
+                          obscureText: _isObscure,
+                          style: const TextStyle(fontSize: 15, color: Colors.white),
+                          controller: passwordController,
+                          enabled: _isEnable,
+                          decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                                icon: Icon(_isObscure
+                                    ? Icons.visibility
+                                    : Icons.visibility_off),
+                                onPressed: () {
+                                  setState(() {
+                                    _isObscure = !_isObscure;
+                                  });
+                                }),
+                            enabledBorder: const UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                            focusedBorder: const UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  TextField(
-                    style: const TextStyle(fontSize: 15, color: Colors.white),
-                    controller: emailController,
-                    enabled: _isEnable,
-                    decoration: const InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                  TextField(
-                    obscureText: _isObscure,
-                    style: const TextStyle(fontSize: 15, color: Colors.white),
-                    controller: passwordController,
-                    enabled: _isEnable,
-                    decoration: InputDecoration(
-                      suffixIcon: IconButton(
-                          icon: Icon(_isObscure
-                              ? Icons.visibility
-                              : Icons.visibility_off),
-                          onPressed: () {
-                            setState(() {
-                              _isObscure = !_isObscure;
-                            });
-                          }),
-                      enabledBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                  );
+                }
+                else if(snapshot.hasError){
+                  return Text("ERROR");
+                }
+                // else
+                return CircularProgressIndicator(color: Colors.white,);
+              },
+
             ),
             // to do: profili düzenle butonu dönüşcek veya kaydetmek için 2 buton?
             const SizedBox(
