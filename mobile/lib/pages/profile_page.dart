@@ -4,6 +4,7 @@ import 'package:login_page/model/user_profile.dart';
 import 'package:login_page/pages/login_page.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'package:login_page/pages/update_profile_page.dart';
 import 'dart:convert';
 
 import '../model/error_message.dart';
@@ -45,12 +46,11 @@ class _ProfilePageState extends State<ProfilePage> {
     if(answer.statusCode == 200){
       print("user profile success");
       resp = UserProfile.fromJson(json.decode(answer.body));
-      return resp;
-      /*
       name = resp.name;
       surname = resp.surname;
       email = resp.email;
-      phone = resp.phone;  */
+      phone = resp.phone;
+      return resp;
     }
     else if(answer.statusCode == 400){
       print("user profile not success");
@@ -62,10 +62,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
-
-
-
-
     /*
     userProfile().then((value){
       name = value.name;
@@ -148,58 +144,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: 250,
                     child: Column(
                       children: [
-                        TextField(
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 25,
-                              color: Colors.white),
-                          controller: nameController,
-                          enabled: _isEnable,
-                          decoration: const InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        TextField(
-                          style: const TextStyle(fontSize: 15, color: Colors.white),
-                          controller: emailController,
-                          enabled: _isEnable,
-                          decoration: const InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        TextField(
-                          obscureText: _isObscure,
-                          style: const TextStyle(fontSize: 15, color: Colors.white),
-                          controller: passwordController,
-                          enabled: _isEnable,
-                          decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                                icon: Icon(_isObscure
-                                    ? Icons.visibility
-                                    : Icons.visibility_off),
-                                onPressed: () {
-                                  setState(() {
-                                    _isObscure = !_isObscure;
-                                  });
-                                }),
-                            enabledBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            focusedBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                          ),
-                        ),
+                        Text(name),
+                        Text(surname),
+                        Text(email),
                       ],
                     ),
                   );
@@ -224,8 +171,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   height: 45,
                   child: ElevatedButton(
                     onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                            UpdateProfilePage(name: name,surname: surname, email: email,)),
+                      );
                       setState(() {
-                        _isEnable = true;
+                        //_isEnable = true;
                       });
                     },
                     style: ElevatedButton.styleFrom(
