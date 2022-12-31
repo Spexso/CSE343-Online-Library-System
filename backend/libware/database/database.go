@@ -1263,19 +1263,53 @@ func (d *Database) IsbnList(name string, author string, publisher string, yearSt
 	return
 }
 
-func (d *Database) BookList(isbn string, perPage int, page int) (entries []responses.BookListEntry, err error) {
-	var parameters []string
-	var parametersList []any
-
-	if yes, err := d.IsIsbnExist(isbn); !yes {
-		return entries, errlist.ErrIsbnNotExist
+func (d *Database) BookList(isbn string, perPage int, page int) (bookIds []string, err error) {
+	yes, err := d.IsIsbnExist(isbn)
+	if !yes {
+		err = errlist.ErrIsbnNotExist
+		return
 	} else if err != nil {
-		return entries, err
+		return
 	}
 
-	if isbn != "" {
-		parameters = append(parameters, "isbn = ?")
-		parametersList = append(parametersList, isbn)
+	rows, err := d.db.Query(`SELECT id FROM books WHERE isbn = ?`, isbn)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			bookId string
+		)
+
+		err = rows.Scan(&bookId)
+		if err != nil {
+			return
+		}
+
+		bookIds = append(bookIds, bookId)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+func (d *Database) UserList(name string, surname string, perPage int, page int) (entries []responses.UserListEntry, err error) {
+	var parameters []string
+	var parametersList []any
+	if name != "" {
+		parameters = append(parameters, "instr(name, ?)")
+		parametersList = append(parametersList, name)
+	}
+
+	if surname != "" {
+		parameters = append(parameters, "surname = ?")
+		parametersList = append(parametersList, surname)
 	}
 
 	parametersJoined := strings.Join(parameters, " AND ")
@@ -1286,7 +1320,7 @@ func (d *Database) BookList(isbn string, perPage int, page int) (entries []respo
 	}
 
 	parametersList = append(parametersList, perPage, perPage*(page-1))
-	rows, err := d.db.Query(`SELECT id FROM books `+whereClause+" LIMIT ? OFFSET ?", parametersList...)
+	rows, err := d.db.Query(`SELECT name, surname, email, phone FROM users `+whereClause+" LIMIT ? OFFSET ?", parametersList...)
 	if err != nil {
 		return
 	}
@@ -1294,10 +1328,10 @@ func (d *Database) BookList(isbn string, perPage int, page int) (entries []respo
 
 	for rows.Next() {
 		var (
-			entry responses.BookListEntry
+			entry responses.UserListEntry
 		)
 
-		err = rows.Scan(&entry.Id)
+		err = rows.Scan(&entry.Name, &entry.Surname, &entry.Email, &entry.Phone)
 		if err != nil {
 			return
 		}
