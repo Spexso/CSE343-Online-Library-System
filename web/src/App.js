@@ -1,6 +1,6 @@
 import LoginForm from '../src/components/LoginForm';
 import { BrowserRouter as Router, Route, Switch, } from 'react-router-dom';
-import MainPage from './MainPage';
+import { MainPage } from './components/MainPage';
 import Booklist from "./components/Booklist";
 import Userlist from "./components/Userlist";
 import './App.css';
@@ -32,7 +32,9 @@ function App() {
     </Route>
 
     <Route exact path="/main">
+      <div className='Main'>
       <MainPage/>
+      </div>
     </Route>
 
     <Route exact path="/bookList">

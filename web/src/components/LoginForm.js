@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import logo from '../assets/books-stack-of-three.png';
-import '../Loading.css';
+import './Loading.css';
 import './LoginForm.css';
 
 

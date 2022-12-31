@@ -1,17 +1,24 @@
 .inputField{
-	/*display: flex;
+	display: flex;
 	flex-direction: column;
-	text-align: center;*/
-	border: 3px solid rgb(226, 231, 221);
-	/*margin: 10px 5px;*/
+	flex-wrap: nowrap;
+
+	border: solid 2px blue;
 }
 
-ul{
+.inputField .inputField_h2{
+	margin: 0px;
+}
+
+.inputField .inputField_ul{
 	list-style-type: none;
+	padding: 0px;
+	margin: 0px;
+
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
 }
 
-button{
-	background-color: white;
-	width: 100px;
-	align-self: center;
-}
+/* .inputField .inputField_button{
+}*/
