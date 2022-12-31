@@ -1,5 +1,22 @@
 import 'package:flutter/material.dart';
 
+List<String> _nameList = [
+  "Designing embedded systems with PIC microcontrollers : principles and applications",
+  "Concrete mathematics",
+  "An introduction to information theory : symbols, signals & noise",
+  "1984"
+];
+
+List<int> _peopleLeft = [0, 1, 7, 11];
+
+List<String> _imageList = [
+  "https://m.media-amazon.com/images/I/51iVywErBdL.jpg",
+  "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1348780612l/112243.jpg",
+  "https://m.media-amazon.com/images/I/41IOCu-lwdL._AC_SY1000_.jpg",
+  "https://i.dr.com.tr/cache/600x600-0/originals/0000000064038-1.jpg"
+];
+
+
 class RequestsPage extends StatefulWidget {
   const RequestsPage({Key? key}) : super(key: key);
 
@@ -7,17 +24,20 @@ class RequestsPage extends StatefulWidget {
   State<RequestsPage> createState() => _RequestsPageState();
 }
 
+
+
 class _RequestsPageState extends State<RequestsPage> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 10,
+      itemCount: 4,
       physics: const ClampingScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
         return _RequestsInList(
-          left: "3",
-          name: "1984",
+          left: _peopleLeft[index].toString(),
+          name: _nameList[index],
+          image: _imageList[index],
         );
       },
     );
@@ -27,11 +47,13 @@ class _RequestsPageState extends State<RequestsPage> {
 class _RequestsInList extends StatefulWidget {
   final String name;
   final String left;
+  final String image;
 
   const _RequestsInList({
     Key? key,
     required this.name,
     required this.left,
+    required this.image,
   }) : super(key: key);
 
   @override
@@ -59,10 +81,10 @@ class _RequestsInListState extends State<_RequestsInList> {
                     topLeft: Radius.circular(10),
                     bottomLeft: Radius.circular(10)),
                 child: SizedBox(
-                    height: MediaQuery.of(context).size.width / 5 * 2,
-                    width: null,
+                    height: 200,
+                    width: 150,
                     child: Image.network(
-                        "https://i.dr.com.tr/cache/600x600-0/originals/0000000064038-1.jpg")),
+                        widget.image)),
               ),
               Expanded(
                 child: Column(
@@ -75,14 +97,15 @@ class _RequestsInListState extends State<_RequestsInList> {
                         widget.name,
                         style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 23,
+                            fontSize: 20,
                             fontWeight: FontWeight.bold),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
                       ),
                     ),
                     Text(
-                      "${widget.left} people left",
+                      "${widget.left} kişi kaldı",
                       style: const TextStyle(color: Colors.white, fontSize: 18),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

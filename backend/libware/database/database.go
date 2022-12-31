@@ -3,13 +3,16 @@ package database
 import (
 	"bytes"
 	"database/sql"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/errlist"
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/helpers"
+	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/server/responses"
 	_ "github.com/mattn/go-sqlite3"
 	"golang.org/x/exp/slices"
 )
@@ -1099,6 +1102,245 @@ func (d *Database) UserQueuedBooksDetailed(userId int64) (isbns []string, availa
 		if err != nil {
 			return
 		}
+	}
+
+	return
+}
+
+func (d *Database) UserSavedBooks(userId int64) (isbns []string, err error) {
+	yes, err := d.IsUserExistWithId(userId)
+	if !yes {
+		err = errlist.ErrUserIdNotExist
+		return
+	} else if err != nil {
+		return
+	}
+
+	userRow := d.db.QueryRow(`SELECT savedbooks FROM users WHERE id = ?`, userId)
+
+	var savedBooksJson string
+	err = userRow.Scan(&savedBooksJson)
+	if err != nil {
+		return
+	}
+
+	err = json.Unmarshal([]byte(savedBooksJson), &isbns)
+	return
+}
+
+func (d *Database) userSetSavedBooks(userId int64, isbns []string) error {
+	savedBooksJson, err := json.Marshal(&isbns)
+	if err != nil {
+		return err
+	}
+
+	sqlStmt := `UPDATE users
+SET savedbooks = ?
+WHERE id = ?;
+`
+	_, err = d.db.Exec(sqlStmt, string(savedBooksJson), userId)
+	return err
+}
+
+func (d *Database) UserSaveBook(userId int64, isbn string) error {
+	yes, err := d.IsIsbnExist(isbn)
+	if !yes {
+		return errlist.ErrIsbnNotExist
+	} else if err != nil {
+		return err
+	}
+
+	isbns, err := d.UserSavedBooks(userId)
+	if err != nil {
+		return err
+	}
+
+	if slices.Contains(isbns, isbn) {
+		return errlist.ErrBookIsSaved
+	}
+
+	isbns = append(isbns, isbn)
+
+	err = d.userSetSavedBooks(userId, isbns)
+	return err
+}
+
+func (d *Database) UserUnsaveBook(userId int64, isbn string) error {
+	yes, err := d.IsIsbnExist(isbn)
+	if !yes {
+		return errlist.ErrIsbnNotExist
+	} else if err != nil {
+		return err
+	}
+
+	isbns, err := d.UserSavedBooks(userId)
+	if err != nil {
+		return err
+	}
+
+	pos := slices.Index(isbns, isbn)
+	if pos == -1 {
+		return errlist.ErrBookIsNotSaved
+	}
+
+	isbns = append(isbns[:pos], isbns[pos+1:]...)
+
+	err = d.userSetSavedBooks(userId, isbns)
+	return err
+}
+
+func (d *Database) IsbnList(name string, author string, publisher string, yearStart string, yearEnd string, classNumber string, cutterNumber string, perPage int, page int) (entries []responses.IsbnListEntry, err error) {
+	var parameters []string
+	var parametersList []any
+	if name != "" {
+		parameters = append(parameters, "instr(name, ?)")
+		parametersList = append(parametersList, name)
+	}
+
+	if author != "" {
+		parameters = append(parameters, "author = ?")
+		parametersList = append(parametersList, author)
+	}
+
+	if publisher != "" {
+		parameters = append(parameters, "publisher = ?")
+		parametersList = append(parametersList, publisher)
+	}
+
+	if yearStart != "" {
+		parameters = append(parameters, "publicationyear >= ?")
+		parametersList = append(parametersList, yearStart)
+	}
+
+	if yearEnd != "" {
+		parameters = append(parameters, "publicationyear <= ?")
+		parametersList = append(parametersList, yearEnd)
+	}
+
+	if classNumber != "" {
+		parameters = append(parameters, "classnumber = ?")
+		parametersList = append(parametersList, classNumber)
+	}
+
+	if cutterNumber != "" {
+		parameters = append(parameters, "cutternumber = ?")
+		parametersList = append(parametersList, cutterNumber)
+	}
+
+	parametersJoined := strings.Join(parameters, " AND ")
+
+	var whereClause string
+	if parametersJoined != "" {
+		whereClause = "WHERE " + parametersJoined
+	}
+
+	parametersList = append(parametersList, perPage, perPage*(page-1))
+	rows, err := d.db.Query(`SELECT isbn, name, author, publisher, publicationyear, classnumber, cutternumber, picture FROM isbndata `+whereClause+" LIMIT ? OFFSET ?", parametersList...)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			entry        responses.IsbnListEntry
+			pictureBytes []byte
+		)
+
+		err = rows.Scan(&entry.Isbn, &entry.Name, &entry.Author, &entry.Publisher, &entry.PublicationYear, &entry.ClassNumber, &entry.CutterNumber, &pictureBytes)
+		if err != nil {
+			return
+		}
+
+		entry.Picture = base64.StdEncoding.EncodeToString(pictureBytes)
+		entries = append(entries, entry)
+	}
+	err = rows.Err()
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+func (d *Database) BookList(isbn string, perPage int, page int) (bookIds []string, err error) {
+	yes, err := d.IsIsbnExist(isbn)
+	if !yes {
+		err = errlist.ErrIsbnNotExist
+		return
+	} else if err != nil {
+		return
+	}
+
+	rows, err := d.db.Query(`SELECT id FROM books WHERE isbn = ?`, isbn)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			bookId string
+		)
+
+		err = rows.Scan(&bookId)
+		if err != nil {
+			return
+		}
+
+		bookIds = append(bookIds, bookId)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+func (d *Database) UserList(name string, surname string, perPage int, page int) (entries []responses.UserListEntry, err error) {
+	var parameters []string
+	var parametersList []any
+	if name != "" {
+		parameters = append(parameters, "instr(name, ?)")
+		parametersList = append(parametersList, name)
+	}
+
+	if surname != "" {
+		parameters = append(parameters, "instr(surname, ?)")
+		parametersList = append(parametersList, surname)
+	}
+
+	parametersJoined := strings.Join(parameters, " AND ")
+
+	var whereClause string
+	if parametersJoined != "" {
+		whereClause = "WHERE " + parametersJoined
+	}
+
+	parametersList = append(parametersList, perPage, perPage*(page-1))
+	rows, err := d.db.Query(`SELECT name, surname, email, phone FROM users `+whereClause+" LIMIT ? OFFSET ?", parametersList...)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			entry responses.UserListEntry
+		)
+
+		err = rows.Scan(&entry.Name, &entry.Surname, &entry.Email, &entry.Phone)
+		if err != nil {
+			return
+		}
+
+		entries = append(entries, entry)
+	}
+	err = rows.Err()
+	if err != nil {
+		return
 	}
 
 	return

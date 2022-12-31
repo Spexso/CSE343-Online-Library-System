@@ -78,3 +78,36 @@ type BookReturn struct {
 	BookId string `json:"book-id"`
 	UserId string `json:"user-id"`
 }
+
+type SaveBook struct {
+	Isbn string `json:"isbn"`
+}
+
+type UnsaveBook struct {
+	Isbn string `json:"isbn"`
+}
+
+type IsbnList struct {
+	Name         string `json:"name"`
+	Author       string `json:"author"`
+	Publisher    string `json:"publisher"`
+	YearStart    string `json:"year-start"`
+	YearEnd      string `json:"year-end"`
+	ClassNumber  string `json:"class-number"`
+	CutterNumber string `json:"cutter-number"`
+	PerPage      string `json:"per-page"`
+	Page         string `json:"page"`
+}
+
+type BookList struct {
+	Isbn    string `json:"isbn"`
+	PerPage string `json:"per-page"`
+	Page    string `json:"page"`
+}
+
+type UserList struct {
+	Name    string `json:"name"`
+	Surname string `json:"surname"`
+	PerPage string `json:"per-page"`
+	Page    string `json:"page"`
+}

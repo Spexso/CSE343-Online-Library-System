@@ -4,6 +4,7 @@ import 'package:login_page/pages/requests_page.dart';
 import 'package:login_page/pages/saved_page.dart';
 import 'package:login_page/pages/profile_page.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'notifications_page.dart';
 
 class NewHomePage extends StatefulWidget {
   final String token;
@@ -30,9 +31,9 @@ class _NewHomePageState extends State<NewHomePage> {
 
     _children = [
       LibraryPage(token: _token),
-       SavedPage(token: _token),
+      SavedPage(token: _token),
       const RequestsPage(),
-      const ProfilePage(),
+      ProfilePage(token: _token,),
     ];
 
     super.initState();
@@ -53,7 +54,14 @@ class _NewHomePageState extends State<NewHomePage> {
         automaticallyImplyLeading: false,
         backgroundColor: const Color.fromRGBO(42, 43, 46, 1),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.notifications, color: Colors.white,)),
+          IconButton(onPressed: () => {
+    Navigator.push(
+    context,
+    MaterialPageRoute(
+    builder: (context) =>
+    const NotificationsPage()),
+    )
+    }, icon: const Icon(Icons.notifications, color: Colors.white,)),
           IconButton(onPressed: () {}, icon: const Icon(Icons.settings, color: Colors.white,))
         ],
       ),
@@ -113,17 +121,4 @@ class _NewHomePageState extends State<NewHomePage> {
   }
 }
 
-class CustomAppBar extends StatefulWidget {
-  const CustomAppBar({Key? key}) : super(key: key);
-
-  @override
-  State<CustomAppBar> createState() => _CustomAppBarState();
-}
-
-class _CustomAppBarState extends State<CustomAppBar> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
 
