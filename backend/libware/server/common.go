@@ -76,7 +76,7 @@ func (l *LibraryHandler) isbnProfile(w http.ResponseWriter, r *http.Request) {
 func (l *LibraryHandler) IsbnList(w http.ResponseWriter, r *http.Request) {
 	var req requests.IsbnList
 	err := helpers.ReadRequest(r.Body, &req)
-	if err != nil || req.Name == "" || req.PerPage == "" || req.Page == "" {
+	if err != nil || req.PerPage == "" || req.Page == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		helpers.WriteError(w, errlist.ErrJsonDecoder)
 		if err == nil {
