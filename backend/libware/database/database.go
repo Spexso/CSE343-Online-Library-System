@@ -1262,3 +1262,52 @@ func (d *Database) IsbnList(name string, author string, publisher string, yearSt
 
 	return
 }
+
+func (d *Database) BookList(isbn string, perPage int, page int) (entries []responses.BookListEntry, err error) {
+	var parameters []string
+	var parametersList []any
+
+	if yes, err := d.IsIsbnExist(isbn); !yes {
+		return entries, errlist.ErrIsbnNotExist
+	} else if err != nil {
+		return entries, err
+	}
+
+	if isbn != "" {
+		parameters = append(parameters, "isbn = ?")
+		parametersList = append(parametersList, isbn)
+	}
+
+	parametersJoined := strings.Join(parameters, " AND ")
+
+	var whereClause string
+	if parametersJoined != "" {
+		whereClause = "WHERE " + parametersJoined
+	}
+
+	parametersList = append(parametersList, perPage, perPage*(page-1))
+	rows, err := d.db.Query(`SELECT id FROM books `+whereClause+" LIMIT ? OFFSET ?", parametersList...)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			entry responses.BookListEntry
+		)
+
+		err = rows.Scan(&entry.Id)
+		if err != nil {
+			return
+		}
+
+		entries = append(entries, entry)
+	}
+	err = rows.Err()
+	if err != nil {
+		return
+	}
+
+	return
+}

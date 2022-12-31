@@ -63,3 +63,11 @@ type IsbnListEntry struct {
 type IsbnList struct {
 	IsbnList []IsbnListEntry `json:"isbn-list"`
 }
+
+type BookListEntry struct {
+	Id string `json:"id"`
+}
+
+type BookList struct {
+	BookList []BookListEntry `json:"id-list"`
+}

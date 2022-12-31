@@ -98,3 +98,7 @@ type IsbnList struct {
 	PerPage      string `json:"per-page"`
 	Page         string `json:"page"`
 }
+
+type BookList struct {
+	Id string `json:"id"`
+}
