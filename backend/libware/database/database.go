@@ -1308,7 +1308,7 @@ func (d *Database) UserList(name string, surname string, perPage int, page int) 
 	}
 
 	if surname != "" {
-		parameters = append(parameters, "surname = ?")
+		parameters = append(parameters, "instr(surname, ?)")
 		parametersList = append(parametersList, surname)
 	}
 
