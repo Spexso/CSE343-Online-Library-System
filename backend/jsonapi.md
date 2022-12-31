@@ -613,7 +613,8 @@ empty
 
 ### Possible Errors
 
-empty
+- err-per-page-convert
+- err-page-convert
 
 ## book-list
 ### Request
