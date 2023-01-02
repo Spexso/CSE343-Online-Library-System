@@ -7,7 +7,7 @@ import './LoginForm.css';
 
 function LoginForm() {
     
-    const {REACT_APP_API_TOKEN} = process.env;
+    const {REACT_APP_API_TOKEN_ADMIN_LOGIN} = process.env;
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const history = useHistory();
@@ -21,7 +21,7 @@ function LoginForm() {
         e.preventDefault();
         
 
-            fetch(`${REACT_APP_API_TOKEN}`, {
+            fetch(`${REACT_APP_API_TOKEN_ADMIN_LOGIN}`, {
                 method: 'POST',
                 headers: { "Content-Type": "application/json"},
                 body: JSON.stringify({
