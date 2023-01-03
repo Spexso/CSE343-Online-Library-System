@@ -78,3 +78,7 @@ type UserListEntry struct {
 type UserList struct {
 	UserList []UserListEntry `json:"user-list"`
 }
+
+type UserIdOfEmail struct {
+	UserId string `json:"user-id"`
+}

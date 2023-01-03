@@ -1345,3 +1345,22 @@ func (d *Database) UserList(name string, surname string, perPage int, page int) 
 
 	return
 }
+
+func (d *Database) UserIdOfEmail(email string) (userId int64, err error) {
+	yes, err := d.IsUserExistWithEmail(email)
+	if !yes {
+		err = errlist.ErrEmailNotExist
+		return
+	} else if err != nil {
+		return
+	}
+
+	userRow := d.db.QueryRow(`SELECT id FROM users WHERE email = ?`, email)
+	err = userRow.Err()
+	if err != nil {
+		return
+	}
+
+	err = userRow.Scan(&userId)
+	return
+}

@@ -111,3 +111,7 @@ type UserList struct {
 	PerPage string `json:"per-page"`
 	Page    string `json:"page"`
 }
+
+type UserIdOfEmail struct {
+	Email string `json:"email"`
+}
