@@ -318,3 +318,33 @@ func (l *LibraryHandler) UserList(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
+
+func (l *LibraryHandler) UserIdOfEmail(w http.ResponseWriter, r *http.Request) {
+	var req requests.UserIdOfEmail
+	err := helpers.ReadRequest(r.Body, &req)
+	if err != nil || req.Email == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrJsonDecoder)
+		if err == nil {
+			err = errlist.ErrJsonDecoder
+		}
+		log.Printf("error: user-id-of-email: %v", err)
+		return
+	}
+
+	entries, err := l.db.UserIdOfEmail(req.Email)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		if errors.Is(err, errlist.ErrEmailNotExist) {
+			helpers.WriteError(w, errlist.ErrEmailNotExist)
+		} else {
+			helpers.WriteError(w, errlist.ErrGeneric)
+		}
+		log.Printf("error: user-id-of-email: %v", err)
+		return
+	}
+	response := entries
+	helpers.WriteResponse(w, response)
+
+	w.WriteHeader(http.StatusOK)
+}
