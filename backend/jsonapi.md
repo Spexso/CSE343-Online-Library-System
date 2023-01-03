@@ -530,6 +530,27 @@ empty
 
 empty
 
+## user-id-of-email
+### Request
+
+```json
+{
+  "email": "ww@mail.com"
+}
+```
+
+### Response
+
+```json
+{
+  "id": "5"
+}
+```
+
+### Possible Errors
+
+- err-email-not-exist
+
 # /user/ and /admin/
 
 ## isbn-list
@@ -613,7 +634,8 @@ empty
 
 ### Possible Errors
 
-empty
+- err-per-page-convert
+- err-page-convert
 
 ## book-list
 ### Request

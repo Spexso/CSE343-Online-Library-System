@@ -2,30 +2,21 @@ import React, {Component} from 'react';
 import "./SingleInput.css";
 
 /**
+ * Controlled Component SingleInput
+ * 
  * Parameters
  * (str) header: name of the input field
- * 
- * State
- * (str) value: content of the input filed
+ * (str) value: value of the input field
+ * (function) handleChange: onChange function of the input field
  */
 class SingleInput extends Component{
-	// eslint-disable-next-line
-	constructor(props){
-		super(props);
-		//this.state={value:''};
-
-		//this.onChange=this.onChange.bind(this);
-	}
-
-	/*onChange(e){
-		this.setState({value:e.target.value});
-	}*/
+	
 
 	render(){
 		return(
 			<div className='singleInput'>
-				<label>{this.props.header}</label>
-				<input value={this.props.value} onChange={this.props.handleChange} style={{backgroundColor: "white"}}/>
+				<label className='singleInput_label'>{this.props.header}</label>
+				<input className='singleInput_input' value={this.props.value} onChange={this.props.handleChange}/>
 			</div>
 		);
 	}
