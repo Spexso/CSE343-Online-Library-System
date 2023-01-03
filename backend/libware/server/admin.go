@@ -305,8 +305,8 @@ func (l *LibraryHandler) UserList(w http.ResponseWriter, r *http.Request) {
 	entries, err := l.db.UserList(req.Name, req.Surname, intPerPage, intPage)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		if errors.Is(err, errlist.ErrIsbnNotExist) {
-			helpers.WriteError(w, errlist.ErrIsbnNotExist)
+		if errors.Is(err, errlist.ErrNameNotExist) {
+			helpers.WriteError(w, errlist.ErrNameNotExist)
 		} else {
 			helpers.WriteError(w, errlist.ErrGeneric)
 		}
