@@ -278,7 +278,7 @@ func (l *LibraryHandler) bookReturn(w http.ResponseWriter, r *http.Request) {
 func (l *LibraryHandler) UserList(w http.ResponseWriter, r *http.Request) {
 	var req requests.UserList
 	err := helpers.ReadRequest(r.Body, &req)
-	if err != nil || req.Name == "" || req.PerPage == "" || req.Page == "" {
+	if err != nil || req.PerPage == "" || req.Page == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		helpers.WriteError(w, errlist.ErrJsonDecoder)
 		if err == nil {
