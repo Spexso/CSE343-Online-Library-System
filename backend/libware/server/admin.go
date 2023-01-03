@@ -274,3 +274,47 @@ func (l *LibraryHandler) bookReturn(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
+
+func (l *LibraryHandler) UserList(w http.ResponseWriter, r *http.Request) {
+	var req requests.UserList
+	err := helpers.ReadRequest(r.Body, &req)
+	if err != nil || req.Name == "" || req.PerPage == "" || req.Page == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrJsonDecoder)
+		if err == nil {
+			err = errlist.ErrJsonDecoder
+		}
+		log.Printf("error: user-list: %v", err)
+		return
+	}
+
+	intPerPage, err := strconv.Atoi(req.PerPage)
+	if err != nil {
+		helpers.WriteError(w, errlist.ErrPerPageConvert)
+		log.Printf("error: user-list")
+		return
+	}
+
+	intPage, err := strconv.Atoi(req.Page)
+	if err != nil {
+		helpers.WriteError(w, errlist.ErrPageConvert)
+		log.Printf("error: user-list")
+		return
+	}
+
+	entries, err := l.db.UserList(req.Name, req.Surname, intPerPage, intPage)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		if errors.Is(err, errlist.ErrIsbnNotExist) {
+			helpers.WriteError(w, errlist.ErrIsbnNotExist)
+		} else {
+			helpers.WriteError(w, errlist.ErrGeneric)
+		}
+		log.Printf("error: user-list: %v", err)
+		return
+	}
+	response := entries
+	helpers.WriteResponse(w, response)
+
+	w.WriteHeader(http.StatusOK)
+}
