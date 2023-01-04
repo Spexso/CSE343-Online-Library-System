@@ -49,7 +49,7 @@ class _BookPageState extends State<BookPage> {
       ),
       body: Container(
         color: const Color.fromRGBO(60, 60, 60, 1),
-        height: MediaQuery.of(context).size.height - 100,
+        height: MediaQuery.of(context).size.height,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [

@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:login_page/manager/requests.dart';
 import 'package:login_page/model/isbn_picture.dart';
 import 'package:login_page/model/isbn_profile.dart';
+import 'package:login_page/model/saved_book_list.dart';
 import 'dart:typed_data';
 
 import 'book_page.dart';
@@ -23,14 +24,24 @@ class SavedPage extends StatefulWidget {
 
 class _SavedPageState extends State<SavedPage> {
 
-
   var pictureList = List<String>.filled(4, "", growable: false);
   var nameList = List<String>.filled(4, "", growable: false);
-  var isbnList = ["0201558025", "0486240614", "0761997601", "9783527308378"];
+
+  Future<List<String>> savedBooks() async {
+    var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
+    var url = Uri.parse("$urlString/user/saved-books");
+    print("savedBooks();");
+    var answer = await http.post(url ,headers: {"Authorization": "Bearer ${widget.token}"});
+    print(answer);
+    if(answer.statusCode == 200) {
+      //return SavedBooks.fromJson(json.decode(answer.body));
+    }
 
 
+    return List.filled(4, "fill");
+  }
   Future<List<IsbnProfile>> isbnProfileState() async {
-
+    var savedBookISBNList = savedBooks();
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
     var url = Uri.parse("$urlString/user/isbn-profile");
 
