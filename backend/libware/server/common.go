@@ -73,7 +73,7 @@ func (l *LibraryHandler) isbnProfile(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (l *LibraryHandler) IsbnList(w http.ResponseWriter, r *http.Request) {
+func (l *LibraryHandler) isbnList(w http.ResponseWriter, r *http.Request) {
 	var req requests.IsbnList
 	err := helpers.ReadRequest(r.Body, &req)
 	if err != nil || req.PerPage == "" || req.Page == "" {
@@ -117,7 +117,7 @@ func (l *LibraryHandler) IsbnList(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (l *LibraryHandler) BookList(w http.ResponseWriter, r *http.Request) {
+func (l *LibraryHandler) bookList(w http.ResponseWriter, r *http.Request) {
 	var req requests.BookList
 	err := helpers.ReadRequest(r.Body, &req)
 	if err != nil || req.Isbn == "" || req.PerPage == "" || req.Page == "" {

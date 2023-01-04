@@ -23,6 +23,10 @@ func (l *LibraryHandler) adminHandler() http.Handler {
 	router.HandleFunc("/user-profile-with-id", l.userProfileWithId)
 	router.HandleFunc("/book-borrow", l.bookBorrow)
 	router.HandleFunc("/book-return", l.bookReturn)
+	router.HandleFunc("/isbn-list", l.isbnList)
+	router.HandleFunc("/book-list", l.bookList)
+	router.HandleFunc("/user-list", l.userList)
+	router.HandleFunc("/user-id-of-email", l.userIdOfEmail)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		subject, err := l.authorize(w, r, l.adminSecret)
 		if err != nil {
@@ -275,7 +279,7 @@ func (l *LibraryHandler) bookReturn(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (l *LibraryHandler) UserList(w http.ResponseWriter, r *http.Request) {
+func (l *LibraryHandler) userList(w http.ResponseWriter, r *http.Request) {
 	var req requests.UserList
 	err := helpers.ReadRequest(r.Body, &req)
 	if err != nil || req.PerPage == "" || req.Page == "" {
@@ -319,7 +323,7 @@ func (l *LibraryHandler) UserList(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (l *LibraryHandler) UserIdOfEmail(w http.ResponseWriter, r *http.Request) {
+func (l *LibraryHandler) userIdOfEmail(w http.ResponseWriter, r *http.Request) {
 	var req requests.UserIdOfEmail
 	err := helpers.ReadRequest(r.Body, &req)
 	if err != nil || req.Email == "" {

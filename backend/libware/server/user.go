@@ -28,6 +28,8 @@ func (l *LibraryHandler) userHandler() http.Handler {
 	router.HandleFunc("/saved-books", l.savedBooks)
 	router.HandleFunc("/save-book", l.saveBook)
 	router.HandleFunc("/unsave-book", l.unsaveBook)
+	router.HandleFunc("/isbn-list", l.isbnList)
+	router.HandleFunc("/book-list", l.bookList)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		subject, err := l.authorize(w, r, l.userSecret)
 		if err != nil {
