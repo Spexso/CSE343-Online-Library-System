@@ -66,16 +66,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
-    /*
+
     userProfile().then((value){
-      name = value.name;
-      surname = value.surname;
-      email = value.email;
-      print(name);
-      print(surname);
-    }); */
-    //print(name);
-    //print(surname);
+    });
+
     super.initState();
   }
 
@@ -180,7 +174,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                            UpdateProfilePage(name: name,surname: surname, email: email,)),
+                            UpdateProfilePage(name: name,surname: surname, email: email, token: widget.token,)),
                       );
                       setState(() {
                         //_isEnable = true;

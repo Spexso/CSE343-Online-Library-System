@@ -1,16 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
+import 'package:login_page/model/error_message.dart';
+import 'package:login_page/pages/profile_page.dart';
 
 class UpdateProfilePage extends StatefulWidget {
   final String name;
   final String surname;
   final String email;
+  final String token;
   const UpdateProfilePage({Key? key,
     required this.name,
     required this.surname,
-    required this.email
+    required this.email,
+    required this.token
   }) : super(key: key);
 
   @override
@@ -28,6 +33,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   late bool _isObscure = true;
 
   late TextEditingController nameController;
+  late TextEditingController surnameController;
   late TextEditingController emailController;
   late TextEditingController passwordController;
 
@@ -36,6 +42,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     super.initState();
 
     nameController = TextEditingController(text: widget.name);
+    surnameController = TextEditingController(text: widget.surname);
     emailController = TextEditingController(text: widget.email);
     passwordController = TextEditingController(text: "123");
   }
@@ -47,6 +54,42 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     emailController.dispose();
     super.dispose();
   }
+
+  Future<bool> changeUsername() async {
+
+    var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
+    var url = Uri.parse("$urlString/user/change-user-name");
+
+    var data = {
+      "new-name": nameController.text,
+      "new-surname": surnameController.text,
+    };
+
+    var body = json.encode(data);
+    var answer = await http.post(
+        url,
+        body: body,
+        headers: {
+          "Authorization": "Bearer ${widget.token}"}
+    );
+    print("update profile page");
+
+    if(answer.statusCode == 200){
+      print("username update success");
+      return true;
+    }
+    else if(answer.statusCode == 400) {
+      print("username update NOT success");
+      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
+      print(resp.kind);
+      print(resp.message);
+      return false;
+    }
+    else {
+      print("username update not 200 and 400");
+      return false;
+    }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +171,18 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
             ),
             const SizedBox(height: 20,),
             ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  var ans = await changeUsername();
+
+                  if(ans == true){
+                    print("success update profile button");
+                    //Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage(token: widget.token,)),);
+                    Navigator.pop(context);
+                  }
+                  else if(ans == false){
+                    print("error update profile button");
+                  }
+                },
                 child: const Text("KAYDET"),
             ),
           ],
