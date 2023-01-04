@@ -46,7 +46,6 @@ func (c *Cli) Start() {
 		case "help":
 			fmt.Print(
 				`exit
-admins id=<integer> name=<string>
 admin-insert name=<string> password=<string>
 admin-delete id=<integer>
 `)
