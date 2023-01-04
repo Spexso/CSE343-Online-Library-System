@@ -23,6 +23,10 @@ func (l *LibraryHandler) adminHandler() http.Handler {
 	router.HandleFunc("/user-profile-with-id", l.userProfileWithId)
 	router.HandleFunc("/book-borrow", l.bookBorrow)
 	router.HandleFunc("/book-return", l.bookReturn)
+	router.HandleFunc("/isbn-list", l.isbnList)
+	router.HandleFunc("/book-list", l.bookList)
+	router.HandleFunc("/user-list", l.userList)
+	router.HandleFunc("/user-id-of-email", l.userIdOfEmail)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		subject, err := l.authorize(w, r, l.adminSecret)
 		if err != nil {
@@ -271,6 +275,80 @@ func (l *LibraryHandler) bookReturn(w http.ResponseWriter, r *http.Request) {
 		log.Printf("error: book-return: %v", err)
 		return
 	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func (l *LibraryHandler) userList(w http.ResponseWriter, r *http.Request) {
+	var req requests.UserList
+	err := helpers.ReadRequest(r.Body, &req)
+	if err != nil || req.PerPage == "" || req.Page == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrJsonDecoder)
+		if err == nil {
+			err = errlist.ErrJsonDecoder
+		}
+		log.Printf("error: user-list: %v", err)
+		return
+	}
+
+	intPerPage, err := strconv.Atoi(req.PerPage)
+	if err != nil {
+		helpers.WriteError(w, errlist.ErrPerPageConvert)
+		log.Printf("error: user-list")
+		return
+	}
+
+	intPage, err := strconv.Atoi(req.Page)
+	if err != nil {
+		helpers.WriteError(w, errlist.ErrPageConvert)
+		log.Printf("error: user-list")
+		return
+	}
+
+	entries, err := l.db.UserList(req.Name, req.Surname, intPerPage, intPage)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		if errors.Is(err, errlist.ErrNameNotExist) {
+			helpers.WriteError(w, errlist.ErrNameNotExist)
+		} else {
+			helpers.WriteError(w, errlist.ErrGeneric)
+		}
+		log.Printf("error: user-list: %v", err)
+		return
+	}
+	response := entries
+	helpers.WriteResponse(w, response)
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func (l *LibraryHandler) userIdOfEmail(w http.ResponseWriter, r *http.Request) {
+	var req requests.UserIdOfEmail
+	err := helpers.ReadRequest(r.Body, &req)
+	if err != nil || req.Email == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrJsonDecoder)
+		if err == nil {
+			err = errlist.ErrJsonDecoder
+		}
+		log.Printf("error: user-id-of-email: %v", err)
+		return
+	}
+
+	entries, err := l.db.UserIdOfEmail(req.Email)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		if errors.Is(err, errlist.ErrEmailNotExist) {
+			helpers.WriteError(w, errlist.ErrEmailNotExist)
+		} else {
+			helpers.WriteError(w, errlist.ErrGeneric)
+		}
+		log.Printf("error: user-id-of-email: %v", err)
+		return
+	}
+	response := entries
+	helpers.WriteResponse(w, response)
 
 	w.WriteHeader(http.StatusOK)
 }

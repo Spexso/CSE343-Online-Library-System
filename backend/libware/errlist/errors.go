@@ -52,4 +52,6 @@ var (
 	ErrUserNotPresent    = New("err-user-not-present", "user has not marked their presence")
 	ErrBookIsSaved       = New("err-book-is-saved", "book is already in saved books")
 	ErrBookIsNotSaved    = New("err-book-is-not-saved", "book is not in saved books")
+	ErrPerPageConvert    = New("err-per-page-convert", "per-page is not a valid integer")
+	ErrPageConvert       = New("err-page-convert", "page is not a valid integer")
 )

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import logo from '../assets/books-stack-of-three.png';
-import '../Loading.css';
+import './Loading.css';
 import './LoginForm.css';
 
 
 function LoginForm() {
-    
-    const serverAdd = "http://localhost:8080/guest/admin-login";
+    /*guest/admin-login*/
+    const {REACT_APP_API_TOKEN} = process.env;
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const history = useHistory();
@@ -21,7 +21,7 @@ function LoginForm() {
         e.preventDefault();
         
 
-            fetch(serverAdd, {
+            fetch(`${REACT_APP_API_TOKEN}/guest/admin-login`, {
                 method: 'POST',
                 headers: { "Content-Type": "application/json"},
                 body: JSON.stringify({
@@ -65,7 +65,6 @@ function LoginForm() {
                 setError("Can not reach to server!");
                 console.log("Server is offline");
                 console.log(err);
-                console.log(serverAdd);
             })
             
     }

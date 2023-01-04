@@ -1,0 +1,78 @@
+ .wholePage{
+	display: flex;
+	flex-direction: row; /* default value */
+	flex-wrap: nowrap; /* default value */
+	height: 100vh;
+	width: 100vw;
+	background-color: rgb(239, 139, 17);
+}
+
+.wholePage .sidebar{ /* .class1 .class2 represents nesting, whereas .class1.class2 means having both classes */
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	height: 100%;
+	width: 15%;
+	background-color: rgb(76, 81, 68);
+}
+
+.wholePage .non-sidebar{
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	height: 100%;
+	width: 85%;
+	background-color: blanchedalmond;
+
+	justify-content: center;
+	align-items: center;
+}
+
+/* sidebar css rules */
+
+.wholePage .sidebar .sidebar_ul{
+	list-style-type: none;
+	padding: 0px;
+	margin: 0px;
+
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	height: 100%;
+	width: 100%;
+}
+
+.wholePage .sidebar .sidebar_ul .sidebar_li{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+
+	/* width: 100%;
+	height: auto;
+	padding: 0px;
+	margin: 0px; */
+}
+
+/* icon ve text ekliycem buraya */
+
+/* .icon{
+	height: 100%;
+	width: 30%;
+	text-align: center;
+} */
+
+/* .text{
+	height: 100%;
+	width: 70%;
+	text-align: left;
+} */
+
+/*  non-sidebar css rules  */
+
+.wholePage .non-sidebar .content{
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	/* height: min-content; */
+	/* width: min-content; */
+}

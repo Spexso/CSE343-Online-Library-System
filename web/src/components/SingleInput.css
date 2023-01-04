@@ -1,8 +1,13 @@
-input{
-	padding:10px;
-	margin:10px 10px;
+.singleInput{
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
 }
 
+/* .singleInput .singleInput_label{
+} */
 
-
-
+/* .singleInput .singleInput_input{
+	padding:10px;
+	margin:10px 10px;
+} */

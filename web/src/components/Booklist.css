@@ -16,22 +16,23 @@
     margin-bottom: 8px;
 }
 
-*{
+head.header{
     padding: 0;
     margin: 0;
     font-family: 'Fjalla One';
 }
 
-:root{
+:root.header{
     --primary-color:#dfb19f;
     --secondary-color:#e9bd98;
+    padding: 0px;
 }
 
-body{
+body.header{
     background-color: var(--primary-color);
 }
 
-html{
+html.header{
     font-size: 70%;
 }
 

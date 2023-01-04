@@ -46,15 +46,8 @@ func (c *Cli) Start() {
 		case "help":
 			fmt.Print(
 				`exit
-admins id=<integer> name=<string>
 admin-insert name=<string> password=<string>
 admin-delete id=<integer>
-admin-history id=<integer>
-users id=<integer> name=<string> surname=<string> email=<string> phone=<string>
-user-delete id=<integer>
-user-history id=<integer>
-books isbn=<integer> name=<string> author=<string> publisher=<string> publicationyear=<integer> classnumber=<string> cutternumber=<string>
-book-delete id=<integer>
 `)
 		case "exit":
 			err = c.cmdExit(arguments)

@@ -1,18 +1,11 @@
 @import url('https://fonts.googleapis.com/css?family=Fjalla+One&display=swap');
 
 
-* {
+.form-inner{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Fjalla One';
-}
-
-input, button {
-    appearance: none;
-    background: none;
-    border: none;
-    outline: none;
 }
 
 
@@ -82,6 +75,7 @@ form .form-inner .form-group input {
     background-color: #F8F8F8;
     border-radius: 8px;
     transition: 0.4s;
+    border: none;
 }
 
 form .form-inner .form-group input:focus {
@@ -99,6 +93,7 @@ form .form-inner input[type="submit"], .welcome button {
     color: #FFF;
     font-weight: 700;
     cursor: pointer;
+    border: none;
 }
 
 form .form-inner input[type="submit"]:hover , .welcome button:hover

@@ -3,9 +3,14 @@ import { SingleInput } from './SingleInput';
 import "./InputField.css";
 
 /**
+ * Standalone Component InputField
+ * 
  * Parameters
- * (str) fieldName: name of the input filed
- * (str array) inputFields: header's of the SingleInput's
+ * (str) fieldName: Name of the input filed.
+ * (str array) inputFields: Headers of the SingleInputs'.
+ * (function) onClickFunction: onClick function of the button. The function should have a single parameter of type (str array) whose size must be
+ * equal to the size of inputFields array. Each element of the array corresponds to the current text in the input fileds when the button is pressed,
+ * in the same order as the inputFileds array.
  */
 class InputField extends Component{
 	constructor(props){
@@ -26,7 +31,7 @@ class InputField extends Component{
 		}
 
 		for(let i=0; i<this.props.inputFields.length; ++i)
-			this.onChangeFuncs.push(this.parOnChangeFunc(i));		
+			this.onChangeFuncs.push(this.parOnChangeFunc(i));
 		
 		/*this.x=[];
 		for(let i=0; i<this.props.inputFields.length; ++i){
@@ -37,7 +42,7 @@ class InputField extends Component{
 	}
 
 	onClick(){
-		console.log(this.state.values);
+		this.props.onClickFunction([].concat(this.state.values));
 	}
 
 	render(){
@@ -48,16 +53,15 @@ class InputField extends Component{
 			x.push(<SingleInput header={this.props.inputFields[i]} value={this.state.values[i]} handleChange={this.onChangeFuncs[i]}/>);
 		}
 
-		i=0;
 		return(
 			<div className="inputField">
-				<h2>{this.props.fieldName}</h2>
-				<ul>
+				<h2 className='inputField_h2'>{this.props.fieldName}</h2>
+				<ul className='inputField_ul'>
 					{x.map(elm => (
 						<li key={i++}>{elm}</li>
 					))}
 				</ul>
-				<button onClick={this.onClick}>Onayla</button>
+				<button className='inputField_button' onClick={this.onClick}>Onayla</button>
 			</div>
 		);
 	}

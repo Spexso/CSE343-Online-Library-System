@@ -98,3 +98,20 @@ type IsbnList struct {
 	PerPage      string `json:"per-page"`
 	Page         string `json:"page"`
 }
+
+type BookList struct {
+	Isbn    string `json:"isbn"`
+	PerPage string `json:"per-page"`
+	Page    string `json:"page"`
+}
+
+type UserList struct {
+	Name    string `json:"name"`
+	Surname string `json:"surname"`
+	PerPage string `json:"per-page"`
+	Page    string `json:"page"`
+}
+
+type UserIdOfEmail struct {
+	Email string `json:"email"`
+}
