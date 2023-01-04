@@ -2,6 +2,7 @@
 
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
@@ -41,7 +42,8 @@ class _LibraryPageState extends State<LibraryPage> {
 
   Future<List<IsbnProfile>> isbnProfileState() async {
 
-    var url = Uri.parse("http://10.0.2.2:8080/user/isbn-profile");
+    var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
+    var url = Uri.parse("$urlString/user/isbn-profile");
 
     var data = List.filled(4, {"isbn": "0201558025"});
 

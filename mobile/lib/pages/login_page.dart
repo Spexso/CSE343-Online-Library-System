@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'dart:async';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:login_page/model/login.dart';
@@ -25,7 +26,9 @@ class _LoginPageState extends State<LoginPage> {
   late String token;
 
   Future<bool> loginState() async {
-    var url = Uri.parse("http://10.0.2.2:8080/guest/user-login");
+    var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
+    var url = Uri.parse("$urlString/guest/user-login");
+    //var url = Uri.parse("http://10.0.2.2:8080/guest/user-login");
     var data = {
       "email": _tfEmailController.text,
       "password": _tfKeyController.text,

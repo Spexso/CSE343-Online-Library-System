@@ -39,8 +39,6 @@ class _NewHomePageState extends State<NewHomePage> {
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,13 +53,15 @@ class _NewHomePageState extends State<NewHomePage> {
         backgroundColor: const Color.fromRGBO(42, 43, 46, 1),
         actions: [
           IconButton(onPressed: () => {
-    Navigator.push(
-    context,
-    MaterialPageRoute(
-    builder: (context) =>
-    const NotificationsPage()),
-    )
-    }, icon: const Icon(Icons.notifications, color: Colors.white,)),
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                const NotificationsPage()
+              ),
+            )
+            }, icon: const Icon(Icons.notifications, color: Colors.white,)
+          ),
           IconButton(onPressed: () {}, icon: const Icon(Icons.settings, color: Colors.white,))
         ],
       ),

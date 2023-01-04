@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
@@ -30,7 +31,10 @@ class _SavedPageState extends State<SavedPage> {
 
   Future<List<IsbnProfile>> isbnProfileState() async {
 
-    var url = Uri.parse("http://10.0.2.2:8080/user/isbn-profile");
+    var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
+    var url = Uri.parse("$urlString/user/isbn-profile");
+
+    //var url = Uri.parse("http://10.0.2.2:8080/user/isbn-profile");
     var data = List.filled(4, {"isbn": "0201558025"});
     data[0] = {
       "isbn": "0201558025",
@@ -74,46 +78,6 @@ class _SavedPageState extends State<SavedPage> {
         {
           resp[i] = IsbnProfile.fromJson(json.decode(answer[i].body));
         }
-
-
-
-      /*nameList[0] = resp1.name;
-      authorList[0] = resp1.author;
-      publisherList[0] = resp1.publisher;
-      yearList[0] = resp1.publicationYear;
-      classNumList[0] = resp1.classNumber;
-      cutterNumList[0] = resp1.cutterNumber;*/
-
-      /*nameList[1] = resp2.name;
-      authorList[1] = resp2.author;
-      publisherList[1] = resp2.publisher;
-      yearList[1] = resp2.publicationYear;
-      classNumList[1] = resp2.classNumber;
-      cutterNumList[1] = resp2.cutterNumber;*/
-
-      /*nameList[2] = resp3.name;
-      authorList[2] = resp3.author;
-      publisherList[2] = resp3.publisher;
-      yearList[2] = resp3.publicationYear;
-      classNumList[2] = resp3.classNumber;
-      cutterNumList[2] = resp3.cutterNumber;*/
-
-      /*nameList[3] = resp4.name;
-      authorList[3] = resp4.author;
-      publisherList[3] = resp4.publisher;
-      yearList[3] = resp4.publicationYear;
-      classNumList[3] = resp4.classNumber;
-      cutterNumList[3] = resp4.cutterNumber;*/
-
-      /*
-      bookName = resp.name;
-      bookAuthor = resp.author;
-      bookPublisher = resp.publisher;
-      print("bookkksss");
-      print(bookName);
-      print(bookAuthor);
-      print(bookPublisher); */
-
     }
     else if((answer[0].statusCode == 400) || (answer[1].statusCode == 400) || (answer[2].statusCode == 400) || (answer[3].statusCode == 400)){
       print("isbn profile not success");

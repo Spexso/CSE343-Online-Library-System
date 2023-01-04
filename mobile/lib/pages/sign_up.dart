@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:login_page/model/error_message.dart';
 import 'login_page.dart';
 import 'package:http/http.dart' as http;
@@ -33,7 +34,10 @@ class _SignUpPageState extends State<SignUpPage> {
     String phone = "";
     String password = "";
 
-    var url = Uri.parse("http://10.0.2.2:8080/guest/user-register");
+    var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
+    var url = Uri.parse("$urlString/guest/user-register");
+
+    //var url = Uri.parse("http://10.0.2.2:8080/guest/user-register");
     var data = {
       "name": _tfNameController.text,
       "surname": _tfSurnameController.text,

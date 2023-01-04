@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:login_page/model/user_profile.dart';
 import 'package:login_page/pages/login_page.dart';
 import 'dart:async';
@@ -32,8 +33,11 @@ class _ProfilePageState extends State<ProfilePage> {
   late String password;
   
   Future<UserProfile> userProfile() async {
+
+    var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
+    var url = Uri.parse("$urlString/user/user-profile");
     
-    var url = Uri.parse("http://10.0.2.2:8080/user/user-profile");
+    //var url = Uri.parse("http://10.0.2.2:8080/user/user-profile");
 
     var answer = await http.post(
         url,
@@ -129,6 +133,7 @@ class _ProfilePageState extends State<ProfilePage> {
         padding: const EdgeInsets.all(30),
         child: Column(
           children: [
+            //Text(dotenv.env['API_URL'] ?? "API_URL not found"),
             const SizedBox(
               width: 100,
               height: 100,
