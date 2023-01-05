@@ -6,17 +6,19 @@ class SavedBooks {
   });
 
   factory SavedBooks.fromJson(Map<String, dynamic> parsedJson) {
-    var booksFromJson  = parsedJson['streets'];
+    var booksFromJson  = parsedJson['isbn-list'];
     //print(streetsFromJson.runtimeType);
     // List<String> streetsList = new List<String>.from(streetsFromJson);
-    List<String> streetsList = booksFromJson.cast<String>();
+    List<String> booksList = booksFromJson.cast<String>();
 
     return  SavedBooks(
-      books: booksFromJson,
-      // burda streetslist yazman lazımdı yani üstteki list
-      // bundan dolayı mıydı anlamadığın yer bakarsın
-      // books: streetsList,
+       books: booksList,
     );
+
+
   }
 
+   List<String> toList({bool growable = true}) {
+     return books.toList(growable: growable);
+   }
 }

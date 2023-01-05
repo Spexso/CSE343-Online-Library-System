@@ -27,15 +27,12 @@ class _SavedPageState extends State<SavedPage> {
   var pictureList = List<String>.filled(4, "", growable: false);
   var nameList = List<String>.filled(4, "", growable: false);
   var isbnList ;
-  Future<void> savedBooks() async {
+  Future<List<String>> savedBooks() async {
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
     var url = Uri.parse("$urlString/user/saved-books");
-    print("savedBooks();");
     var answer = await http.post(url , headers: {"Authorization": "Bearer ${widget.token}"});
-    print("savedBooks();");
-
-    isbnList = json.decode(answer.body);
-    print(isbnList);
+    isbnList = SavedBooks.fromJson(json.decode(answer.body));
+    return isbnList.toList();
 
   }
 
@@ -45,22 +42,24 @@ class _SavedPageState extends State<SavedPage> {
     var url = Uri.parse("$urlString/user/isbn-profile");
 
     //var url = Uri.parse("http://10.0.2.2:8080/user/isbn-profile");
-    var data = List.filled(4, "");
-
-    var body = List.filled(4, json.encode(data[0]));
-    for (int i=0;i<4;++i)
+    print("isbnProfileState");
+    var data = await isbnList;
+    data = data.toList();
+    print("isbnProfileState");
+    print(data);
+    var body = List.filled(data.length, json.encode(data[0]));
+    for (int i=0;i<data.length;++i)
       {
-        body[i] = json.encode(data[i]);
+        body[i] = json.encode(data[i].toString());
       }
-    var answer = List.filled(4, await http.post(
+    print(body);
+    var answer = List.filled(data.length, await http.post(
         url,
         body: body[0],
         headers: {
           "Authorization": "Bearer ${widget.token}"}
     ));
-    print("in isbn:");
-    print(widget.token);
-    for (int i=0;i<4;++i)
+    for (int i=0;i<data.length;++i)
       {
         answer[i] = await http.post(
             url,
@@ -69,7 +68,7 @@ class _SavedPageState extends State<SavedPage> {
               "Authorization": "Bearer ${widget.token}"}
         );
       }
-    var resp = List.filled(4, IsbnProfile("", "", "", "", "", "", ""));
+    var resp = List.filled(data.length, IsbnProfile("", "", "", "", "", "", ""));
 
     if((answer[0].statusCode == 200) && (answer[1].statusCode == 200) && (answer[2].statusCode == 200) && (answer[3].statusCode == 200)){
       print("isbn profile success");
@@ -77,6 +76,7 @@ class _SavedPageState extends State<SavedPage> {
         {
           resp[i] = IsbnProfile.fromJson(json.decode(answer[i].body));
         }
+      print(resp);
     }
     else if((answer[0].statusCode == 400) || (answer[1].statusCode == 400) || (answer[2].statusCode == 400) || (answer[3].statusCode == 400)){
       print("isbn profile not success");
