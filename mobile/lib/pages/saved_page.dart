@@ -10,7 +10,7 @@ import 'package:login_page/model/isbn_profile.dart';
 import 'package:login_page/model/saved_book_list.dart';
 import 'dart:typed_data';
 
-import 'book_page.dart';
+
 
 import '../model/error_message.dart';
 
@@ -26,64 +26,70 @@ class _SavedPageState extends State<SavedPage> {
 
   var pictureList = List<String>.filled(4, "", growable: false);
   var nameList = List<String>.filled(4, "", growable: false);
-  var isbnList ;
+
   Future<List<String>> savedBooks() async {
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
     var url = Uri.parse("$urlString/user/saved-books");
     var answer = await http.post(url , headers: {"Authorization": "Bearer ${widget.token}"});
-    isbnList = SavedBooks.fromJson(json.decode(answer.body));
-    return isbnList.toList();
+    var isbnList = SavedBooks(books: [""]);
+    if(answer.statusCode == 200)
+      {
+        isbnList = SavedBooks.fromJson(json.decode(answer.body));
+
+        return isbnList.books;
+      }
+    print(isbnList.toList());
+    return isbnList.books;
+
+
 
   }
 
   Future<List<IsbnProfile>> isbnProfileState() async {
-
+    print("in isbnProfileState");
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
     var url = Uri.parse("$urlString/user/isbn-profile");
-
-    //var url = Uri.parse("http://10.0.2.2:8080/user/isbn-profile");
-    print("isbnProfileState");
-    var data = await isbnList;
-    data = data.toList();
-    print("isbnProfileState");
-    print(data);
-    var body = List.filled(data.length, json.encode(data[0]));
-    for (int i=0;i<data.length;++i)
+    var list = await savedBooks();
+    var data = List.filled(list.length,{"isbn" : list[0]});
+    for(int i=0;i<list.length;++i)
       {
-        body[i] = json.encode(data[i].toString());
+        data[i] = {"isbn" : list[i]};
       }
-    print(body);
-    var answer = List.filled(data.length, await http.post(
-        url,
-        body: body[0],
-        headers: {
-          "Authorization": "Bearer ${widget.token}"}
-    ));
-    for (int i=0;i<data.length;++i)
-      {
-        answer[i] = await http.post(
-            url,
-            body: body[i],
-            headers: {
-              "Authorization": "Bearer ${widget.token}"}
-        );
-      }
-    var resp = List.filled(data.length, IsbnProfile("", "", "", "", "", "", ""));
-
-    if((answer[0].statusCode == 200) && (answer[1].statusCode == 200) && (answer[2].statusCode == 200) && (answer[3].statusCode == 200)){
-      print("isbn profile success");
-      for(int i=0;i<4;++i)
-        {
-          resp[i] = IsbnProfile.fromJson(json.decode(answer[i].body));
-        }
-      print(resp);
+    var body = List.filled(list.length, json.encode(data));
+    for(int i=0;i<list.length;++i)
+    {
+      body[i] = json.encode(data[i]);
     }
-    else if((answer[0].statusCode == 400) || (answer[1].statusCode == 400) || (answer[2].statusCode == 400) || (answer[3].statusCode == 400)){
+    print(body);
+    print(body[0].runtimeType);
+    var answer = List.filled(list.length, await http.post(url, body: body[0],headers: {"Authorization": "Bearer ${widget.token}"} ));
+    for(int i=0; i<list.length;++i)
+      {
+        answer[i] = await http.post(url, body: body[i],headers: {"Authorization": "Bearer ${widget.token}"} );
+      }
+    bool flag = true;
+    for (int i=0;i<list.length;++i)
+    {
+      if(answer[i].statusCode == 400)
+      {
+        flag = false;
+      }
+    }
+
+    var resp = List.filled(list.length, IsbnProfile("", "", "", "", "", "", ""));
+    if(flag){
+      print("isbn profile success");
+      for(int i=0;i<list.length;++i)
+      {
+        resp[i] = IsbnProfile.fromJson(json.decode(answer[i].body));
+      }
+    }
+    else{
       print("isbn profile not success");
       ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer[0].body));
-      print(resp.message);
-
+      print(resp.kind);
     }
+
     return resp;
   }
 
@@ -141,7 +147,23 @@ class _BookInList extends StatefulWidget {
 }
 
 bool style = false;
+Future<bool> unsaveBook(isbn, token) async {
+  var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
+  var url = Uri.parse("$urlString/user/unsave-book");
+  var data = {"isbn" : isbn};
+  var body = await json.encode(data);
+  var answer = await http.post(url ,body: body ,headers: {"Authorization": "Bearer $token"});
+  print(body);
+  print(answer.statusCode);
+  if(answer.statusCode == 200)
+  {
+    print("TRUE");
+    return true;
+  }
 
+  print("FALSE");
+  return false;
+}
 class _RequestsInListState extends State<_BookInList> {
   @override
   Widget build(BuildContext context) {
@@ -184,7 +206,7 @@ class _RequestsInListState extends State<_BookInList> {
                         children: [
                           OutlinedButton(
                             onPressed: () {},
-                            child: const Icon(Icons.bookmark_outline),
+                            child: const Icon(Icons.add),
                             style: buildButtonStyle(),
                           ),
                           OutlinedButton(
@@ -217,4 +239,3 @@ class _RequestsInListState extends State<_BookInList> {
 
 
 }
-

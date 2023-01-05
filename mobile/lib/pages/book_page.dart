@@ -24,10 +24,11 @@ class BookPage extends StatefulWidget {
   @override
   State<BookPage> createState() => _BookPageState();
 }
-Future<bool> savedBooks(isbn, token) async {
+Future<bool> saveBook(isbn, token) async {
   var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
   var url = Uri.parse("$urlString/user/save-book");
-  var body = String.fromCharCode(34) + isbn + String.fromCharCode(34);
+  var data = {"isbn" : isbn};
+  var body = await json.encode(data);
   var answer = await http.post(url ,body: body ,headers: {"Authorization": "Bearer $token"});
   print(body);
   print(answer.statusCode);
@@ -57,7 +58,7 @@ class _BookPageState extends State<BookPage> {
         ),
         actions: [
           IconButton(
-            onPressed: (){savedBooks(widget.isbn, widget.token);},
+            onPressed: (){saveBook(widget.isbn, widget.token);},
             icon: const Icon(
               Icons.bookmark_outlined,
             ),
