@@ -238,7 +238,8 @@ class _LibraryPageState extends State<LibraryPage> {
                             classNum: snapshot.data![index].classNumber,
                             cutterNum: snapshot.data![index].cutterNumber,
                             isbn: isbnList[index],
-                            year: snapshot.data![index].publicationYear
+                            year: snapshot.data![index].publicationYear,
+                            token: widget.token
                         );
                       },
                     );
@@ -373,7 +374,8 @@ class _LibraryPageState extends State<LibraryPage> {
                             classNum: snapshot.data![index].classNumber,
                             cutterNum: snapshot.data![index].cutterNumber,
                             isbn: isbnList[index],
-                            year: snapshot.data![index].publicationYear
+                            year: snapshot.data![index].publicationYear,
+                            token: widget.token
                         );
                       },
                     );
@@ -401,11 +403,12 @@ class BookingList extends StatefulWidget {
   final String classNum;
   final String cutterNum;
   final String isbn;
+  final token;
   const BookingList({Key? key,
     required this.name, required this.author,
     required this.publisher, required this.picture,
     required this.classNum, required this.cutterNum,
-    required this.isbn, required this.year}) : super(key: key);
+    required this.isbn, required this.year, required this.token}) : super(key: key);
 
   @override
   State<BookingList> createState() => _BookingListState();
@@ -441,6 +444,7 @@ class _BookingListState extends State<BookingList> {
                           cutterNum: widget.cutterNum,
                           isbn: widget.isbn,
                           picture: widget.picture,
+                          token: widget.token,
                         ),
                 ),
               );
@@ -503,11 +507,12 @@ class BookingGrid extends StatefulWidget {
   final String classNum;
   final String cutterNum;
   final String isbn;
+  final String token;
   const BookingGrid({Key? key,
     required this.name, required this.author,
     required this.publisher, required this.picture,
     required this.classNum, required this.cutterNum,
-    required this.isbn, required this.year}) : super(key: key);
+    required this.isbn, required this.year, required this.token}) : super(key: key);
 
   @override
   State<BookingGrid> createState() => _BookingGridState();
@@ -542,6 +547,7 @@ class _BookingGridState extends State<BookingGrid> {
                     cutterNum: widget.cutterNum,
                     isbn: widget.isbn,
                     picture: widget.picture,
+                    token: widget.token,
                   ),),
             );
           },

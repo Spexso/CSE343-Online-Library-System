@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'new_home_page.dart';
+import 'package:http/http.dart' as http;
 
 class BookPage extends StatefulWidget {
   final String name;
@@ -12,16 +14,32 @@ class BookPage extends StatefulWidget {
   final String classNum;
   final String cutterNum;
   final String isbn;
+  final String token;
   const BookPage({Key? key,
     required this.name, required this.author,
     required this.publisher, required this.picture,
     required this.classNum, required this.cutterNum,
-    required this.isbn, required this.year}) : super(key: key);
+    required this.isbn, required this.year,required this.token}) : super(key: key);
 
   @override
   State<BookPage> createState() => _BookPageState();
 }
+Future<bool> savedBooks(isbn, token) async {
+  var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
+  var url = Uri.parse("$urlString/user/save-book");
+  var body = String.fromCharCode(34) + isbn + String.fromCharCode(34);
+  var answer = await http.post(url ,body: body ,headers: {"Authorization": "Bearer $token"});
+  print(body);
+  print(answer.statusCode);
+  if(answer.statusCode == 200)
+    {
+      print("TRUE");
+      return true;
+    }
 
+  print("FALSE");
+  return false;
+}
 class _BookPageState extends State<BookPage> {
   @override
   Widget build(BuildContext context) {
@@ -39,7 +57,7 @@ class _BookPageState extends State<BookPage> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: (){savedBooks(widget.isbn, widget.token);},
             icon: const Icon(
               Icons.bookmark_outlined,
             ),
