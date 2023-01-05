@@ -1395,3 +1395,18 @@ func (d *Database) AdminList() (ids []int64, names []string, err error) {
 
 	return
 }
+
+func (d *Database) AdminDelete(id int64) (err error) {
+	if yes, err := d.IsAdminExistWithId(id); !yes {
+		return errlist.ErrAdminIdNotExist
+	} else if err != nil {
+		return err
+	}
+
+	_, err = d.db.Exec(`DELETE FROM admins WHERE id = ?`, id)
+	if err != nil {
+		return
+	}
+
+	return
+}
