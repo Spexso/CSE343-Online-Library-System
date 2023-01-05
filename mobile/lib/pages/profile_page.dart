@@ -77,6 +77,8 @@ class _ProfilePageState extends State<ProfilePage> {
       TextEditingController(text: name);
   late TextEditingController emailController =
       TextEditingController(text: surname);
+  late TextEditingController phoneController =
+    TextEditingController(text: phone);
   late TextEditingController passwordController =
       TextEditingController(text: password);
 
@@ -146,6 +148,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Text(name),
                         Text(surname),
                         Text(email),
+                        Text(phone),
                       ],
                     ),
                   );
@@ -174,7 +177,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                            UpdateProfilePage(name: name,surname: surname, email: email, token: widget.token,)),
+                            UpdateProfilePage(name: name,surname: surname, email: email, token: widget.token, phone: phone,)),
                       );
                       setState(() {
                         //_isEnable = true;

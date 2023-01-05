@@ -10,11 +10,13 @@ class UpdateProfilePage extends StatefulWidget {
   final String name;
   final String surname;
   final String email;
+  final String phone;
   final String token;
   const UpdateProfilePage({Key? key,
     required this.name,
     required this.surname,
     required this.email,
+    required this.phone,
     required this.token
   }) : super(key: key);
 
@@ -35,6 +37,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   late TextEditingController nameController;
   late TextEditingController surnameController;
   late TextEditingController emailController;
+  late TextEditingController phoneController;
   late TextEditingController passwordController;
 
   @override
@@ -44,6 +47,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     nameController = TextEditingController(text: widget.name);
     surnameController = TextEditingController(text: widget.surname);
     emailController = TextEditingController(text: widget.email);
+    phoneController = TextEditingController(text: widget.phone);
     passwordController = TextEditingController(text: "123");
   }
 
@@ -89,7 +93,44 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       print("username update not 200 and 400");
       return false;
     }
-}
+  }
+
+  Future<bool> changeUserEmail() async {
+
+    var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
+    var url = Uri.parse("$urlString/user/change-user-email");
+
+    var data = {
+      "password": passwordController.text,
+      "new-email": emailController.text,
+    };
+
+    var body = json.encode(data);
+    var answer = await http.post(
+        url,
+        body: body,
+        headers: {
+          "Authorization": "Bearer ${widget.token}"}
+    );
+
+    if(answer.statusCode == 200){
+      print("email update success");
+      return true;
+    }
+    else if(answer.statusCode == 400) {
+      print("email update NOT success");
+      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
+      print(resp.kind);
+      print(resp.message);
+      return false;
+    }
+    else {
+      print("email update not 200 and 400");
+      return false;
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -160,6 +201,19 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     ),
                   ),
                   TextField(
+                    style: const TextStyle(fontSize: 15, color: Colors.white),
+                    controller: phoneController,
+                    //enabled: _isEnable,
+                    decoration: const InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  TextField(
                     obscureText: _isObscure,
                     style: const TextStyle(fontSize: 15, color: Colors.white),
                     controller: passwordController,
@@ -189,6 +243,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
             ElevatedButton(
                 onPressed: () async {
                   var ans = await changeUsername();
+                  var ans1 = await changeUserEmail();
 
                   if(ans == true){
                     print("success update profile button");
