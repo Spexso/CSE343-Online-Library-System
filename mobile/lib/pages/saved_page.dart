@@ -26,27 +26,41 @@ class _SavedPageState extends State<SavedPage> {
 
   var pictureList = List<String>.filled(4, "", growable: false);
   var nameList = List<String>.filled(4, "", growable: false);
-  var isbnList ;
-  Future<List<String>> savedBooks() async {
+
+  late List<String> savedIsbnList;
+
+  Future<void> savedBooks() async {
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
     var url = Uri.parse("$urlString/user/saved-books");
     var answer = await http.post(url , headers: {"Authorization": "Bearer ${widget.token}"});
-    isbnList = SavedBooks.fromJson(json.decode(answer.body));
-    return isbnList.toList();
+
+    var savedBookResp = SavedBooks(books: []);
+
+    if(answer.statusCode == 200){
+      savedBookResp = SavedBooks.fromJson(json.decode(answer.body));
+      savedIsbnList = savedBookResp.toList();
+    }
+    else if(answer.statusCode == 400){
+      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
+    }
+
+
+    //await isbnProfileState(savedBookResp);
+    //return savedBookResp;
 
   }
 
-  Future<List<IsbnProfile>> isbnProfileState() async {
+  Future<List<IsbnProfile>> isbnProfileState(List<String> data) async {
 
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
     var url = Uri.parse("$urlString/user/isbn-profile");
 
     //var url = Uri.parse("http://10.0.2.2:8080/user/isbn-profile");
     print("isbnProfileState");
-    var data = await isbnList;
-    data = data.toList();
+    //List<String> data = await savedBooks();
+    //data = data.toList();
     print("isbnProfileState");
-    print(data);
+    //print(data);
     var body = List.filled(data.length, json.encode(data[0]));
     for (int i=0;i<data.length;++i)
       {
@@ -77,6 +91,7 @@ class _SavedPageState extends State<SavedPage> {
           resp[i] = IsbnProfile.fromJson(json.decode(answer[i].body));
         }
       print(resp);
+      return resp;
     }
     else if((answer[0].statusCode == 400) || (answer[1].statusCode == 400) || (answer[2].statusCode == 400) || (answer[3].statusCode == 400)){
       print("isbn profile not success");
@@ -90,7 +105,10 @@ class _SavedPageState extends State<SavedPage> {
 
   @override
   void initState() {
-    savedBooks().then((value) => null);
+/*
+    savedBooks().then((value){
+      //List<String> savedBookList = value.toList();
+    });*/
     //isbnPicture().then((value){
     //});
     super.initState();
@@ -98,7 +116,7 @@ class _SavedPageState extends State<SavedPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<IsbnProfile>>(
-      future: isbnProfileState(),
+      future: isbnProfileState(savedIsbnList),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return ListView.builder(
