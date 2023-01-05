@@ -1364,3 +1364,34 @@ func (d *Database) UserIdOfEmail(email string) (userId int64, err error) {
 	err = userRow.Scan(&userId)
 	return
 }
+
+func (d *Database) AdminList() (ids []int64, names []string, err error) {
+
+	rows, err := d.db.Query(`SELECT id, name FROM admins`)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			adminId   int64
+			adminName string
+		)
+
+		err = rows.Scan(&adminId, &adminName)
+		if err != nil {
+			return
+		}
+
+		ids = append(ids, adminId)
+		names = append(names, adminName)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return
+	}
+
+	return
+}
