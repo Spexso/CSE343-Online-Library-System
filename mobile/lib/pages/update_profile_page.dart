@@ -131,6 +131,22 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     ),
                   ),
                   TextField(
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                        color: Colors.white),
+                    controller: surnameController,
+                    //enabled: _isEnable,
+                    decoration: const InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  TextField(
                     style: const TextStyle(fontSize: 15, color: Colors.white),
                     controller: emailController,
                     //enabled: _isEnable,

@@ -13,6 +13,9 @@ class SavedBooks {
 
     return  SavedBooks(
       books: booksFromJson,
+      // burda streetslist yazman lazımdı yani üstteki list
+      // bundan dolayı mıydı anlamadığın yer bakarsın
+      // books: streetsList,
     );
   }
 
