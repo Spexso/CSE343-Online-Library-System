@@ -8,6 +8,8 @@ const Userlist = () => {
         { name: 'Rüyaların Yorumu', body: 'student', author: 'Freud', id: 3 }
     ]);
     
+    let data = sessionStorage.getItem("token");
+
     return ( 
         <div className="Users">
             <h2>
@@ -15,9 +17,11 @@ const Userlist = () => {
                 <div className="user-display" key={users.id}>
                     <h2>{ users.name }</h2>
                     <h2>{ users.body }</h2>
+                    
                 </div>
                 ))}
             </h2>
+            <h2>{data}ANAN</h2>
         </div>
      );
 }

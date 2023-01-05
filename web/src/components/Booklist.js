@@ -6,7 +6,7 @@ import Board from "./Board";
 const Booklist = () => {
     // eslint-disable-next-line
     const [search,setSearch]=useState("");
-    const {REACT_APP_API_TOKEN} = process.env;
+    const {REACT_APP_API_TOKEN} = process.env; 
     const searchBook=(evt)=> {
         if(evt.key === "Enter")
         {
@@ -15,12 +15,12 @@ const Booklist = () => {
                 method: 'POST',
                 headers: { "Content-Type": "application/json"},
                 body: JSON.stringify({
-                    name: ,
-                    password: ,
+                    name: "bla",
+                    password: "bla",
                 }),
             }).then( res =>console.log(res))
               .catch(err=>console.log(err))
-            */    
+            */
         }
     }
     /*const [books, setBooks] = useState([

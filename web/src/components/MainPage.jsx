@@ -1,15 +1,38 @@
-import React, {Component} from 'react';
+import React, {Component}  from 'react';
 import { InputField } from './InputField';
+import { useHistory } from 'react-router-dom';
 import "./MainPage.css";
 
+const GoBooklist = () => {
+	const historyB = useHistory();
+	return <div>
+			{historyB.push("/booklist")}
+		   </div>
+}
+
+const Logout = () => {
+	const historyL = useHistory();
+	return <div>
+			{historyL.push("/CSE343-Online-Library-System")}
+		   </div>
+}
+
+const GoUserlist = () => {
+	const historyL = useHistory();
+	return <div>
+			{historyL.push("/userlist")}
+		   </div>
+}
+
 class MainPage extends Component{
-	
+
+
 	constructor(props){
 		super(props);
 
 		this.state={contentIndex: 0};
 		let self=this;
-
+	 
 		this.items=[
 			{index:0,
 			 icon:"a",
@@ -48,7 +71,7 @@ class MainPage extends Component{
 			 text:"Kitap Listesi",
 			 onClick(){self.setState({contentIndex:4});},
 			 style(){return {backgroundColor: this.index===self.state.contentIndex?"rgb(182, 155, 80)":"rgb(173, 199, 131)"};},
-			 content:<InputField key="4" fieldName="Burda senin BookList component'in olcak" inputFields={["Önemsiz text:"]} onClickFunction={this.f}/>
+			 content:<GoBooklist key="4"/>
 			},
 
 			{index:5,
@@ -56,7 +79,8 @@ class MainPage extends Component{
 			 text:"Kullanıcı Listesi",
 			 onClick(){self.setState({contentIndex:5});},
 			 style(){return {backgroundColor: this.index===self.state.contentIndex?"rgb(182, 155, 80)":"rgb(173, 199, 131)"};},
-			 content:<InputField key="5" fieldName="Burda senin UserList component'in olcak" inputFields={["Önemsiz text:"]} onClickFunction={this.f}/>
+			 content:<GoUserlist/> 
+			 /* Modify here */
 			},
 
 			{index:6,
@@ -66,8 +90,9 @@ class MainPage extends Component{
 			{index:7,
 			 icon:"g",
 			 text:"Çıkış Yap",
-			 onClick(){self.setState({contentIndex:7}); /* Burda senin pop fonksiyonunu çağırcaz galiba login'e dönmek için. */},
+			 onClick(){self.setState({contentIndex:7}); GoBooklist(); /* Burda senin pop fonksiyonunu çağırcaz galiba login'e dönmek için. */},
 			 style(){return {backgroundColor: this.index===self.state.contentIndex?"rgb(182, 155, 80)":"rgb(173, 199, 131)"};},
+			 content: <Logout key="7"/> 
 			}
 		];
 	}
@@ -77,7 +102,10 @@ class MainPage extends Component{
 			console.log("Input text: "+inputs[i]);
 	}
 
+	
+
 	render(){
+
 		return(
 			<div className='wholePage'>
 				<div className='sidebar'>

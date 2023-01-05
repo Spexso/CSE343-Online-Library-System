@@ -101,6 +101,12 @@ form .form-inner input[type="submit"]:hover , .welcome button:hover
     background-position: 100% 0%;
 }
 
+form .form-inner input[value="LOGIN"]
+{
+    font-size: 16px;
+    font-family: 'Fjalla One';
+}
+
 .welcome {
     width: 100%;
     max-width: 480px;

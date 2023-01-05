@@ -5,7 +5,7 @@ import './Loading.css';
 import './LoginForm.css';
 
 
-function LoginForm() {
+function LoginForm(props) {
     /*guest/admin-login*/
     const {REACT_APP_API_TOKEN} = process.env;
     const [name, setName] = useState("");
@@ -13,13 +13,12 @@ function LoginForm() {
     const history = useHistory();
     /*const [isPending, setIsPending] = useState('false');*/
     const [error, setError] = useState("");
-    
+
 
     const submitHandler = e => {
         console.log(name);
         console.log(password);
         e.preventDefault();
-        
 
             fetch(`${REACT_APP_API_TOKEN}/guest/admin-login`, {
                 method: 'POST',
@@ -52,14 +51,16 @@ function LoginForm() {
                     console.log("Empty string");
                 }
                 else
-                {   
-                    const token = data.token;
+                {        
+                    props.getLoginV("true");
+
                     console.log("------------");
-                    console.log(token);
+                    props.getTokenV(data.token);
                     console.log("------------");
 
                     history.push('/main');
                     console.log(data.message);
+                    
                 }               
             }).catch( err => {
                 setError("Can not reach to server!");
@@ -89,7 +90,7 @@ function LoginForm() {
             </div>
 
             
-            <input type="submit" value="LOGIN"/>
+            <input type="submit" value="LOGIN" />
             <div className="form-logo">
                 <img src={logo} alt="LoginPageLogo"/>
             </div>
