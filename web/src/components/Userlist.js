@@ -2,6 +2,9 @@ import { useState } from "react";
 
 const Userlist = () => {
     // eslint-disable-next-line
+    const historyN = useHistory();
+    const BackToMain = () => historyN.push("/main");
+
     const [users, setUsers] = useState([
         { name: 'Mario', body: 'student', author: 'mario', id: 1 },
         { name: 'Kurak Günler', body: 'teacher', author: 'yoshi', id: 2 },

@@ -1,16 +1,36 @@
 import React from "react";
-import test from "../assets/book-icon-145.png";
+import { useState } from "react";
+import PopBook from "./popBook";
 
-const Board = () => {
+const Board = ({book, search}) => {
+    console.log(book);
+    console.log(search);
+
+    const [show, setShow] = useState(false);
+    const [bookItem,setItem] = useState();
     return ( 
         <>
-            <div className="board">
-                <img src={test} alt="test" />
-                <div className="bottom">
-                    <h3 className="title">React</h3>
-                    <p className="amount">&#8377;3290</p>
-                </div>
-            </div>
+            {
+                book.map(item => {
+                    if(item.name === search || item["publication-year"] === search || item.author === search || item.publisher === search)
+                    {
+                        return(
+                        <>
+                        <div className="board" onClick={()=>{setShow(true);setItem(item)}}>
+                            <div className="bottom">
+                                <h3 className="title">{item.name}</h3>
+                                <p className="author">{item.author}</p>
+                                <p className="year">{item["publication-year"]}</p>
+                                <p className="publisher">{item.publisher}</p>
+                            </div>
+                        </div> 
+                        <PopBook show={show} item={bookItem} onClose={() => setShow(false)}/>
+                        </>
+                        )
+                    }
+                     return null;
+                })
+            }    
         </>
      );
 }
