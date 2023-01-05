@@ -6,8 +6,10 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"math"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/Spexso/CSE343-Online-Library-System/backend/libware/database"
@@ -46,6 +48,7 @@ func (c *Cli) Start() {
 		case "help":
 			fmt.Print(
 				`exit
+admins
 admin-insert name=<string> password=<string>
 admin-delete id=<integer>
 `)
@@ -54,8 +57,12 @@ admin-delete id=<integer>
 			if err == nil {
 				return
 			}
+		case "admins":
+			err = c.cmdAdmins(arguments)
 		case "admin-insert":
 			err = c.cmdAdminInsert(arguments)
+		case "admin-delete":
+			err = c.cmdAdminDelete(arguments)
 		}
 
 		if err != nil {
@@ -94,6 +101,31 @@ func (c *Cli) cmdExit(arguments map[string]string) error {
 	return nil
 }
 
+func (c *Cli) cmdAdmins(arguments map[string]string) error {
+	if len(arguments) != 0 {
+		for k := range arguments {
+			unrecognizedArgument(k)
+		}
+	}
+
+	ids, names, err := c.db.AdminList()
+	if err != nil {
+		return err
+	}
+
+	if len(ids) == 0 {
+		return nil
+	}
+
+	nDigits := int64(math.Log10(float64(ids[len(ids)-1])))
+	fmt.Println(nDigits)
+	for i := 0; i < len(ids); i++ {
+		fmt.Printf("%-*d %s\n", nDigits+1, ids[i], names[i])
+	}
+
+	return nil
+}
+
 func (c *Cli) cmdAdminInsert(arguments map[string]string) error {
 	if err := missingArgument([]string{"name", "password"}, arguments); err != nil {
 		return err
@@ -118,6 +150,36 @@ func (c *Cli) cmdAdminInsert(arguments map[string]string) error {
 	}
 
 	log.Printf("admin-insert: %q created", name)
+
+	return nil
+}
+
+func (c *Cli) cmdAdminDelete(arguments map[string]string) error {
+	if err := missingArgument([]string{"id"}, arguments); err != nil {
+		return err
+	}
+
+	var idString string
+	for k, v := range arguments {
+		switch k {
+		case "id":
+			idString = v
+		default:
+			return unrecognizedArgument(k)
+		}
+	}
+
+	id, err := strconv.ParseInt(idString, 10, 64)
+	if err != nil {
+		return err
+	}
+
+	err = c.db.AdminDelete(id)
+	if err != nil {
+		return err
+	}
+
+	log.Printf("admin-delete: %q deleted", idString)
 
 	return nil
 }
