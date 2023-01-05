@@ -26,39 +26,27 @@ class _SavedPageState extends State<SavedPage> {
 
   var pictureList = List<String>.filled(4, "", growable: false);
   var nameList = List<String>.filled(4, "", growable: false);
-
-  Future<List<String>> savedBooks() async {
+  var isbnList ;
+  Future<void> savedBooks() async {
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
     var url = Uri.parse("$urlString/user/saved-books");
     print("savedBooks();");
-    var answer = await http.post(url ,headers: {"Authorization": "Bearer ${widget.token}"});
-    print(answer);
-    if(answer.statusCode == 200) {
-      //return SavedBooks.fromJson(json.decode(answer.body));
-    }
+    var answer = await http.post(url , headers: {"Authorization": "Bearer ${widget.token}"});
+    print("savedBooks();");
 
+    isbnList = json.decode(answer.body);
+    print(isbnList);
 
-    return List.filled(4, "fill");
   }
+
   Future<List<IsbnProfile>> isbnProfileState() async {
-    var savedBookISBNList = savedBooks();
+
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
     var url = Uri.parse("$urlString/user/isbn-profile");
 
     //var url = Uri.parse("http://10.0.2.2:8080/user/isbn-profile");
-    var data = List.filled(4, {"isbn": "0201558025"});
-    data[0] = {
-      "isbn": "0201558025",
-    };
-    data[1] = {
-      "isbn": "0486240614",
-    };
-    data[2] = {
-      "isbn": "0761997601",
-    };
-    data[3] = {
-      "isbn": "9783527308378",
-    };
+    var data = List.filled(4, "");
+
     var body = List.filled(4, json.encode(data[0]));
     for (int i=0;i<4;++i)
       {
@@ -102,9 +90,7 @@ class _SavedPageState extends State<SavedPage> {
 
   @override
   void initState() {
-    isbnProfileState().then((value){
-
-    });
+    savedBooks().then((value) => null);
     //isbnPicture().then((value){
     //});
     super.initState();
