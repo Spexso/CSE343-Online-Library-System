@@ -1,0 +1,46 @@
+.List {
+    display: table;
+    padding-left: 30px;
+    margin-bottom: 30px;
+    width: 97%;
+    height: auto;
+    background: rgb(202, 224, 230);
+    border: 10px solid rgba(74, 74, 74, 0.075);
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 10px;
+    color: #204056;
+    text-align: left;
+    font-size: 18px;
+    font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
+}
+
+.List li{
+    margin: 10px;
+}
+
+.List p{
+    font-weight: bold;
+    font-family:"Lucida Console", "Courier New", monospace;
+    border-radius: 1rem;
+    color: rgb(228, 169, 103);
+}
+  
+.List button{
+    display: block;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    margin-bottom: 10px;
+}
+
+.List button:hover{
+    transform: scale(0.9);
+}
+
+button.MB{
+    align-items: center;
+    border: none;
+    outline-style: outset;
+    outline-color: rgb(228, 218, 85);
+}
+

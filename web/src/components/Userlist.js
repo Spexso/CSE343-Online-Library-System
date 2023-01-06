@@ -1,30 +1,59 @@
+import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { useState } from "react";
+import './Userlist.css';
 
 const Userlist = () => {
     // eslint-disable-next-line
     const historyN = useHistory();
     const BackToMain = () => historyN.push("/main");
-
-    const [users, setUsers] = useState([
-        { name: 'Mario', body: 'student', author: 'mario', id: 1 },
-        { name: 'Kurak Günler', body: 'teacher', author: 'yoshi', id: 2 },
-        { name: 'Rüyaların Yorumu', body: 'student', author: 'Freud', id: 3 }
-    ]);
+    let token = sessionStorage.getItem("token");
+    var bearer = 'Bearer ' + token;
+    const {REACT_APP_API_TOKEN} = process.env;
     
-    let data = sessionStorage.getItem("token");
+
+
+    /*const nameList = names.map*/
+
+    const [users, setUsers] = useState([]);
+    
+    useEffect( () => {
+        
+        const getUsers = async () => {
+            const response = await fetch(`${REACT_APP_API_TOKEN}/admin/user-list`, {
+                method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': bearer,
+                    },
+                    body: JSON.stringify(
+                        {
+                            "per-page": "20",
+                            "page": "1"
+                        }
+                    )
+            });
+            const jsonResponse = await response.json();
+            console.log(jsonResponse);
+            setUsers(jsonResponse);
+        };
+        
+        getUsers();
+
+    }, []);
 
     return ( 
-        <div className="Users">
-            <h2>
-                {users.map((users) => (
-                <div className="user-display" key={users.id}>
-                    <h2>{ users.name }</h2>
-                    <h2>{ users.body }</h2>
-                    
-                </div>
-                ))}
-            </h2>
-            <h2>{data}ANAN</h2>
+        <div className="List">
+            <p>Users</p>
+                <ul id="L">
+                    {
+                        users.map((users) => {
+                            return <li class="sub">Name: {users.name} <br></br>Surname: {users.surname} <br></br> Email: {users.email} <br></br> Phone: {users.phone}</li>       
+                        })
+                    }
+                </ul>
+            <br></br>
+            <button className="MB" onClick={BackToMain}>Main Page</button>
         </div>
      );
 }
