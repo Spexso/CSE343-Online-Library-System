@@ -84,7 +84,7 @@ class _SavedPageState extends State<SavedPage> {
       print("isbn profile success");
       for(int i=0;i<list.length;++i)
       {
-        resp[i] = IsbnProfile.fromJson(json.decode(answer[i].body));
+        resp[i] = IsbnProfile.fromJson(json.decode(utf8.decode(answer[i].bodyBytes)));
       }
     }
     else{

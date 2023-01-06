@@ -72,7 +72,6 @@ Future<bool> enqueueBook(isbn, token) async {
   var body = await json.encode(data);
   var answer = await http
       .post(url, body: body, headers: {"Authorization": "Bearer $token"});
-
   if (answer.statusCode == 200) {
     print("TRUE enqueue");
     return true;

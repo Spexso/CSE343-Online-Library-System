@@ -11,7 +11,6 @@ import 'package:login_page/model/isbn_list_response.dart';
 import 'package:login_page/model/isbn_picture.dart';
 import 'package:login_page/model/isbn_profile.dart';
 import 'dart:typed_data';
-import 'package:turkish/turkish.dart';
 import 'book_page.dart';
 
 import '../model/error_message.dart';
@@ -25,6 +24,7 @@ class LibraryPage extends StatefulWidget {
 }
 
 class _LibraryPageState extends State<LibraryPage> {
+  final _tfBookNameController = TextEditingController();
   bool isGridView = false;
 
 
@@ -41,7 +41,7 @@ class _LibraryPageState extends State<LibraryPage> {
       "year-end": "",
       "class-number": "",
       "cutter-number": "",
-      "per-page": "20",
+      "per-page": "5",
       "page": "1"
     };
 
@@ -92,6 +92,7 @@ class _LibraryPageState extends State<LibraryPage> {
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: TextField(
+                  controller: _tfBookNameController,
                   style: const TextStyle(color: Colors.white, fontSize: 20),
                   decoration: InputDecoration(
                     filled: true,

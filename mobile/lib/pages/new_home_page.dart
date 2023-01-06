@@ -63,7 +63,7 @@ class _NewHomePageState extends State<NewHomePage> {
             )
             }, icon: const Icon(Icons.notifications, color: Colors.white,)
           ),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.settings, color: Colors.white,))
+
         ],
       ),
       body: _children[_selectedIndex],

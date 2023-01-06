@@ -33,7 +33,7 @@ dependencies:
   card_swiper: ^2.0.4
   google_nav_bar: ^5.0.6
   http: ^0.13.5
-  turkish: ^0.2.1
+  searchable_listview:  2.2.1
 
 
   # The following adds the Cupertino Icons font to your application.
