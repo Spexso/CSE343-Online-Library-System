@@ -165,8 +165,8 @@ class _SavedPageState extends State<SavedPage> {
 
                                   Text(
                                     snapshot.data![index].name,
-                                    style: const TextStyle(color: Colors.white, fontSize: 18),
-                                    maxLines: 3,
+                                    style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                                    maxLines: 2,
                                     textAlign: TextAlign.center,
                                     overflow: TextOverflow.ellipsis,
                                   ),

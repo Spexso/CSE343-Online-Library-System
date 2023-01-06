@@ -15,39 +15,49 @@ class BookPage extends StatefulWidget {
   final String cutterNum;
   final String isbn;
   final String token;
-  const BookPage({Key? key,
-    required this.name, required this.author,
-    required this.publisher, required this.picture,
-    required this.classNum, required this.cutterNum,
-    required this.isbn, required this.year,required this.token}) : super(key: key);
+
+  const BookPage(
+      {Key? key,
+      required this.name,
+      required this.author,
+      required this.publisher,
+      required this.picture,
+      required this.classNum,
+      required this.cutterNum,
+      required this.isbn,
+      required this.year,
+      required this.token})
+      : super(key: key);
 
   @override
   State<BookPage> createState() => _BookPageState();
 }
+
 Future<bool> saveBook(isbn, token) async {
   var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
   var url = Uri.parse("$urlString/user/save-book");
-  var data = {"isbn" : isbn};
+  var data = {"isbn": isbn};
   var body = await json.encode(data);
-  var answer = await http.post(url ,body: body ,headers: {"Authorization": "Bearer $token"});
+  var answer = await http
+      .post(url, body: body, headers: {"Authorization": "Bearer $token"});
 
-  if(answer.statusCode == 200)
-    {
-      print("TRUE");
-      return true;
-    }
+  if (answer.statusCode == 200) {
+    print("TRUE");
+    return true;
+  }
   print("FALSE");
   return false;
 }
+
 Future<bool> unsaveBook(isbn, token) async {
   var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
   var url = Uri.parse("$urlString/user/unsave-book");
-  var data = {"isbn" : isbn};
+  var data = {"isbn": isbn};
   var body = await json.encode(data);
-  var answer = await http.post(url ,body: body ,headers: {"Authorization": "Bearer $token"});
+  var answer = await http
+      .post(url, body: body, headers: {"Authorization": "Bearer $token"});
 
-  if(answer.statusCode == 200)
-  {
+  if (answer.statusCode == 200) {
     print("TRUE ");
     return true;
   }
@@ -58,12 +68,12 @@ Future<bool> unsaveBook(isbn, token) async {
 Future<bool> enqueueBook(isbn, token) async {
   var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
   var url = Uri.parse("$urlString/user/enqueue");
-  var data = {"isbn" : isbn};
+  var data = {"isbn": isbn};
   var body = await json.encode(data);
-  var answer = await http.post(url ,body: body ,headers: {"Authorization": "Bearer $token"});
+  var answer = await http
+      .post(url, body: body, headers: {"Authorization": "Bearer $token"});
 
-  if(answer.statusCode == 200)
-  {
+  if (answer.statusCode == 200) {
     print("TRUE enqueue");
     return true;
   }
@@ -74,12 +84,12 @@ Future<bool> enqueueBook(isbn, token) async {
 Future<bool> dequeueBook(isbn, token) async {
   var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
   var url = Uri.parse("$urlString/user/dequeue");
-  var data = {"isbn" : isbn};
+  var data = {"isbn": isbn};
   var body = await json.encode(data);
-  var answer = await http.post(url ,body: body ,headers: {"Authorization": "Bearer $token"});
+  var answer = await http
+      .post(url, body: body, headers: {"Authorization": "Bearer $token"});
 
-  if(answer.statusCode == 200)
-  {
+  if (answer.statusCode == 200) {
     print("TRUE dequeue");
     return true;
   }
@@ -104,14 +114,18 @@ class _BookPageState extends State<BookPage> {
         ),
         actions: [
           IconButton(
-            onPressed: (){unsaveBook(widget.isbn, widget.token);},
+            onPressed: () {
+              unsaveBook(widget.isbn, widget.token);
+            },
             icon: const Icon(
               Icons.bookmark_outline,
             ),
             color: Colors.white,
           ),
           IconButton(
-            onPressed: (){saveBook(widget.isbn, widget.token);},
+            onPressed: () {
+              saveBook(widget.isbn, widget.token);
+            },
             icon: const Icon(
               Icons.bookmark_outlined,
             ),
@@ -126,13 +140,16 @@ class _BookPageState extends State<BookPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
-              height: MediaQuery.of(context).size.width,
-              width: MediaQuery.of(context).size.width,
-              child: Image.memory(base64Decode(widget.picture), fit: BoxFit.contain,)
-            ),
+                height: MediaQuery.of(context).size.width,
+                width: MediaQuery.of(context).size.width,
+                child: Image.memory(
+                  base64Decode(widget.picture),
+                  fit: BoxFit.contain,
+                )),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: SizedBox(
                   width: double.infinity,
                   child: Column(
@@ -145,8 +162,7 @@ class _BookPageState extends State<BookPage> {
                             color: Colors.white,
                             overflow: TextOverflow.ellipsis,
                             fontSize: 25,
-                            fontWeight: FontWeight.bold
-                        ),
+                            fontWeight: FontWeight.bold),
                         maxLines: 2,
                       ),
                       Text(
@@ -155,17 +171,16 @@ class _BookPageState extends State<BookPage> {
                             color: Colors.white,
                             overflow: TextOverflow.ellipsis,
                             fontSize: 20,
-                            fontStyle: FontStyle.italic
-                        ),
+                            fontStyle: FontStyle.italic),
                         maxLines: 2,
                         textAlign: TextAlign.center,
                       ),
                       Text(
                         "Publisher:  ${widget.publisher}",
                         style: TextStyle(
-                            color: Colors.grey[400],
-                            overflow: TextOverflow.ellipsis,
-                            fontSize: 18,
+                          color: Colors.grey[400],
+                          overflow: TextOverflow.ellipsis,
+                          fontSize: 18,
                         ),
                         maxLines: 2,
                         textAlign: TextAlign.center,
@@ -175,8 +190,7 @@ class _BookPageState extends State<BookPage> {
                         style: TextStyle(
                             color: Colors.grey[400],
                             overflow: TextOverflow.ellipsis,
-                            fontSize: 18
-                        ),
+                            fontSize: 18),
                         maxLines: 2,
                         textAlign: TextAlign.center,
                       ),
@@ -201,46 +215,46 @@ class _BookPageState extends State<BookPage> {
                       Align(
                         alignment: Alignment.center,
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             ElevatedButton(
-                              style: ButtonStyle(
-                                  foregroundColor: MaterialStateProperty.all(Colors.white),
-                                  overlayColor: MaterialStateProperty.all(
-                                      const Color.fromRGBO(80, 80, 80, 1)),
-                                  backgroundColor: MaterialStateProperty.all(
-                                    Colors.white,
-                                  )
-                              ),
-                              onPressed: () {
-                                enqueueBook(widget.isbn, widget.token);
-                              },
-                              child: const Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 13, horizontal: 35),
-                                  child: Text(
-                                    "Talep Et",
-                                    style: TextStyle(fontSize: 20, color: Colors.black),
-                                  )),
-                            ),
+                                style: ButtonStyle(
+                                    foregroundColor:
+                                        MaterialStateProperty.all(Colors.white),
+                                    overlayColor: MaterialStateProperty.all(
+                                        const Color.fromRGBO(80, 80, 80, 1)),
+                                    fixedSize: MaterialStateProperty.all(
+                                        const Size(150, 50)),
+                                    backgroundColor: MaterialStateProperty.all(
+                                      Colors.white,
+                                    )),
+                                onPressed: () {
+                                  enqueueBook(widget.isbn, widget.token);
+                                },
+                                child: const Text(
+                                  "Talep Et",
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black),
+                                )),
                             ElevatedButton(
                               style: ButtonStyle(
-                                  foregroundColor: MaterialStateProperty.all(Colors.white),
+                                  foregroundColor:
+                                      MaterialStateProperty.all(Colors.white),
                                   overlayColor: MaterialStateProperty.all(
                                       const Color.fromRGBO(80, 80, 80, 1)),
+                                  fixedSize: MaterialStateProperty.all(
+                                      const Size(150, 50)),
                                   backgroundColor: MaterialStateProperty.all(
                                     Colors.white,
-                                  )
-                              ),
+                                  )),
                               onPressed: () {
                                 dequeueBook(widget.isbn, widget.token);
                               },
-                              child: const Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 13, horizontal: 35),
-                                  child: Text(
+                              child: const Text(
                                     "Talep İptal",
-                                    style: TextStyle(fontSize: 20, color: Colors.black),
-                                  )),
+                                    style: TextStyle(
+                                        fontSize: 20, color: Colors.black),
+                                  )
                             ),
                           ],
                         ),

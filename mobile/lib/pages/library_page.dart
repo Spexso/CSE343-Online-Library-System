@@ -11,7 +11,7 @@ import 'package:login_page/model/isbn_list_response.dart';
 import 'package:login_page/model/isbn_picture.dart';
 import 'package:login_page/model/isbn_profile.dart';
 import 'dart:typed_data';
-
+import 'package:turkish/turkish.dart';
 import 'book_page.dart';
 
 import '../model/error_message.dart';
@@ -27,79 +27,6 @@ class LibraryPage extends StatefulWidget {
 class _LibraryPageState extends State<LibraryPage> {
   bool isGridView = false;
 
-  //String bookName = "";
-  //String bookAuthor = "";
-  //String bookPublisher = "";
-
-  //String pictureBase64 = "";
-  var pictureList = List<String>.filled(4, "", growable: false);
-  var nameList = List<String>.filled(4, "", growable: false);
-  var authorList = List<String>.filled(4, "", growable: false);
-  var publisherList = List<String>.filled(4, "", growable: false);
-  var yearList = List<String>.filled(4, "", growable: false);
-  var classNumList = List<String>.filled(4, "", growable: false);
-  var cutterNumList = List<String>.filled(4, "", growable: false);
-  var isbnList = ["0201558025", "0486240614", "0761997601", "9783527308378"];
-/*
-  Future<List<IsbnProfile>> isbnProfileState() async {
-
-    var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
-    var url = Uri.parse("$urlString/user/isbn-profile");
-
-    var data = List.filled(4, {"isbn": "0201558025"});
-
-    data[0] = {
-      "isbn": "0201558025",
-    };
-    data[1] = {
-      "isbn": "0486240614",
-    };
-    data[2] = {
-      "isbn": "0761997601",
-    };
-    data[3] = {
-      "isbn": "9783527308378",
-    };
-
-    var body = List.filled(4, json.encode(data[0]));
-
-    for (int i=0;i<4;++i) {
-      body[i] = json.encode(data[i]);
-    }
-    var answer = List.filled(4, await http.post(
-        url,
-        body: body[0],
-        headers: {
-          "Authorization": "Bearer ${widget.token}"}
-    ));
-    print("in isbn:");
-    print(widget.token);
-    for (int i=0;i<4;++i) {
-      answer[i] = await http.post(
-          url,
-          body: body[i],
-          headers: {
-            "Authorization": "Bearer ${widget.token}"}
-      );
-    }
-    var resp = List.filled(4, IsbnProfile("", "", "", "", "", "", ""));
-
-    if((answer[0].statusCode == 200) && (answer[1].statusCode == 200) && (answer[2].statusCode == 200) && (answer[3].statusCode == 200)){
-      print("isbn profile success");
-      for(int i=0;i<4;++i)
-      {
-        resp[i] = IsbnProfile.fromJson(json.decode(answer[i].body));
-      }
-
-    }
-    else if((answer[0].statusCode == 400) || (answer[1].statusCode == 400) || (answer[2].statusCode == 400) || (answer[3].statusCode == 400)){
-      print("isbn profile not success");
-      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer[0].body));
-      print(resp.message);
-    }
-    return resp;
-  }
- */
 
   Future<IsbnListResponse> isbnListState() async {
 
@@ -132,7 +59,7 @@ class _LibraryPageState extends State<LibraryPage> {
     if(answer.statusCode == 200){
       print("request 200");
       print(json.decode(answer.body));
-      resp = await IsbnListResponse.fromJson(json.decode(answer.body));
+      resp = await IsbnListResponse.fromJson(json.decode(utf8.decode(answer.bodyBytes)));
       print("ISBN LIST RESP");
       print(await resp);
       print(await resp.isbnList[0].name);
@@ -570,76 +497,79 @@ class _BookingGridState extends State<BookingGrid> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-      child: Container(
-        width: MediaQuery.of(context).size.width / 5 * 2,
-        height: MediaQuery.of(context).size.width / 50 * 45,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: const Color.fromRGBO(42, 43, 46, 1),
-        ),
-        child: InkWell(
-          customBorder:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => BookPage(
-                    name: widget.name,
-                    author: widget.author,
-                    publisher: widget.publisher,
-                    year: widget.year,
-                    classNum: widget.classNum,
-                    cutterNum: widget.cutterNum,
-                    isbn: widget.isbn,
-                    picture: widget.picture,
-                    token: widget.token,
-                  ),),
-            );
-          },
-          child: Column(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(5),
-                child: SizedBox(
-                  height: 200, width: 150,
-                    child: Image.memory(base64Decode(widget.picture))
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 7.0, left: 8, right: 8),
-                  child: Text(
-                    widget.name,
-                    style: const TextStyle(color: Colors.white, fontSize: 23, fontWeight: FontWeight.bold),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+      child: Center(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.width / 5 * 2,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: const Color.fromRGBO(42, 43, 46, 1),
+          ),
+          child: InkWell(
+            customBorder:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => BookPage(
+                      name: widget.name,
+                      author: widget.author,
+                      publisher: widget.publisher,
+                      year: widget.year,
+                      classNum: widget.classNum,
+                      cutterNum: widget.cutterNum,
+                      isbn: widget.isbn,
+                      picture: widget.picture,
+                      token: widget.token,
+                    ),),
+              );
+            },
+            child: Column(
+
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: SizedBox(
+                    height: 200, width: 150,
+                      child: Image.memory(base64Decode(widget.picture))
                   ),
                 ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 10,left: 8, right: 8),
-                  child: Text(
-                    widget.author,
-                    style: const TextStyle(color: Colors.white, fontSize: 18),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                Padding(
+                    padding: const EdgeInsets.only(top: 7.0, left: 8, right: 8),
+                    child: Text(
+                      widget.name,
+                      style: const TextStyle(color: Colors.white, fontSize: 23, fontWeight: FontWeight.bold),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                )
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8, right: 8),
-                  child: Text(
-                    widget.publisher,
-                    style: const TextStyle(color: Colors.white, fontSize: 18),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+
+
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10,left: 8, right: 8),
+                    child: Text(
+                      widget.author,
+                      style: const TextStyle(color: Colors.white, fontSize: 18),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
-              ),
-            ],
+
+
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    child: Text(
+                      widget.publisher,
+                      style: const TextStyle(color: Colors.white, fontSize: 18),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+
+              ],
+            ),
           ),
         ),
       ),
