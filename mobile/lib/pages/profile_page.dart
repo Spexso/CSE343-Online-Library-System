@@ -172,9 +172,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   width: 200,
                   height: 45,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
+                    onPressed: () async {
+                      await Navigator.push(context,
                         MaterialPageRoute(
                             builder: (context) =>
                             UpdateProfilePage(name: name,surname: surname, email: email, token: widget.token, phone: phone,)),
