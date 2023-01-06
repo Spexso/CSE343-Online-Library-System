@@ -1203,7 +1203,7 @@ func (d *Database) IsbnList(name string, author string, publisher string, yearSt
 	}
 
 	if publisher != "" {
-		parameters = append(parameters, "publisher = ?")
+		parameters = append(parameters, "instr(publisher, ?)")
 		parametersList = append(parametersList, publisher)
 	}
 
@@ -1218,12 +1218,12 @@ func (d *Database) IsbnList(name string, author string, publisher string, yearSt
 	}
 
 	if classNumber != "" {
-		parameters = append(parameters, "classnumber = ?")
+		parameters = append(parameters, "instr(classnumber, ?)")
 		parametersList = append(parametersList, classNumber)
 	}
 
 	if cutterNumber != "" {
-		parameters = append(parameters, "cutternumber = ?")
+		parameters = append(parameters, "instr(cutternumber, ?)")
 		parametersList = append(parametersList, cutterNumber)
 	}
 
