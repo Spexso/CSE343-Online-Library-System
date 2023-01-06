@@ -30,14 +30,27 @@ Future<bool> saveBook(isbn, token) async {
   var data = {"isbn" : isbn};
   var body = await json.encode(data);
   var answer = await http.post(url ,body: body ,headers: {"Authorization": "Bearer $token"});
-  print(body);
-  print(answer.statusCode);
+
   if(answer.statusCode == 200)
     {
       print("TRUE");
       return true;
     }
+  print("FALSE");
+  return false;
+}
+Future<bool> unsaveBook(isbn, token) async {
+  var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
+  var url = Uri.parse("$urlString/user/unsave-book");
+  var data = {"isbn" : isbn};
+  var body = await json.encode(data);
+  var answer = await http.post(url ,body: body ,headers: {"Authorization": "Bearer $token"});
 
+  if(answer.statusCode == 200)
+  {
+    print("TRUE");
+    return true;
+  }
   print("FALSE");
   return false;
 }
@@ -57,6 +70,13 @@ class _BookPageState extends State<BookPage> {
           ),
         ),
         actions: [
+          IconButton(
+            onPressed: (){unsaveBook(widget.isbn, widget.token);},
+            icon: const Icon(
+              Icons.bookmark_outline,
+            ),
+            color: Colors.white,
+          ),
           IconButton(
             onPressed: (){saveBook(widget.isbn, widget.token);},
             icon: const Icon(
@@ -95,7 +115,6 @@ class _BookPageState extends State<BookPage> {
                             fontWeight: FontWeight.bold
                         ),
                         maxLines: 2,
-                        textAlign: TextAlign.center,
                       ),
                       Text(
                         "by ${widget.author}",

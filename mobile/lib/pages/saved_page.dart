@@ -79,7 +79,7 @@ class _SavedPageState extends State<SavedPage> {
       }
     }
 
-    var resp = List.filled(list.length, IsbnProfile("", "", "", "", "", "", ""));
+    var resp = List.filled(list.length, IsbnProfile("", "", "", "", "", "", "",""));
     if(flag){
       print("isbn profile success");
       for(int i=0;i<list.length;++i)
@@ -137,7 +137,7 @@ class _SavedPageState extends State<SavedPage> {
                                   year: snapshot.data![index].publicationYear,
                                   classNum: snapshot.data![index].classNumber,
                                   cutterNum: snapshot.data![index].cutterNumber,
-                                  isbn: "",
+                                  isbn: snapshot.data![index].isbn,
                                   picture: snapshot.data![index].picture,
                                   token: widget.token,
                                 ),

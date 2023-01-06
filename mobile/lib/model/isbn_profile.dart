@@ -7,9 +7,10 @@ class IsbnProfile {
   String classNumber;
   String cutterNumber;
   String picture;
+  String isbn;
 
   IsbnProfile(this.name, this.author, this.publisher, this.publicationYear,
-      this.classNumber, this.cutterNumber, this.picture);
+      this.classNumber, this.cutterNumber, this.picture, this.isbn);
 
   factory IsbnProfile.fromJson(Map<String, dynamic> json){
     return IsbnProfile(
@@ -19,7 +20,8 @@ class IsbnProfile {
         json["publication-year"] as String,
         json["class-number"] as String,
         json["cutter-number"] as String,
-        json["picture"] as String
+        json["picture"] as String,
+        json["isbn"] as String
     );
   }
 }

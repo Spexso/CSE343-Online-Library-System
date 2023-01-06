@@ -70,6 +70,7 @@ class _RequestsPageState extends State<RequestsPage> {
     }
     return resp;
   }
+
   Future<List<IsbnProfile>> ListIsbnProfile () async
   {
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
@@ -101,7 +102,7 @@ class _RequestsPageState extends State<RequestsPage> {
   }
   void initState ()
   {
-     ListIsbnProfile();
+
     super.initState();
   }
   @override
