@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:login_page/manager/requests.dart';
+import 'package:login_page/model/isbn_list_response.dart';
 import 'package:login_page/model/isbn_picture.dart';
 import 'package:login_page/model/isbn_profile.dart';
 import 'dart:typed_data';
@@ -39,7 +40,7 @@ class _LibraryPageState extends State<LibraryPage> {
   var classNumList = List<String>.filled(4, "", growable: false);
   var cutterNumList = List<String>.filled(4, "", growable: false);
   var isbnList = ["0201558025", "0486240614", "0761997601", "9783527308378"];
-
+/*
   Future<List<IsbnProfile>> isbnProfileState() async {
 
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
@@ -98,10 +99,56 @@ class _LibraryPageState extends State<LibraryPage> {
     }
     return resp;
   }
+ */
+
+  Future<IsbnListResponse> isbnListState() async {
+
+    var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
+    var url = Uri.parse("$urlString/user/isbn-list");
+
+    var data = {
+      "name": "",
+      "author": "",
+      "publisher": "",
+      "year-start": "",
+      "year-end": "",
+      "class-number": "",
+      "cutter-number": "",
+      "per-page": "5",
+      "page": "1"
+    };
+
+    var body = json.encode(data);
+
+    var answer = await http.post(
+        url,
+        body: body,
+        headers: {
+          "Authorization": "Bearer ${widget.token}"}
+    );
+
+    IsbnListResponse resp = IsbnListResponse([]);
+
+    if(answer.statusCode == 200){
+      print("request 200");
+      resp = IsbnListResponse.fromJson(json.decode(answer.body));
+      print("ISBN LIST RESP");
+      print(resp);
+      print(resp.isbnList[0].name);
+      return resp;
+    }
+    else if(answer.statusCode == 400){
+      print("request 400");
+      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
+      print(resp.kind);
+    }
+    return resp;
+  }
+
 
   @override
   void initState() {
-    isbnProfileState().then((value){
+    isbnListState().then((value){
 
     });
     //isbnPicture().then((value){
@@ -218,27 +265,27 @@ class _LibraryPageState extends State<LibraryPage> {
                 ),
               ),
 
-              FutureBuilder<List<IsbnProfile>>(
-                future: isbnProfileState(),
+              FutureBuilder<IsbnListResponse>(
+                future: isbnListState(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return GridView.builder(
                       scrollDirection: Axis.vertical,
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,      childAspectRatio: 0.5),
-                      itemCount: snapshot.data!.length,
+                      itemCount: snapshot.data!.isbnList.length,
                       physics: const ClampingScrollPhysics(),
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         return BookingGrid(
-                            name: snapshot.data![index].name,
-                            author: snapshot.data![index].author,
-                            publisher: snapshot.data![index].publisher,
-                            picture: snapshot.data![index].picture,
-                            classNum: snapshot.data![index].classNumber,
-                            cutterNum: snapshot.data![index].cutterNumber,
-                            isbn: isbnList[index],
-                            year: snapshot.data![index].publicationYear,
+                            name: snapshot.data!.isbnList[index].name,
+                            author: snapshot.data!.isbnList[index].author,
+                            publisher: snapshot.data!.isbnList[index].publisher,
+                            picture: snapshot.data!.isbnList[index].picture,
+                            classNum: snapshot.data!.isbnList[index].classNumber,
+                            cutterNum: snapshot.data!.isbnList[index].cutterNumber,
+                            isbn: snapshot.data!.isbnList[index].isbn,
+                            year: snapshot.data!.isbnList[index].publicationYear,
                             token: widget.token
                         );
                       },
@@ -357,24 +404,24 @@ class _LibraryPageState extends State<LibraryPage> {
                   ],
                 ),
               ),
-              FutureBuilder<List<IsbnProfile>>(
-                future: isbnProfileState(),
+              FutureBuilder<IsbnListResponse>(
+                future: isbnListState(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return ListView.builder(
-                      itemCount: snapshot.data!.length,
+                      itemCount: snapshot.data!.isbnList.length,
                       physics: const ClampingScrollPhysics(),
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         return BookingList(
-                            name: snapshot.data![index].name,
-                            author: snapshot.data![index].author,
-                            publisher: snapshot.data![index].publisher,
-                            picture: snapshot.data![index].picture,
-                            classNum: snapshot.data![index].classNumber,
-                            cutterNum: snapshot.data![index].cutterNumber,
-                            isbn: isbnList[index],
-                            year: snapshot.data![index].publicationYear,
+                            name: snapshot.data!.isbnList[index].name,
+                            author: snapshot.data!.isbnList[index].author,
+                            publisher: snapshot.data!.isbnList[index].publisher,
+                            picture: snapshot.data!.isbnList[index].picture,
+                            classNum: snapshot.data!.isbnList[index].classNumber,
+                            cutterNum: snapshot.data!.isbnList[index].cutterNumber,
+                            isbn: snapshot.data!.isbnList[index].isbn,
+                            year: snapshot.data!.isbnList[index].publicationYear,
                             token: widget.token
                         );
                       },

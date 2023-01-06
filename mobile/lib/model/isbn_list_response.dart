@@ -1,4 +1,4 @@
-import 'isbn_list.dart';
+import 'package:login_page/model/isbn_list.dart';
 
 class IsbnListResponse {
 
