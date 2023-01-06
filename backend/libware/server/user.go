@@ -550,6 +550,7 @@ func (l *LibraryHandler) borrowedBooks(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		entry.Isbn = isbn
 		entry.Picture = base64.StdEncoding.EncodeToString(pictureBytes)
 		entry.PublicationYear = strconv.FormatInt(int64(publicationYearInt16), 10)
 		entry.Id = strconv.FormatInt(int64(bookIds[i]), 10)
