@@ -21,6 +21,7 @@ type UserProfile struct {
 }
 
 type IsbnProfile struct {
+	Isbn            string `json:"isbn"`
 	Name            string `json:"name"`
 	Author          string `json:"author"`
 	Publisher       string `json:"publisher"`

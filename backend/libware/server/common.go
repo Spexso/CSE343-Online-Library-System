@@ -60,6 +60,7 @@ func (l *LibraryHandler) isbnProfile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := responses.IsbnProfile{
+		Isbn:            req.Isbn,
 		Name:            name,
 		Author:          author,
 		Publisher:       publisher,
