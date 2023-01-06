@@ -118,7 +118,6 @@ func (c *Cli) cmdAdmins(arguments map[string]string) error {
 	}
 
 	nDigits := int64(math.Log10(float64(ids[len(ids)-1])))
-	fmt.Println(nDigits)
 	for i := 0; i < len(ids); i++ {
 		fmt.Printf("%-*d %s\n", nDigits+1, ids[i], names[i])
 	}
