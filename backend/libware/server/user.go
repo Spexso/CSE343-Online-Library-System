@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/base64"
 	"errors"
 	"log"
 	"net/http"
@@ -30,6 +31,7 @@ func (l *LibraryHandler) userHandler() http.Handler {
 	router.HandleFunc("/unsave-book", l.unsaveBook)
 	router.HandleFunc("/isbn-list", l.isbnList)
 	router.HandleFunc("/book-list", l.bookList)
+	router.HandleFunc("/borrowed-books", l.borrowedBooks)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		subject, err := l.authorize(w, r, l.userSecret)
 		if err != nil {
@@ -510,6 +512,57 @@ func (l *LibraryHandler) unsaveBook(w http.ResponseWriter, r *http.Request) {
 		log.Printf("error: unsave-book: %v", err)
 		return
 	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func (l *LibraryHandler) borrowedBooks(w http.ResponseWriter, r *http.Request) {
+	idString := r.Header.Get("Subject")
+
+	id, err := strconv.ParseInt(idString, 10, 64)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrGeneric)
+		log.Printf("error: borrowed-books: %v", err)
+		return
+	}
+
+	bookIds, isbns, dueDates, err := l.db.UserBorrowedBooks(id)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		helpers.WriteError(w, errlist.ErrGeneric)
+		log.Printf("error: borrowed-books: %v", err)
+		return
+	}
+
+	entries := []responses.BorrowedBooksEntry{}
+	for i, isbn := range isbns {
+		var (
+			entry                responses.BorrowedBooksEntry
+			publicationYearInt16 int16
+			pictureBytes         []byte
+		)
+		entry.Name, entry.Author, entry.Publisher, publicationYearInt16, entry.ClassNumber, entry.CutterNumber, pictureBytes, err = l.db.IsbnProfile(isbn)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			helpers.WriteError(w, errlist.ErrGeneric)
+			log.Printf("error: borrowed-books: %v", err)
+			return
+		}
+
+		entry.Isbn = isbn
+		entry.Picture = base64.StdEncoding.EncodeToString(pictureBytes)
+		entry.PublicationYear = strconv.FormatInt(int64(publicationYearInt16), 10)
+		entry.Id = strconv.FormatInt(int64(bookIds[i]), 10)
+		entry.DueDate = strconv.FormatInt(int64(dueDates[i]), 10)
+
+		entries = append(entries, entry)
+	}
+	response := responses.BorrowedBooks{
+		BorrowedList: entries,
+	}
+
+	helpers.WriteResponse(w, response)
 
 	w.WriteHeader(http.StatusOK)
 }

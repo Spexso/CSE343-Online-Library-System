@@ -83,3 +83,20 @@ type UserList struct {
 type UserIdOfEmail struct {
 	UserId string `json:"user-id"`
 }
+
+type BorrowedBooksEntry struct {
+	Id              string `json:"id"`
+	Isbn            string `json:"isbn"`
+	DueDate         string `json:"due-date"`
+	Name            string `json:"name"`
+	Author          string `json:"author"`
+	Publisher       string `json:"publisher"`
+	PublicationYear string `json:"publication-year"`
+	ClassNumber     string `json:"class-number"`
+	CutterNumber    string `json:"cutter-number"`
+	Picture         string `json:"picture"`
+}
+
+type BorrowedBooks struct {
+	BorrowedList []BorrowedBooksEntry `json:"borrowed-list"`
+}
