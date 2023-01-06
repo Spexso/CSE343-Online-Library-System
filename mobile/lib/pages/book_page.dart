@@ -48,12 +48,45 @@ Future<bool> unsaveBook(isbn, token) async {
 
   if(answer.statusCode == 200)
   {
-    print("TRUE");
+    print("TRUE ");
     return true;
   }
   print("FALSE");
   return false;
 }
+
+Future<bool> enqueueBook(isbn, token) async {
+  var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
+  var url = Uri.parse("$urlString/user/enqueue");
+  var data = {"isbn" : isbn};
+  var body = await json.encode(data);
+  var answer = await http.post(url ,body: body ,headers: {"Authorization": "Bearer $token"});
+
+  if(answer.statusCode == 200)
+  {
+    print("TRUE enqueue");
+    return true;
+  }
+  print("FALSE enqueue");
+  return false;
+}
+
+Future<bool> dequeueBook(isbn, token) async {
+  var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
+  var url = Uri.parse("$urlString/user/dequeue");
+  var data = {"isbn" : isbn};
+  var body = await json.encode(data);
+  var answer = await http.post(url ,body: body ,headers: {"Authorization": "Bearer $token"});
+
+  if(answer.statusCode == 200)
+  {
+    print("TRUE dequeue");
+    return true;
+  }
+  print("FALSE dequeue");
+  return false;
+}
+
 class _BookPageState extends State<BookPage> {
   @override
   Widget build(BuildContext context) {
@@ -167,23 +200,49 @@ class _BookPageState extends State<BookPage> {
                       ),
                       Align(
                         alignment: Alignment.center,
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                              foregroundColor: MaterialStateProperty.all(Colors.white),
-                              overlayColor: MaterialStateProperty.all(
-                                  const Color.fromRGBO(80, 80, 80, 1)),
-                              backgroundColor: MaterialStateProperty.all(
-                                Colors.white,
-                              )
-                          ),
-                          onPressed: () {},
-                          child: const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 13, horizontal: 35),
-                              child: Text(
-                                "Talep Et",
-                                style: TextStyle(fontSize: 20, color: Colors.black),
-                              )),
+                        child: Row(
+                          children: [
+                            ElevatedButton(
+                              style: ButtonStyle(
+                                  foregroundColor: MaterialStateProperty.all(Colors.white),
+                                  overlayColor: MaterialStateProperty.all(
+                                      const Color.fromRGBO(80, 80, 80, 1)),
+                                  backgroundColor: MaterialStateProperty.all(
+                                    Colors.white,
+                                  )
+                              ),
+                              onPressed: () {
+                                enqueueBook(widget.isbn, widget.token);
+                              },
+                              child: const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 13, horizontal: 35),
+                                  child: Text(
+                                    "Talep Et",
+                                    style: TextStyle(fontSize: 20, color: Colors.black),
+                                  )),
+                            ),
+                            ElevatedButton(
+                              style: ButtonStyle(
+                                  foregroundColor: MaterialStateProperty.all(Colors.white),
+                                  overlayColor: MaterialStateProperty.all(
+                                      const Color.fromRGBO(80, 80, 80, 1)),
+                                  backgroundColor: MaterialStateProperty.all(
+                                    Colors.white,
+                                  )
+                              ),
+                              onPressed: () {
+                                dequeueBook(widget.isbn, widget.token);
+                              },
+                              child: const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 13, horizontal: 35),
+                                  child: Text(
+                                    "Talep İptal",
+                                    style: TextStyle(fontSize: 20, color: Colors.black),
+                                  )),
+                            ),
+                          ],
                         ),
                       ),
                     ],

@@ -114,7 +114,7 @@ class _LibraryPageState extends State<LibraryPage> {
       "year-end": "",
       "class-number": "",
       "cutter-number": "",
-      "per-page": "5",
+      "per-page": "20",
       "page": "1"
     };
 
@@ -131,6 +131,7 @@ class _LibraryPageState extends State<LibraryPage> {
 
     if(answer.statusCode == 200){
       print("request 200");
+      print(json.decode(answer.body));
       resp = await IsbnListResponse.fromJson(json.decode(answer.body));
       print("ISBN LIST RESP");
       print(await resp);

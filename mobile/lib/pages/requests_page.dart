@@ -107,12 +107,12 @@ class _RequestsPageState extends State<RequestsPage> {
   }
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<RequestListResponse>(
-        future: requestListState(),
+    return FutureBuilder<List<IsbnProfile>>(
+        future: ListIsbnProfile(),
         builder: (context, snapshot){
           if(snapshot.hasData){
             return ListView.builder(
-              itemCount: snapshot.data!.requestList.length,
+              itemCount: snapshot.data!.length,
               physics: const ClampingScrollPhysics(),
               shrinkWrap: true,
               itemBuilder: (context, index) {
@@ -134,8 +134,7 @@ class _RequestsPageState extends State<RequestsPage> {
                             child: SizedBox(
                                 height: 200,
                                 width: 150,
-                                child: Image.network(
-                                    _imageList[index])),
+                                child: Image.memory(base64Decode(snapshot.data![index].picture))),
                           ),
                           Expanded(
                             child: Column(
@@ -145,7 +144,7 @@ class _RequestsPageState extends State<RequestsPage> {
                                 Padding(
                                   padding: const EdgeInsets.only(left: 13, right: 13),
                                   child: Text(
-                                    _nameList[0],
+                                    snapshot.data![index].name,
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 20,
@@ -156,7 +155,8 @@ class _RequestsPageState extends State<RequestsPage> {
                                   ),
                                 ),
                                 Text(
-                                  "${snapshot.data!.requestList[index].position} kişi kaldı",
+                                  //"${snapshot.data!.requestList[index].position} kişi kaldı",
+                                  "${_peopleLeft[index]} kişi kaldı",
                                   style: const TextStyle(color: Colors.white, fontSize: 18),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
