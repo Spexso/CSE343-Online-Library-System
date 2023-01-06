@@ -496,11 +496,11 @@ class _BookingGridState extends State<BookingGrid> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Center(
         child: Container(
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.width / 5 * 2,
+          height: MediaQuery.of(context).size.width / 50 * 45,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: const Color.fromRGBO(42, 43, 46, 1),
@@ -536,7 +536,7 @@ class _BookingGridState extends State<BookingGrid> {
                   ),
                 ),
                 Padding(
-                    padding: const EdgeInsets.only(top: 7.0, left: 8, right: 8),
+                    padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
                     child: Text(
                       widget.name,
                       style: const TextStyle(color: Colors.white, fontSize: 23, fontWeight: FontWeight.bold),
@@ -548,23 +548,25 @@ class _BookingGridState extends State<BookingGrid> {
 
 
                   Padding(
-                    padding: const EdgeInsets.only(top: 10,left: 8, right: 8),
+                    padding: const EdgeInsets.only(top: 8,left: 8, right: 8),
                     child: Text(
                       widget.author,
                       style: const TextStyle(color: Colors.white, fontSize: 18),
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
                     ),
                   ),
 
 
                   Padding(
-                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    padding: const EdgeInsets.only(left: 8, right: 8,top: 8),
                     child: Text(
                       widget.publisher,
                       style: const TextStyle(color: Colors.white, fontSize: 18),
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
                     ),
                   ),
 

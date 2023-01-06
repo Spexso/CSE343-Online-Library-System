@@ -52,10 +52,6 @@ class _RequestsPageState extends State<RequestsPage> {
     if (answer.statusCode == 200) {
       print("request 200");
       resp = RequestListResponse.fromJson(json.decode(answer.body));
-      print("REQUEST RESP");
-      print(resp);
-      print(resp.requestList[0].isbn);
-      print(resp.requestList[0].availableBooks);
       return resp;
     } else if (answer.statusCode == 400) {
       print("request 400");
@@ -65,8 +61,35 @@ class _RequestsPageState extends State<RequestsPage> {
     return resp;
   }
 
-  markPresence() {
-    print("BURDDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa");
+  Future<bool> MarkPresence() async{
+    var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
+    var url = Uri.parse("$urlString/user/mark-presence");
+
+    var answer = await http
+        .post(url, headers: {"Authorization": "Bearer ${widget.token}"});
+
+    if (answer.statusCode == 200) {
+      print("request 200");
+      return true;
+    } else if (answer.statusCode == 400) {
+      print("request 400");
+
+    }
+    return false;
+  }
+
+  String _timestampConverter(timestamp) {
+    DateTime tsdate = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+    String dateTime = tsdate.day.toString() +
+        "/" +
+        tsdate.month.toString() +
+        "/" +
+        tsdate.year.toString() +
+        "-" +
+        tsdate.hour.toString() +
+        ":" +
+        tsdate.minute.toString();
+    return dateTime;
   }
 
   Future<List<IsbnProfile>> ListIsbnProfile() async {
@@ -185,21 +208,26 @@ class _RequestsPageState extends State<RequestsPage> {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   ElevatedButton(
-                                    onPressed: () {
-                                      if (snapshot.data![1].requestList[index]
-                                              .position ==
-                                          "1") {
-                                        markPresence();
-                                      }
-                                    },
-                                    child: Text(
-                                      "Kitabı Al",
-                                    ),
+                                    onPressed: () async {await MarkPresence();},
+                                    child: Text("Kitabı Al"),
                                     style: ButtonStyle(
                                         backgroundColor:
                                             MaterialStateProperty.all(
                                                 Colors.white)),
-                                  )
+                                  ),
+                                  (snapshot.data![1].requestList[index]
+                                                  .position ==
+                                              "1" &&
+                                          snapshot.data![1].requestList[index]
+                                                  .validUntil !=
+                                              "0")
+                                      ? Text(
+                                          "${_timestampConverter(snapshot.data![1].requestList[index].validUntil)} Tarihine Kadar Alabilirsiniz",
+                                          style: TextStyle(color: Colors.white))
+                                      : Text(
+                                          "Sıranız Gelmedi",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
                                 ],
                               ),
                             )
@@ -223,227 +251,3 @@ class _RequestsPageState extends State<RequestsPage> {
         });
   }
 }
-
-/*
-* return ListView.builder(
-      itemCount: 4,
-      physics: const ClampingScrollPhysics(),
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Center(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.width / 5 * 2,
-              decoration: BoxDecoration(
-                  color: const Color.fromRGBO(42, 43, 46, 1),
-                  borderRadius: BorderRadius.circular(10)),
-              child: Row(
-                children: [
-                  ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        bottomLeft: Radius.circular(10)),
-                    child: SizedBox(
-                        height: 200,
-                        width: 150,
-                        child: Image.network(
-                            _imageList[index])),
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 13, right: 13),
-                          child: Text(
-                            _nameList[index],
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        Text(
-                          "${_peopleLeft[index]} kişi kaldı",
-                          style: const TextStyle(color: Colors.white, fontSize: 18),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            OutlinedButton(
-                              onPressed: () {},
-                              child: Icon(Icons.add),
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(Colors.white),
-                                  side: MaterialStateProperty.all(
-                                      const BorderSide(color: Colors.transparent)),
-                                  shape: MaterialStateProperty.all(const CircleBorder())),
-                            ),
-                            OutlinedButton(
-                              onPressed: () {},
-                              child: Icon(Icons.delete),
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(Colors.white),
-                                  side: MaterialStateProperty.all(
-                                      const BorderSide(color: Colors.transparent)),
-                                  shape: MaterialStateProperty.all(const CircleBorder())),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );*/
-
-/*
-class _RequestsInList extends StatefulWidget {
-  final String name;
-  final String left;
-  final String image;
-
-  const _RequestsInList({
-    Key? key,
-    required this.name,
-    required this.left,
-    required this.image,
-  }) : super(key: key);
-
-  @override
-  State<_RequestsInList> createState() => _RequestsInListState();
-}
-
-bool style = false;
-
-class _RequestsInListState extends State<_RequestsInList> {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Center(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.width / 5 * 2,
-          decoration: BoxDecoration(
-              color: const Color.fromRGBO(42, 43, 46, 1),
-              borderRadius: BorderRadius.circular(10)),
-          child: Row(
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    bottomLeft: Radius.circular(10)),
-                child: SizedBox(
-                    height: 200,
-                    width: 150,
-                    child: Image.network(
-                        widget.image)),
-              ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 13, right: 13),
-                      child: Text(
-                        widget.name,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Text(
-                      "${widget.left} kişi kaldı",
-                      style: const TextStyle(color: Colors.white, fontSize: 18),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        OutlinedButton(
-                          onPressed: () {},
-                          child: Icon(Icons.add),
-                          style: buildButtonStyle(),
-                        ),
-                        OutlinedButton(
-                          onPressed: () {},
-                          child: Icon(Icons.delete),
-                          style: buildButtonStyle(),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  ButtonStyle buildButtonStyle() {
-    return ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Colors.white),
-        side: MaterialStateProperty.all(
-            const BorderSide(color: Colors.transparent)),
-        shape: MaterialStateProperty.all(const CircleBorder()));
-  }
-
-  TextStyle buildTextStyle() => const TextStyle(color: Colors.black);
-
-/*ButtonStyle buildButtonStyle() {
-    return ButtonStyle(
-      backgroundColor: MaterialStateProperty.all(Colors.white),
-      fixedSize: MaterialStateProperty.all(const Size(110, 20)),
-    );
-  }*/
-} */
-
-/*    First Prototype
-Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 5.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  ElevatedButton(
-                                      style: buildButtonStyle(),
-                                      onPressed: () {},
-                                      child: Text(
-                                        "Kitabı Al",
-                                        style: buildTextStyle(),
-                                      )),
-                                  ElevatedButton(
-                                      style: buildButtonStyle(),
-                                      onPressed: () {},
-                                      child: Text(
-                                        "Sıradan Çık",
-                                        style: buildTextStyle(),
-                                      ))
-                                ],
-                              ),
-                            )
-
-
-
- */
