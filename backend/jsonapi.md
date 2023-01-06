@@ -390,7 +390,11 @@ empty
 
 ### Response
 
-empty
+```json
+{
+  "id": "7"
+}
+```
 
 ### Possible Errors
 
