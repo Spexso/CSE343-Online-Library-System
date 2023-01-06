@@ -551,6 +551,50 @@ empty
 
 - err-email-not-exist
 
+## borrowed-books
+### Request
+
+empty
+
+### Response
+
+```json
+{
+  "borrowed-list": [
+    {
+      "id": "5",
+      "isbn": "0201558025",
+      "due-date": "1671205349",
+      "name": "Concrete mathematics",
+      "author": "Ronald L. Graham",
+      "publisher": "Addison-Wesley",
+      "publication-year": "1994",
+      "class-number": "QA 39.2",
+      "cutter-number": "G73",
+      "picture": "eWVzc2ly"
+    },
+    {
+      "id": "13"
+      "isbn": "9780471758235",
+      "due-date": "1671205525",
+      "name": "Urban transit systems and technology",
+      "author": "Vukan R. Vuchic",
+      "publisher": "John Wiley & Sons",
+      "publication-year": "2007",
+      "class-number": "HE 308",
+      "cutter-number": "V83",
+      "picture": "eWVzc2ly"
+    }
+  ]
+}
+```
+
+**NOTE:** If `due-date` is in the past, the user will be removed from current queues and suspended.
+
+### Possible Errors
+
+empty
+
 # /user/ and /admin/
 
 ## isbn-list
