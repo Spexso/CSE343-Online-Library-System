@@ -112,7 +112,13 @@ func (l *LibraryHandler) isbnList(w http.ResponseWriter, r *http.Request) {
 		log.Printf("error: isbn-list: %v", err)
 		return
 	}
-	response := entries
+
+	if entries == nil {
+		entries = []responses.IsbnListEntry{}
+	}
+	response := responses.IsbnList{
+		IsbnList: entries,
+	}
 	helpers.WriteResponse(w, response)
 
 	w.WriteHeader(http.StatusOK)
@@ -156,7 +162,13 @@ func (l *LibraryHandler) bookList(w http.ResponseWriter, r *http.Request) {
 		log.Printf("error: book-list: %v", err)
 		return
 	}
-	response := entries
+
+	if entries == nil {
+		entries = []string{}
+	}
+	response := responses.BookList{
+		BookList: entries,
+	}
 	helpers.WriteResponse(w, response)
 
 	w.WriteHeader(http.StatusOK)

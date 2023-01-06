@@ -427,6 +427,9 @@ func (l *LibraryHandler) savedBooks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if isbns == nil {
+		isbns = []string{}
+	}
 	response := responses.SavedBooks{
 		IsbnList: isbns,
 	}

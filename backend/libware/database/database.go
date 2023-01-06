@@ -1198,7 +1198,7 @@ func (d *Database) IsbnList(name string, author string, publisher string, yearSt
 	}
 
 	if author != "" {
-		parameters = append(parameters, "author = ?")
+		parameters = append(parameters, "instr(author, ?)")
 		parametersList = append(parametersList, author)
 	}
 
