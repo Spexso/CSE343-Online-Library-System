@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 import '../model/error_message.dart';
+import '../model/isbn_profile.dart';
 import '../model/request_book_response.dart';
 
 List<String> _nameList = [
@@ -39,7 +40,7 @@ class _RequestsPageState extends State<RequestsPage> {
   late String name;
   late String left;
   late String image;
-
+  late List<IsbnProfile> profile;
   Future<RequestListResponse> requestListState() async {
 
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
@@ -69,7 +70,40 @@ class _RequestsPageState extends State<RequestsPage> {
     }
     return resp;
   }
+  Future<List<IsbnProfile>> ListIsbnProfile () async
+  {
+    var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
+    var url = Uri.parse("$urlString/user/isbn-profile");
+    var queueData = await requestListState();
+    var data = List.filled(queueData.requestList.length, {"isbn" :  queueData.requestList[0].isbn});
+    for(int i=0;i<queueData.requestList.length;++i)
+      {
+        data[i] = {"isbn" :  queueData.requestList[i].isbn};
+      }
+    var bodyList = List.filled(queueData.requestList.length, json.encode(data[0]));
+    for(int i=0;i<queueData.requestList.length;++i)
+    {
+      bodyList[i] = json.encode(data[i]);
+    }
+    var answerlist = List.filled(queueData.requestList.length,await http.post(url, body: bodyList[0],headers: {"Authorization": "Bearer ${widget.token}"}));
+    for(int i=0;i<answerlist.length;++i)
+      {
+        answerlist[i] = await http.post(url, body: bodyList[i],headers: {"Authorization": "Bearer ${widget.token}"});
+      }
+    var respList = List.filled(queueData.requestList.length, await IsbnProfile.fromJson(json.decode(answerlist[0].body)));
+    for(int i=0;i<queueData.requestList.length;++i)
+      {
 
+        respList[i] = await IsbnProfile.fromJson(json.decode(answerlist[i].body));
+      }
+    return respList;
+
+  }
+  void initState ()
+  {
+     ListIsbnProfile();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<RequestListResponse>(
@@ -110,7 +144,7 @@ class _RequestsPageState extends State<RequestsPage> {
                                 Padding(
                                   padding: const EdgeInsets.only(left: 13, right: 13),
                                   child: Text(
-                                    _nameList[index],
+                                    _nameList[0],
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 20,

@@ -131,10 +131,10 @@ class _LibraryPageState extends State<LibraryPage> {
 
     if(answer.statusCode == 200){
       print("request 200");
-      resp = IsbnListResponse.fromJson(json.decode(answer.body));
+      resp = await IsbnListResponse.fromJson(json.decode(answer.body));
       print("ISBN LIST RESP");
-      print(resp);
-      print(resp.isbnList[0].name);
+      print(await resp);
+      print(await resp.isbnList[0].name);
       return resp;
     }
     else if(answer.statusCode == 400){
@@ -148,9 +148,7 @@ class _LibraryPageState extends State<LibraryPage> {
 
   @override
   void initState() {
-    isbnListState().then((value){
 
-    });
     //isbnPicture().then((value){
     //});
     super.initState();

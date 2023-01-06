@@ -9,6 +9,7 @@ import 'package:login_page/model/isbn_picture.dart';
 import 'package:login_page/model/isbn_profile.dart';
 import 'package:login_page/model/saved_book_list.dart';
 import 'dart:typed_data';
+import 'book_page.dart';
 
 
 
@@ -26,6 +27,8 @@ class _SavedPageState extends State<SavedPage> {
 
   var pictureList = List<String>.filled(4, "", growable: false);
   var nameList = List<String>.filled(4, "", growable: false);
+
+
 
   Future<List<String>> savedBooks() async {
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
@@ -112,9 +115,85 @@ class _SavedPageState extends State<SavedPage> {
             physics: const ClampingScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (context, index) {
-              return _BookInList(
-                name: snapshot.data![index].name,
-                picture: snapshot.data![index].picture,
+              return Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Center(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.width / 5 * 2,
+                    decoration: BoxDecoration(
+                        color: const Color.fromRGBO(42, 43, 46, 1),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                BookPage(
+                                  name: snapshot.data![index].name,
+                                  author: snapshot.data![index].author,
+                                  publisher: snapshot.data![index].publisher,
+                                  year: snapshot.data![index].publicationYear,
+                                  classNum: snapshot.data![index].classNumber,
+                                  cutterNum: snapshot.data![index].cutterNumber,
+                                  isbn: "",
+                                  picture: snapshot.data![index].picture,
+                                  token: widget.token,
+                                ),
+                          ),
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                bottomLeft: Radius.circular(10)),
+                            child: SizedBox(
+                                height: 200,
+                                width: 150,
+                                child: Image.memory(base64Decode(snapshot.data![index].picture))),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+
+                                  Text(
+                                    snapshot.data![index].name,
+                                    style: const TextStyle(color: Colors.white, fontSize: 18),
+                                    maxLines: 3,
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    snapshot.data![index].author,
+                                    style: const TextStyle(color: Colors.white, fontSize: 18),
+                                    maxLines: 3,
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    snapshot.data![index].publisher,
+                                    style: const TextStyle(color: Colors.white, fontSize: 18),
+                                    maxLines: 3,
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               );
             },
           );
@@ -130,103 +209,6 @@ class _SavedPageState extends State<SavedPage> {
 
 
   }
-}
-
-
-class _BookInList extends StatefulWidget {
-  final String name;
-  final String picture;
-  const _BookInList({
-    Key? key,
-    required this.name,
-   required this.picture,
-  }) : super(key: key);
-
-  @override
-  State<_BookInList> createState() => _RequestsInListState();
-}
-
-bool style = false;
-Future<bool> unsaveBook(isbn, token) async {
-  var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
-  var url = Uri.parse("$urlString/user/unsave-book");
-  var data = {"isbn" : isbn};
-  var body = await json.encode(data);
-  var answer = await http.post(url ,body: body ,headers: {"Authorization": "Bearer $token"});
-  print(body);
-  print(answer.statusCode);
-  if(answer.statusCode == 200)
-  {
-    print("TRUE");
-    return true;
-  }
-
-  print("FALSE");
-  return false;
-}
-class _RequestsInListState extends State<_BookInList> {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Center(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.width / 5 * 2,
-          decoration: BoxDecoration(
-              color: const Color.fromRGBO(42, 43, 46, 1),
-              borderRadius: BorderRadius.circular(10)),
-          child: Row(
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    bottomLeft: Radius.circular(10)),
-                child: SizedBox(
-                    height: 200,
-                    width: 150,
-                    child: Image.memory(base64Decode(widget.picture))),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-
-                      Text(
-                        widget.name,
-                        style: const TextStyle(color: Colors.white, fontSize: 18),
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          OutlinedButton(
-                            onPressed: () {},
-                            child: const Icon(Icons.add),
-                            style: buildButtonStyle(),
-                          ),
-                          OutlinedButton(
-                            onPressed: () {},
-                            child: const Icon(Icons.delete),
-                            style: buildButtonStyle(),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   ButtonStyle buildButtonStyle() {
     return ButtonStyle(
         backgroundColor: MaterialStateProperty.all(Colors.white),
@@ -236,6 +218,27 @@ class _RequestsInListState extends State<_BookInList> {
   }
 
   TextStyle buildTextStyle() => const TextStyle(color: Colors.black);
-
-
 }
+
+
+
+/* UNSAVE BOOK
+Future<bool> unsaveBook(isbn, token) async {
+    var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
+    var url = Uri.parse("$urlString/user/unsave-book");
+    var data = {"isbn" : isbn};
+    var body = await json.encode(data);
+    var answer = await http.post(url ,body: body ,headers: {"Authorization": "Bearer $token"});
+    print(body);
+    print(answer.statusCode);
+    if(answer.statusCode == 200)
+    {
+      print("TRUE");
+      return true;
+    }
+    print("FALSE");
+    return false;
+  }
+ */
+
+
