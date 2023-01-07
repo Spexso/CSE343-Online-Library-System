@@ -28,11 +28,10 @@ class _LibraryPageState extends State<LibraryPage> {
   final _tfBookNameController = TextEditingController();
   String bookNameSearch = "";
   bool isGridView = false;
-
+  bool _isDetailedSearch = false;
   Future<IsbnListResponse> isbnListState() async {
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
     var url = Uri.parse("$urlString/user/isbn-list");
-
     var data = {
       "name": bookNameSearch,
       "author": "",
@@ -170,7 +169,7 @@ class _LibraryPageState extends State<LibraryPage> {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(5),
                     onTap: (() {
-                      log("A");
+                      _isDetailedSearch = !_isDetailedSearch;
                     }),
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
@@ -183,9 +182,11 @@ class _LibraryPageState extends State<LibraryPage> {
                   ),
                 ),
               ),
+             // (_isDetailedSearch) ? Container(color: Colors.red,height: 100,width: 100,) : null
             ],
           ),
         ),
+
         Expanded(
           child: (isGridView
               ? FutureBuilder<IsbnListResponse>(

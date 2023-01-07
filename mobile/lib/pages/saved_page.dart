@@ -25,6 +25,7 @@ class SavedPage extends StatefulWidget {
 class _SavedPageState extends State<SavedPage> {
   var pictureList = List<String>.filled(4, "", growable: false);
   var nameList = List<String>.filled(4, "", growable: false);
+  String _ErrorStr = "AAA";
 
   Future<List<String>> savedBooks() async {
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
@@ -46,6 +47,10 @@ class _SavedPageState extends State<SavedPage> {
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
     var url = Uri.parse("$urlString/user/isbn-profile");
     var list = await savedBooks();
+    if(list.length == 0)
+      {
+        _ErrorStr = "NO DATA";
+      }
     var data = List.filled(list.length, {"isbn": list[0]});
     for (int i = 0; i < list.length; ++i) {
       data[i] = {"isbn": list[i]};
@@ -83,6 +88,7 @@ class _SavedPageState extends State<SavedPage> {
     } else {
       print("isbn profile not success");
       ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer[0].body));
+      _ErrorStr = resp.kind.toString();
       print(resp.kind);
     }
 
@@ -202,8 +208,8 @@ class _SavedPageState extends State<SavedPage> {
             },
           );
         } else if (snapshot.hasError) {
-          return Center(
-              child: Text('NO DATA',
+          return  Center(
+              child: Text(_ErrorStr,
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 15,
@@ -230,4 +236,3 @@ class _SavedPageState extends State<SavedPage> {
   TextStyle buildTextStyle() =>
       const TextStyle(color: Colors.black, fontFamily: 'Ubuntu');
 }
-
