@@ -27,14 +27,16 @@ class LibraryPage extends StatefulWidget {
 class _LibraryPageState extends State<LibraryPage> {
   final _tfBookNameController = TextEditingController();
   String bookNameSearch = "";
+  String authorSearch = "";
   bool isGridView = false;
-  bool _isDetailedSearch = false;
+  late TextEditingController authorController = TextEditingController(text: authorSearch);
+
   Future<IsbnListResponse> isbnListState() async {
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
     var url = Uri.parse("$urlString/user/isbn-list");
     var data = {
       "name": bookNameSearch,
-      "author": "",
+      "author": authorSearch,
       "publisher": "",
       "year-start": "",
       "year-end": "",
@@ -67,6 +69,61 @@ class _LibraryPageState extends State<LibraryPage> {
     }
     return resp;
   }
+/*
+  AlertDialog displayTextInputDialog() {
+    return AlertDialog(
+      title: Text('Filtrele'),
+      content: TextField(
+        controller: authorController,
+        //decoration: InputDecoration(hintText: "Text Field in Dialog"),
+      ),
+      actions: <Widget>[
+        ElevatedButton(
+          child: Text('OK'),
+          onPressed: () {
+            print(authorController.text);
+            //await isbnListState();
+            setState(() {
+              //codeDialog = valueText;
+              Navigator.pop(context);
+            });
+          },
+        ),
+
+      ],
+    );
+  } */
+
+  Future<void> displayTextInputDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                title: Text('Filtrele'),
+                content: TextField(
+                  controller: authorController,
+                ),
+                actions: <Widget>[
+                  ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text("Cancel"),
+                  ),
+                  ElevatedButton(
+                    child: Text('OK'),
+                    onPressed: () async{
+                      await isbnListState();
+                      //setState(() {});
+                    },
+                  ),
+
+                ],
+              );
+            }
+          );
+        });
+  }
 
   @override
   void initState() {
@@ -76,9 +133,7 @@ class _LibraryPageState extends State<LibraryPage> {
   @override
   Widget build(BuildContext context) {
     return Column(
-
       children: [
-
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: TextField(
@@ -168,8 +223,14 @@ class _LibraryPageState extends State<LibraryPage> {
                   message: "Detaylı Arama",
                   child: InkWell(
                     borderRadius: BorderRadius.circular(5),
-                    onTap: (() {
-                      _isDetailedSearch = !_isDetailedSearch;
+                    onTap: (() async {
+                      //_isDetailedSearch = !_isDetailedSearch;
+                      await displayTextInputDialog(context);
+                      print("detaylı arama buton");
+                      print(authorController.text);
+                      setState(() {
+
+                      });
                     }),
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
@@ -186,7 +247,6 @@ class _LibraryPageState extends State<LibraryPage> {
             ],
           ),
         ),
-
         Expanded(
           child: (isGridView
               ? FutureBuilder<IsbnListResponse>(
