@@ -11,7 +11,7 @@ const Board = ({books, search}) => {
         <div>{console.log("Test",books)}
             {
                 
-                books.map(item => {
+                books["isbn-list"].map(item => {
                     if(item.name === search || item["publication-year"] === search || item.author === search || item.publisher === search)
                     {
                         return(
