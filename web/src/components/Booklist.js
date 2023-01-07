@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 const Booklist = () => {
     // eslint-disable-next-line
     const [search,setSearch]=useState("");
-    const [bookData, setBook] = useState();
+    const [bookData, setBook] = useState(new Object());
     const historyN = useHistory();
     const {REACT_APP_API_TOKEN} = process.env;
 
