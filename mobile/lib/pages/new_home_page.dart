@@ -8,7 +8,8 @@ import 'notifications_page.dart';
 
 class NewHomePage extends StatefulWidget {
   final String token;
-  const NewHomePage({Key? key, required this.token}) : super(key: key);
+  final String password;
+  const NewHomePage({Key? key, required this.token, required this.password}) : super(key: key);
 
   @override
   State<NewHomePage> createState() => _NewHomePageState();
@@ -33,7 +34,7 @@ class _NewHomePageState extends State<NewHomePage> {
       LibraryPage(token: _token),
       SavedPage(token: _token),
       RequestsPage(token: _token,),
-      ProfilePage(token: _token,),
+      ProfilePage(token: _token, password: widget.password,),
     ];
 
 

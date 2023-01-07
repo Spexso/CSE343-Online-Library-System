@@ -19,8 +19,8 @@ import '../model/error_message.dart';
 
 class ProfilePage extends StatefulWidget {
   final String token;
-
-  const ProfilePage({Key? key, required this.token}) : super(key: key);
+  final String password;
+  const ProfilePage({Key? key, required this.token, required this.password}) : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -33,7 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
   late String surname;
   late String email;
   late String phone;
-  late String password;
+  //late String password;
 
   Future<String> suspendedUntil() async {
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
@@ -109,7 +109,7 @@ class _ProfilePageState extends State<ProfilePage> {
   late TextEditingController phoneController =
       TextEditingController(text: phone);
   late TextEditingController passwordController =
-      TextEditingController(text: password);
+      TextEditingController(text: widget.password);
 
   late bool _isEnable = false;
   bool passenable = true;
@@ -153,13 +153,13 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        padding: const EdgeInsets.all(30),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
             //Text(dotenv.env['API_URL'] ?? "API_URL not found"),
             const SizedBox(
-              width: 100,
-              height: 100,
+              width: 150,
+              height: 70,
             ),
             const SizedBox(
               height: 40,
@@ -169,13 +169,36 @@ class _ProfilePageState extends State<ProfilePage> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return SizedBox(
-                    width: 250,
+                    width: 300,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(name),
-                        Text(surname),
-                        Text(email),
-                        Text(phone),
+                        SizedBox(height: 20,),
+                        Text(name + " " + surname,
+                          style: TextStyle(
+                              fontSize: 30,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Ubuntu'
+                          ),
+
+                        ),
+                        SizedBox(height: 10,),
+                        Text(email,
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontFamily: 'Ubuntu'
+                          ),
+                        ),
+                        SizedBox(height: 10,),
+                        Text(phone,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                              fontFamily: 'Ubuntu'
+                          ),
+                        ),
                       ],
                     ),
                   );
@@ -209,6 +232,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   email: email,
                                   token: widget.token,
                                   phone: phone,
+                                  password: widget.password,
                                 )),
                       );
                       setState(() {});
@@ -222,6 +246,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ),
+                /*
                 IconButton(
                   icon: const Icon(
                     Icons.check_box,
@@ -231,7 +256,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   onPressed: () {
                     _showDialog(context);
                   },
-                ),
+                ), */
               ],
             ),
             const SizedBox(
@@ -266,7 +291,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             const Divider(),
                             const Text(
                               "Zamanına Kadar Ceza",
-                              style: TextStyle(fontSize: 18,color: Colors.white),
+                              style: TextStyle(fontSize: 17,color: Colors.white),
                             )
                           ],
                         ),
@@ -302,7 +327,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: const [
                       Text(
                         "Ödünç Kitaplar",
-                        style: TextStyle(color: Colors.white, fontSize: 15),
+                        style: TextStyle(color: Colors.white, fontSize: 17),
                       ),
                       Icon(
                         Icons.keyboard_arrow_right_rounded,
@@ -336,7 +361,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       children: const [
                         Text(
                           "Çıkış Yap",
-                          style: TextStyle(color: Colors.red, fontSize: 15),
+                          style: TextStyle(color: Colors.red, fontSize: 17),
                         ),
                         Icon(
                           Icons.keyboard_arrow_right_rounded,

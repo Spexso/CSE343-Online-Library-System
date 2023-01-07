@@ -12,12 +12,14 @@ class UpdateProfilePage extends StatefulWidget {
   final String email;
   final String phone;
   final String token;
+  final String password;
   const UpdateProfilePage({Key? key,
     required this.name,
     required this.surname,
     required this.email,
     required this.phone,
-    required this.token
+    required this.token,
+    required this.password
   }) : super(key: key);
 
   @override
@@ -30,7 +32,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   late String surname;
   late String email;
   late String phone;
-  late String password;
+  //late String password;
 
   late bool _isObscure = true;
 
@@ -48,7 +50,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     surnameController = TextEditingController(text: widget.surname);
     emailController = TextEditingController(text: widget.email);
     phoneController = TextEditingController(text: widget.phone);
-    passwordController = TextEditingController(text: "123");
+    passwordController = TextEditingController(text: widget.password);
   }
 
   @override
@@ -101,7 +103,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     var url = Uri.parse("$urlString/user/change-user-email");
 
     var data = {
-      "password": passwordController.text,
+      "password": widget.password,
       "new-email": emailController.text,
     };
 
@@ -136,7 +138,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     var url = Uri.parse("$urlString/user/change-user-phone");
 
     var data = {
-      "password": passwordController.text,
+      "password": widget.password,
       "new-phone": phoneController.text,
     };
 
@@ -171,7 +173,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     var url = Uri.parse("$urlString/user/change-user-password");
 
     var data = {
-      "old-password": passwordController.text,
+      "old-password": widget.password,
       "new-password": passwordController.text,
     };
 
@@ -223,222 +225,215 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Column(
-          children: [
-            SizedBox(
-              child: Column(
-                children: [
-                  TextField(
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25,
-                        color: Colors.white),
-                    controller: nameController,
-                    onChanged: (text) {
-                      setState(() {
-                        print("name changed");
-                        nameChange = true;
-                      });
-                    },
-                    //enabled: _isEnable,
-                    decoration: const InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                  TextField(
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25,
-                        color: Colors.white),
-                    controller: surnameController,
-                    onChanged: (text) {
-                      setState(() {
-                        print("surname changed");
-                        surnameChange = true;
-                      });
-                    },
-                    //enabled: _isEnable,
-                    decoration: const InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            children: [
+              SizedBox(
+                child: Column(
+                  children: [
+                    TextField(
+                      style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.white),
+                      controller: nameController,
+                      onChanged: (text) {
+                        setState(() {
+                          print("name changed");
+                          nameChange = true;
+                        });
+                      },
+                      //enabled: _isEnable,
+                      decoration: const InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
                       ),
                     ),
-                  ),
-                  TextField(
-                    style: const TextStyle(fontSize: 15, color: Colors.white),
-                    controller: emailController,
-                    onChanged: (text) {
-                      setState(() {
-                        print("email changed");
-                        emailChange = true;
-                      });
-                    },
-                    //enabled: _isEnable,
-                    decoration: const InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                  TextField(
-                    style: const TextStyle(fontSize: 15, color: Colors.white),
-                    controller: phoneController,
-                    onChanged: (text) {
-                      setState(() {
-                        print("phone changed");
-                        phoneChange = true;
-                      });
-                    },
-                    //enabled: _isEnable,
-                    decoration: const InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+                    SizedBox(height: 15,),
+                    TextField(
+                      style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.white),
+                      controller: surnameController,
+                      onChanged: (text) {
+                        setState(() {
+                          print("surname changed");
+                          surnameChange = true;
+                        });
+                      },
+                      //enabled: _isEnable,
+                      decoration: const InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
                       ),
                     ),
-                  ),
-                  TextField(
-                    obscureText: _isObscure,
-                    style: const TextStyle(fontSize: 15, color: Colors.white),
-                    controller: passwordController,
-                    onChanged: (text) {
-                      setState(() {
-                        print("password changed");
-                        passwordChange = true;
-                      });
-                    },
-                    //enabled: _isEnable,
-                    decoration: InputDecoration(
-                      suffixIcon: IconButton(
-                          icon: Icon(_isObscure
-                              ? Icons.visibility
-                              : Icons.visibility_off),
-                          onPressed: () {
-                            setState(() {
-                              _isObscure = !_isObscure;
-                            });
-                          }),
-                      enabledBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+                    SizedBox(height: 15,),
+                    TextField(
+                      style: const TextStyle(fontSize: 20, color: Colors.white),
+                      controller: emailController,
+                      onChanged: (text) {
+                        setState(() {
+                          print("email changed");
+                          emailChange = true;
+                        });
+                      },
+                      //enabled: _isEnable,
+                      decoration: const InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                    SizedBox(height: 15,),
+                    TextField(
+                      style: const TextStyle(fontSize: 20, color: Colors.white),
+                      controller: phoneController,
+                      onChanged: (text) {
+                        setState(() {
+                          print("phone changed");
+                          phoneChange = true;
+                        });
+                      },
+                      //enabled: _isEnable,
+                      decoration: const InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 15,),
+                    TextField(
+                      obscureText: _isObscure,
+                      style: const TextStyle(fontSize: 20, color: Colors.white),
+                      controller: passwordController,
+                      onChanged: (text) {
+                        setState(() {
+                          print("password changed");
+                          passwordChange = true;
+                        });
+                      },
+                      //enabled: _isEnable,
+                      decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                            icon: Icon(_isObscure
+                                ? Icons.visibility
+                                : Icons.visibility_off),
+                            onPressed: () {
+                              setState(() {
+                                _isObscure = !_isObscure;
+                              });
+                            }),
+                        enabledBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        focusedBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 20,),
-            ElevatedButton(
-                onPressed: () async {
+              const SizedBox(height: 20,),
+              ElevatedButton(
+                  onPressed: () async {
 
-                  bool errorFlag = false;
+                    bool errorFlag = false;
 
-                  if(nameChange == true){
-                    var ans = await changeUsername();
+                    if(nameChange == true){
+                      var ans = await changeUsername();
 
-                    if(ans == true){
-                      print("success update Username button");
-                      //Navigator.pop(context);
+                      if(ans == true){
+                        print("success update Username button");
+                        //Navigator.pop(context);
+                      }
+                      else if(ans == false){
+                        print("error update Username button");
+                        errorFlag = true;
+                      }
                     }
-                    else if(ans == false){
-                      print("error update Username button");
-                      errorFlag = true;
+
+                    if(surnameChange == true){
+                      var ans = await changeUsername();
+
+                      if(ans == true){
+                        print("success update Username button");
+                        //Navigator.pop(context);
+                      }
+                      else if(ans == false){
+                        print("error update Username button");
+                        errorFlag = true;
+                      }
                     }
-                  }
 
-                  if(surnameChange == true){
-                    var ans = await changeUsername();
+                    if(emailChange == true){
+                      var ans = await changeUserEmail();
 
-                    if(ans == true){
-                      print("success update Username button");
-                      //Navigator.pop(context);
+                      if(ans == true){
+                        print("success update Email button");
+                        //Navigator.pop(context);
+                      }
+                      else if(ans == false){
+                        print("error update Email button");
+                        errorFlag = true;
+                      }
                     }
-                    else if(ans == false){
-                      print("error update Username button");
-                      errorFlag = true;
+
+                    if(phoneChange == true){
+                      var ans = await changeUserPhone();
+
+                      if(ans == true){
+                        print("success update phone button");
+                        //Navigator.pop(context);
+                      }
+                      else if(ans == false){
+                        print("error update phone button");
+                        errorFlag = true;
+                      }
                     }
-                  }
 
-                  if(emailChange == true){
-                    var ans = await changeUserEmail();
+                    if(passwordChange == true){
+                      var ans = await changeUserPassword();
 
-                    if(ans == true){
-                      print("success update Email button");
-                      //Navigator.pop(context);
+                      if(ans == true){
+                        print("success update password button");
+                        //Navigator.pop(context);
+                      }
+                      else if(ans == false){
+                        print("error update password button");
+                        errorFlag = true;
+                      }
                     }
-                    else if(ans == false){
-                      print("error update Email button");
-                      errorFlag = true;
+
+                    if(errorFlag == false){
+                      Navigator.pop(context);
                     }
-                  }
 
-                  if(phoneChange == true){
-                    var ans = await changeUsername();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0),),
+                      primary: Colors.white,
 
-                    if(ans == true){
-                      print("success update phone button");
-                      //Navigator.pop(context);
-                    }
-                    else if(ans == false){
-                      print("error update phone button");
-                      errorFlag = true;
-                    }
-                  }
-
-                  if(passwordChange == true){
-                    var ans = await changeUsername();
-
-                    if(ans == true){
-                      print("success update password button");
-                      //Navigator.pop(context);
-                    }
-                    else if(ans == false){
-                      print("error update password button");
-                      errorFlag = true;
-                    }
-                  }
-
-
-
-                  if(errorFlag == false){
-                    Navigator.pop(context);
-                  }
-
-
-                  /*
-                  var ans = await changeUsername();
-                  var ans1 = await changeUserEmail();
-                  var ans2 = await changeUserPhone();
-
-                  if((ans == true) && (ans1 == true) && (ans2 == true)){
-                    print("success update profile button");
-                    //Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage(token: widget.token,)),);
-                    Navigator.pop(context);
-                  }
-                  else if((ans == false) || (ans1 == false) || (ans2 == false)){
-                    print("error update profile button");
-                  } */
-                },
-                child: const Text("KAYDET"),
-            ),
-          ],
+                  ),
+                  child: const Text("KAYDET"),
+              ),
+            ],
+          ),
         ),
       ),
     );

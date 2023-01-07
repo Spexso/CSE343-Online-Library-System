@@ -441,7 +441,12 @@ class _BookingListState extends State<BookingList> {
                         padding: const EdgeInsets.only(left: 13, right: 13),
                         child: Text(
                           widget.name,
-                          style: const TextStyle(color: Colors.white, fontSize: 23, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 23,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Ubuntu'
+                          ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),

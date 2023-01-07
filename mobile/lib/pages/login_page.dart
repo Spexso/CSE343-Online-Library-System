@@ -20,8 +20,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   var snackBar = const SnackBar(content: Text("Login Error"));
-  final _tfEmailController = TextEditingController();
-  final _tfKeyController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   late String token;
 
@@ -30,8 +30,8 @@ class _LoginPageState extends State<LoginPage> {
     var url = Uri.parse("$urlString/guest/user-login");
     //var url = Uri.parse("http://10.0.2.2:8080/guest/user-login");
     var data = {
-      "email": _tfEmailController.text,
-      "password": _tfKeyController.text,
+      "email": emailController.text,
+      "password": passwordController.text,
     };
 
     var body = json.encode(data);
@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: TextField(
                     keyboardType: TextInputType.emailAddress,
                     style: const TextStyle(color: Colors.white, fontSize: 20),
-                    controller: _tfEmailController,
+                    controller: emailController,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: const Color.fromRGBO(42, 43, 46, 1),
@@ -117,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                     keyboardType: TextInputType.visiblePassword,
                     style: const TextStyle(color: Colors.white, fontSize: 20),
                     obscureText: true,
-                    controller: _tfKeyController,
+                    controller: passwordController,
                     decoration: InputDecoration(
                       suffixIcon: const Icon(
                         Icons.password,
@@ -187,11 +187,13 @@ class _LoginPageState extends State<LoginPage> {
                             var ans = await loginState();
 
                             if (ans == true) {
+                              print(passwordController.text);
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => NewHomePage(
                                           token: token,
+                                          password: passwordController.text,
                                         )),
                               );
                             } else if (ans == false) {
