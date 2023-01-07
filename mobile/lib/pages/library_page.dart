@@ -26,6 +26,7 @@ class LibraryPage extends StatefulWidget {
 
 class _LibraryPageState extends State<LibraryPage> {
   final _tfBookNameController = TextEditingController();
+  String bookNameSearch = "";
   bool isGridView = false;
 
   Future<IsbnListResponse> isbnListState() async {
@@ -33,7 +34,7 @@ class _LibraryPageState extends State<LibraryPage> {
     var url = Uri.parse("$urlString/user/isbn-list");
 
     var data = {
-      "name": "",
+      "name": bookNameSearch,
       "author": "",
       "publisher": "",
       "year-start": "",
@@ -76,10 +77,14 @@ class _LibraryPageState extends State<LibraryPage> {
   @override
   Widget build(BuildContext context) {
     return Column(
+
       children: [
+
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: TextField(
+            onChanged: (value)=>{bookNameSearch = value, setState(() {})},
+            onSubmitted: (value)=>{setState(() {})},
             controller: _tfBookNameController,
             style: const TextStyle(
                 color: Colors.white, fontSize: 20, fontFamily: 'Ubuntu'),

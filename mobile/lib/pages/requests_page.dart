@@ -130,140 +130,154 @@ class _RequestsPageState extends State<RequestsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: Future.wait([ListIsbnProfile(), requestListState()]),
-        builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data![0].length,
-              physics: const ClampingScrollPhysics(),
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Center(
-                    child: InkWell(
-                      onTap: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BookPage(
-                              name: snapshot.data![0][index].name,
-                              author: snapshot.data![0][index].author,
-                              publisher: snapshot.data![0][index].publisher,
-                              year: snapshot.data![0][index].publicationYear,
-                              classNum: snapshot.data![0][index].classNumber,
-                              cutterNum: snapshot.data![0][index].cutterNumber,
-                              isbn: snapshot.data![0][index].isbn,
-                              picture: snapshot.data![0][index].picture,
-                              token: widget.token,
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 12.0),
+          child: ElevatedButton(
+            onPressed: () async {
+              await MarkPresence();
+            },
+            child: Text(
+              "Buradayım",
+              style: TextStyle(fontFamily: 'Ubuntu'),
+            ),
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.white)),
+          ),
+        ),
+
+        FutureBuilder(
+            future: Future.wait([ListIsbnProfile(), requestListState()]),
+            builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+              if (snapshot.hasData) {
+                return ListView.builder(
+                  itemCount: snapshot.data![0].length,
+                  physics: const ClampingScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Center(
+                        child: InkWell(
+                          onTap: () async {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BookPage(
+                                  name: snapshot.data![0][index].name,
+                                  author: snapshot.data![0][index].author,
+                                  publisher: snapshot.data![0][index].publisher,
+                                  year:
+                                      snapshot.data![0][index].publicationYear,
+                                  classNum:
+                                      snapshot.data![0][index].classNumber,
+                                  cutterNum:
+                                      snapshot.data![0][index].cutterNumber,
+                                  isbn: snapshot.data![0][index].isbn,
+                                  picture: snapshot.data![0][index].picture,
+                                  token: widget.token,
+                                ),
+                              ),
+                            );
+                            setState(() {});
+                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.width / 5 * 2,
+                            decoration: BoxDecoration(
+                                color: const Color.fromRGBO(42, 43, 46, 1),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Row(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10)),
+                                  child: SizedBox(
+                                      height: 200,
+                                      width: 150,
+                                      child: Image.memory(base64Decode(
+                                          snapshot.data![0][index].picture))),
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 13, right: 13),
+                                        child: Text(
+                                          snapshot.data![0][index].name,
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'Ubuntu'),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      Text(
+                                        "${snapshot.data![1].requestList[index].position}. Sıradasınız",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontFamily: 'Ubuntu'),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      (snapshot.data![1].requestList[index]
+                                                      .position ==
+                                                  "1" &&
+                                              snapshot
+                                                      .data![1]
+                                                      .requestList[index]
+                                                      .validUntil !=
+                                                  "0")
+                                          ? Text(
+                                              "${_timestampConverter(snapshot.data![1].requestList[index].validUntil)} Tarihine Kadar Alabilirsiniz",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontFamily: 'Ubuntu'))
+                                          : Text(
+                                              "Sıranız Gelmedi",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontFamily: 'Ubuntu'),
+                                            ),
+                                    ],
+                                  ),
+                                )
+                              ],
                             ),
                           ),
-                        );
-                        setState(() {});
-                      },
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.width / 5 * 2,
-                        decoration: BoxDecoration(
-                            color: const Color.fromRGBO(42, 43, 46, 1),
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Row(
-                          children: [
-                            ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(10),
-                                  bottomLeft: Radius.circular(10)),
-                              child: SizedBox(
-                                  height: 200,
-                                  width: 150,
-                                  child: Image.memory(base64Decode(
-                                      snapshot.data![0][index].picture))),
-                            ),
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 13, right: 13),
-                                    child: Text(
-                                      snapshot.data![0][index].name,
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Ubuntu'),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  Text(
-                                    "${snapshot.data![1].requestList[index].position}. Sıradasınız",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontFamily: 'Ubuntu'),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () async {
-                                      await MarkPresence();
-                                    },
-                                    child: Text(
-                                      "Kitabı Al",
-                                      style: TextStyle(fontFamily: 'Ubuntu'),
-                                    ),
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Colors.white)),
-                                  ),
-                                  (snapshot.data![1].requestList[index]
-                                                  .position ==
-                                              "1" &&
-                                          snapshot.data![1].requestList[index]
-                                                  .validUntil !=
-                                              "0")
-                                      ? Text(
-                                          "${_timestampConverter(snapshot.data![1].requestList[index].validUntil)} Tarihine Kadar Alabilirsiniz",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontFamily: 'Ubuntu'))
-                                      : Text(
-                                          "Sıranız Gelmedi",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontFamily: 'Ubuntu'),
-                                        ),
-                                ],
-                              ),
-                            )
-                          ],
                         ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 );
-              },
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-                child: Text(
-              'NO DATA',
-              style: TextStyle(color: Colors.white, fontSize: 15),
-            ));
-          }
+              } else if (snapshot.hasError) {
+                return Center(
+                    child: Text(
+                  'NO DATA',
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ));
+              }
 
-          // By default, show a loading spinner.
-          return const Center(
-              child: CircularProgressIndicator(
-            color: Colors.white,
-          ));
-        });
+              // By default, show a loading spinner.
+              return const Center(
+                  child: CircularProgressIndicator(
+                color: Colors.white,
+              ));
+            }),
+      ],
+    );
   }
 }
+
+

@@ -100,22 +100,26 @@ class _NewHomePageState extends State<NewHomePage> {
                 GButton(
                   icon: Icons.menu_book,
                   text: 'Kitaplık',
-                  textStyle: TextStyle(fontFamily: 'Ubuntu',color: Colors.white),
+                  textStyle:
+                      TextStyle(fontFamily: 'Ubuntu', color: Colors.white),
                 ),
                 GButton(
                   icon: Icons.bookmark,
                   text: 'Kaydedilenler',
-                  textStyle: TextStyle(fontFamily: 'Ubuntu',color: Colors.white),
+                  textStyle:
+                      TextStyle(fontFamily: 'Ubuntu', color: Colors.white),
                 ),
                 GButton(
                   icon: Icons.check,
                   text: 'Talepler',
-                  textStyle: TextStyle(fontFamily: 'Ubuntu',color: Colors.white),
+                  textStyle:
+                      TextStyle(fontFamily: 'Ubuntu', color: Colors.white),
                 ),
                 GButton(
                   icon: Icons.account_box,
                   text: 'Profil',
-                  textStyle: TextStyle(fontFamily: 'Ubuntu',color: Colors.white),
+                  textStyle:
+                      TextStyle(fontFamily: 'Ubuntu', color: Colors.white),
                 ),
               ],
               selectedIndex: _selectedIndex,

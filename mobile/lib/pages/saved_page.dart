@@ -231,21 +231,3 @@ class _SavedPageState extends State<SavedPage> {
       const TextStyle(color: Colors.black, fontFamily: 'Ubuntu');
 }
 
-/* UNSAVE BOOK
-Future<bool> unsaveBook(isbn, token) async {
-    var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
-    var url = Uri.parse("$urlString/user/unsave-book");
-    var data = {"isbn" : isbn};
-    var body = await json.encode(data);
-    var answer = await http.post(url ,body: body ,headers: {"Authorization": "Bearer $token"});
-    print(body);
-    print(answer.statusCode);
-    if(answer.statusCode == 200)
-    {
-      print("TRUE");
-      return true;
-    }
-    print("FALSE");
-    return false;
-  }
- */
