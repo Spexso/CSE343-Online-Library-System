@@ -24,12 +24,33 @@ class LibraryPage extends StatefulWidget {
   State<LibraryPage> createState() => _LibraryPageState();
 }
 
+class textFieldStyles {
+  static TextStyle get textStyle =>
+      const TextStyle(color: Colors.white, fontSize: 20, fontFamily: 'Ubuntu');
+}
+
 class _LibraryPageState extends State<LibraryPage> {
   final _tfBookNameController = TextEditingController();
   String bookNameSearch = "";
   String authorSearch = "";
+  String publisherSearch = "";
+  String yearStartSearch = "";
+  String yearEndSearch = "";
+  String classNumberSearch = "";
+  String cutterNumberSearch = "";
   bool isGridView = false;
-  late TextEditingController authorController = TextEditingController(text: authorSearch);
+  late TextEditingController authorController =
+      TextEditingController(text: authorSearch);
+  late TextEditingController publisherController =
+      TextEditingController(text: publisherSearch);
+  late TextEditingController yearStartController =
+      TextEditingController(text: yearStartSearch);
+  late TextEditingController yearEndController =
+      TextEditingController(text: yearEndSearch);
+  late TextEditingController classNumberController =
+      TextEditingController(text: classNumberSearch);
+  late TextEditingController cutterNumberController =
+      TextEditingController(text: cutterNumberSearch);
 
   Future<IsbnListResponse> isbnListState() async {
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
@@ -37,11 +58,11 @@ class _LibraryPageState extends State<LibraryPage> {
     var data = {
       "name": bookNameSearch,
       "author": authorSearch,
-      "publisher": "",
-      "year-start": "",
-      "year-end": "",
-      "class-number": "",
-      "cutter-number": "",
+      "publisher": publisherSearch,
+      "year-start": yearStartSearch,
+      "year-end": yearEndSearch,
+      "class-number": classNumberSearch,
+      "cutter-number": cutterNumberSearch,
       "per-page": "5",
       "page": "1"
     };
@@ -69,59 +90,219 @@ class _LibraryPageState extends State<LibraryPage> {
     }
     return resp;
   }
-/*
-  AlertDialog displayTextInputDialog() {
-    return AlertDialog(
-      title: Text('Filtrele'),
-      content: TextField(
-        controller: authorController,
-        //decoration: InputDecoration(hintText: "Text Field in Dialog"),
-      ),
-      actions: <Widget>[
-        ElevatedButton(
-          child: Text('OK'),
-          onPressed: () {
-            print(authorController.text);
-            //await isbnListState();
-            setState(() {
-              //codeDialog = valueText;
-              Navigator.pop(context);
-            });
-          },
-        ),
-
-      ],
-    );
-  } */
 
   Future<void> displayTextInputDialog(BuildContext context) async {
     return showDialog(
         context: context,
         builder: (context) {
-          return StatefulBuilder(
-            builder: (context, setState) {
-              return AlertDialog(
-                title: Text('Filtrele'),
-                content: TextField(
-                  controller: authorController,
-                ),
+          return StatefulBuilder(builder: (context, setState) {
+            return SingleChildScrollView(
+              child: AlertDialog(
+                backgroundColor: const Color.fromRGBO(60, 60, 60, 1),
+                title: Center(
+                    child: Text(
+                  'Detaylı Arama',
+                  style: TextStyle(color: Colors.white),
+                )),
                 actions: <Widget>[
-                  ElevatedButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text("Cancel"),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      cursorColor: Colors.white,
+                      style: textFieldStyles.textStyle,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 1.5, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 2, color: Colors.white),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        hintStyle: const TextStyle(
+                            color: Colors.white, fontFamily: 'Ubuntu'),
+                        hintText: "Yazar Adı Giriniz",
+                      ),
+                      controller: authorController,
+                      onChanged: (value) => {authorSearch = value},
+                    ),
                   ),
-                  ElevatedButton(
-                    child: Text('OK'),
-                    onPressed: () async{
-                      await isbnListState();
-                      //setState(() {});
-                    },
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      cursorColor: Colors.white,
+                      style: textFieldStyles.textStyle,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 1.5, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 2, color: Colors.white),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        hintStyle: const TextStyle(
+                            color: Colors.white, fontFamily: 'Ubuntu'),
+                        hintText: "Yayımcı Adı Giriniz",
+                      ),
+                      controller: publisherController,
+                      onChanged: (value) => {publisherSearch = value},
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      cursorColor: Colors.white,
+                      style: textFieldStyles.textStyle,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 1.5, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 2, color: Colors.white),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        hintStyle: const TextStyle(
+                            color: Colors.white, fontFamily: 'Ubuntu'),
+                        hintText: "Başlangıç Yılı Giriniz",
+                      ),
+                      controller: yearStartController,
+                      onChanged: (value) => {yearStartSearch = value},
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      cursorColor: Colors.white,
+                      style: textFieldStyles.textStyle,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 1.5, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 2, color: Colors.white),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        hintStyle: const TextStyle(
+                            color: Colors.white, fontFamily: 'Ubuntu'),
+                        hintText: "Bitiş Yılı Giriniz",
+                      ),
+                      controller: yearEndController,
+                      onChanged: (value) => {yearEndSearch = value},
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      style: textFieldStyles.textStyle,
+                      cursorColor: Colors.white,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 1.5, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 2, color: Colors.white),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        hintStyle: const TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Ubuntu',
+                            fontSize: 18),
+                        hintText: "Sınıflandırma Numarası Giriniz",
+                      ),
+                      controller: classNumberController,
+                      onChanged: (value) => {classNumberSearch = value},
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      cursorColor: Colors.white,
+                      style: textFieldStyles.textStyle,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 1.5, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 2, color: Colors.white),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        hintStyle: const TextStyle(
+                            color: Colors.white, fontFamily: 'Ubuntu'),
+                        hintText: "Cutter Number Giriniz",
+                      ),
+                      controller: cutterNumberController,
+                      onChanged: (value) => {cutterNumberSearch = value},
+                    ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.white),
+                              fixedSize: MaterialStateProperty.all(
+                                  Size(double.infinity, 20))),
+                          onPressed: () => setState(() {
+                            authorController.text = "";
+                            authorSearch = "";
+
+                            publisherController.text = "";
+                            publisherSearch = "";
+
+                            yearStartController.text = "";
+                            yearEndSearch = "";
+
+                            yearEndController.text = "";
+                            yearEndSearch = "";
+
+                            classNumberController.text = "";
+                            classNumberSearch = "";
+
+                            cutterNumberController.text = "";
+                            cutterNumberSearch = "";
+                          }),
+                          child: Text("Reset"),
+                        ),
+                        ElevatedButton(
+                          child: Text('OK'),
+                          style: ButtonStyle(
+                              backgroundColor:
+                              MaterialStateProperty.all(Colors.white),
+                              fixedSize: MaterialStateProperty.all(
+                                  Size(double.infinity, 20))),
+                          onPressed: () async {
+                            await isbnListState();
+                            Navigator.pop(context);
+                            //setState(() {});
+                          },
+                        ),
+                      ],
+                    ),
                   ),
 
                 ],
-              );
-            }
-          );
+              ),
+            );
+          });
         });
   }
 
@@ -137,8 +318,8 @@ class _LibraryPageState extends State<LibraryPage> {
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: TextField(
-            onChanged: (value)=>{bookNameSearch = value, setState(() {})},
-            onSubmitted: (value)=>{setState(() {})},
+            onChanged: (value) => {bookNameSearch = value, setState(() {})},
+            onSubmitted: (value) => {setState(() {})},
             controller: _tfBookNameController,
             style: const TextStyle(
                 color: Colors.white, fontSize: 20, fontFamily: 'Ubuntu'),
@@ -228,9 +409,7 @@ class _LibraryPageState extends State<LibraryPage> {
                       await displayTextInputDialog(context);
                       print("detaylı arama buton");
                       print(authorController.text);
-                      setState(() {
-
-                      });
+                      setState(() {});
                     }),
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
@@ -243,7 +422,7 @@ class _LibraryPageState extends State<LibraryPage> {
                   ),
                 ),
               ),
-             // (_isDetailedSearch) ? Container(color: Colors.red,height: 100,width: 100,) : null
+              // (_isDetailedSearch) ? Container(color: Colors.red,height: 100,width: 100,) : null
             ],
           ),
         ),
@@ -436,10 +615,8 @@ class _BookingListState extends State<BookingList> {
                       ),
                       Text(
                         widget.author,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontFamily: 'Ubuntu'),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 18),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -556,9 +733,9 @@ class _BookingGridState extends State<BookingGrid> {
                   child: Text(
                     widget.author,
                     style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontFamily: 'Ubuntu'),
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
