@@ -161,7 +161,8 @@ class _BookPageState extends State<BookPage> {
                             color: Colors.white,
                             overflow: TextOverflow.ellipsis,
                             fontSize: 25,
-                            fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Ubuntu'),
                         maxLines: 2,
                       ),
                       Text(
@@ -170,17 +171,18 @@ class _BookPageState extends State<BookPage> {
                             color: Colors.white,
                             overflow: TextOverflow.ellipsis,
                             fontSize: 20,
-                            fontStyle: FontStyle.italic),
+                            fontStyle: FontStyle.italic,
+                            fontFamily: 'Ubuntu'),
                         maxLines: 2,
                         textAlign: TextAlign.center,
                       ),
                       Text(
                         "Publisher:  ${widget.publisher}",
                         style: TextStyle(
-                          color: Colors.grey[400],
-                          overflow: TextOverflow.ellipsis,
-                          fontSize: 18,
-                        ),
+                            color: Colors.grey[400],
+                            overflow: TextOverflow.ellipsis,
+                            fontSize: 18,
+                            fontFamily: 'Ubuntu'),
                         maxLines: 2,
                         textAlign: TextAlign.center,
                       ),
@@ -189,7 +191,8 @@ class _BookPageState extends State<BookPage> {
                         style: TextStyle(
                             color: Colors.grey[400],
                             overflow: TextOverflow.ellipsis,
-                            fontSize: 18),
+                            fontSize: 18,
+                            fontFamily: 'Ubuntu'),
                         maxLines: 2,
                         textAlign: TextAlign.center,
                       ),
@@ -198,7 +201,8 @@ class _BookPageState extends State<BookPage> {
                         style: TextStyle(
                             color: Colors.grey[400],
                             overflow: TextOverflow.ellipsis,
-                            fontSize: 18),
+                            fontSize: 18,
+                            fontFamily: 'Ubuntu'),
                         maxLines: 2,
                         textAlign: TextAlign.center,
                       ),
@@ -207,7 +211,8 @@ class _BookPageState extends State<BookPage> {
                         style: TextStyle(
                             color: Colors.grey[400],
                             overflow: TextOverflow.ellipsis,
-                            fontSize: 18),
+                            fontSize: 18,
+                            fontFamily: 'Ubuntu'),
                         maxLines: 2,
                         textAlign: TextAlign.center,
                       ),
@@ -233,28 +238,29 @@ class _BookPageState extends State<BookPage> {
                                 child: const Text(
                                   "Talep Et",
                                   style: TextStyle(
-                                      fontSize: 20, color: Colors.black),
+                                      fontSize: 20, color: Colors.black,
+                                      fontFamily: 'Ubuntu'),
                                 )),
                             ElevatedButton(
-                              style: ButtonStyle(
-                                  foregroundColor:
-                                      MaterialStateProperty.all(Colors.white),
-                                  overlayColor: MaterialStateProperty.all(
-                                      const Color.fromRGBO(80, 80, 80, 1)),
-                                  fixedSize: MaterialStateProperty.all(
-                                      const Size(150, 50)),
-                                  backgroundColor: MaterialStateProperty.all(
-                                    Colors.white,
-                                  )),
-                              onPressed: () {
-                                dequeueBook(widget.isbn, widget.token);
-                              },
-                              child: const Text(
-                                    "Talep İptal",
-                                    style: TextStyle(
-                                        fontSize: 20, color: Colors.black),
-                                  )
-                            ),
+                                style: ButtonStyle(
+                                    foregroundColor:
+                                        MaterialStateProperty.all(Colors.white),
+                                    overlayColor: MaterialStateProperty.all(
+                                        const Color.fromRGBO(80, 80, 80, 1)),
+                                    fixedSize: MaterialStateProperty.all(
+                                        const Size(150, 50)),
+                                    backgroundColor: MaterialStateProperty.all(
+                                      Colors.white,
+                                    )),
+                                onPressed: () {
+                                  dequeueBook(widget.isbn, widget.token);
+                                },
+                                child: const Text(
+                                  "Talep İptal",
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black,
+                                      fontFamily: 'Ubuntu'),
+                                )),
                           ],
                         ),
                       ),

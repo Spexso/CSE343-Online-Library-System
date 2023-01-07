@@ -9,14 +9,15 @@ import 'notifications_page.dart';
 class NewHomePage extends StatefulWidget {
   final String token;
   final String password;
-  const NewHomePage({Key? key, required this.token, required this.password}) : super(key: key);
+
+  const NewHomePage({Key? key, required this.token, required this.password})
+      : super(key: key);
 
   @override
   State<NewHomePage> createState() => _NewHomePageState();
 }
 
 class _NewHomePageState extends State<NewHomePage> {
-
   late final List<Widget> _children;
   late final String _token = widget.token;
   int _selectedIndex = 0;
@@ -29,14 +30,17 @@ class _NewHomePageState extends State<NewHomePage> {
 
   @override
   void initState() {
-
     _children = [
       LibraryPage(token: _token),
       SavedPage(token: _token),
-      RequestsPage(token: _token,),
-      ProfilePage(token: _token, password: widget.password,),
+      RequestsPage(
+        token: _token,
+      ),
+      ProfilePage(
+        token: _token,
+        password: widget.password,
+      ),
     ];
-
 
     super.initState();
   }
@@ -48,23 +52,24 @@ class _NewHomePageState extends State<NewHomePage> {
       appBar: AppBar(
         title: const Text(
           "Libware",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white, fontFamily: 'Ubuntu'),
         ),
         iconTheme: const IconThemeData(size: 30, color: Colors.white),
         automaticallyImplyLeading: false,
         backgroundColor: const Color.fromRGBO(42, 43, 46, 1),
         actions: [
-          IconButton(onPressed: () => {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                const NotificationsPage()
-              ),
-            )
-            }, icon: const Icon(Icons.notifications, color: Colors.white,)
-          ),
-
+          IconButton(
+              onPressed: () => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const NotificationsPage()),
+                    )
+                  },
+              icon: const Icon(
+                Icons.notifications,
+                color: Colors.white,
+              )),
         ],
       ),
       body: _children[_selectedIndex],
@@ -95,18 +100,22 @@ class _NewHomePageState extends State<NewHomePage> {
                 GButton(
                   icon: Icons.menu_book,
                   text: 'Kitaplık',
+                  textStyle: TextStyle(fontFamily: 'Ubuntu',color: Colors.white),
                 ),
                 GButton(
                   icon: Icons.bookmark,
                   text: 'Kaydedilenler',
+                  textStyle: TextStyle(fontFamily: 'Ubuntu',color: Colors.white),
                 ),
                 GButton(
                   icon: Icons.check,
                   text: 'Talepler',
+                  textStyle: TextStyle(fontFamily: 'Ubuntu',color: Colors.white),
                 ),
                 GButton(
                   icon: Icons.account_box,
                   text: 'Profil',
+                  textStyle: TextStyle(fontFamily: 'Ubuntu',color: Colors.white),
                 ),
               ],
               selectedIndex: _selectedIndex,
@@ -122,5 +131,3 @@ class _NewHomePageState extends State<NewHomePage> {
     );
   }
 }
-
-

@@ -13,25 +13,27 @@ class UpdateProfilePage extends StatefulWidget {
   final String phone;
   final String token;
   final String password;
-  const UpdateProfilePage({Key? key,
-    required this.name,
-    required this.surname,
-    required this.email,
-    required this.phone,
-    required this.token,
-    required this.password
-  }) : super(key: key);
+
+  const UpdateProfilePage(
+      {Key? key,
+      required this.name,
+      required this.surname,
+      required this.email,
+      required this.phone,
+      required this.token,
+      required this.password})
+      : super(key: key);
 
   @override
   State<UpdateProfilePage> createState() => _UpdateProfilePageState();
 }
 
 class _UpdateProfilePageState extends State<UpdateProfilePage> {
-
   late String name;
   late String surname;
   late String email;
   late String phone;
+
   //late String password;
 
   late bool _isObscure = true;
@@ -55,14 +57,12 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
 
   @override
   void dispose() {
-
     nameController.dispose();
     emailController.dispose();
     super.dispose();
   }
 
   Future<bool> changeUsername() async {
-
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
     var url = Uri.parse("$urlString/user/change-user-name");
 
@@ -72,33 +72,26 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     };
 
     var body = json.encode(data);
-    var answer = await http.post(
-        url,
-        body: body,
-        headers: {
-          "Authorization": "Bearer ${widget.token}"}
-    );
+    var answer = await http.post(url,
+        body: body, headers: {"Authorization": "Bearer ${widget.token}"});
     print("update profile page");
 
-    if(answer.statusCode == 200){
+    if (answer.statusCode == 200) {
       print("username update success");
       return true;
-    }
-    else if(answer.statusCode == 400) {
+    } else if (answer.statusCode == 400) {
       print("username update NOT success");
       ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
       print(resp.kind);
       print(resp.message);
       return false;
-    }
-    else {
+    } else {
       print("username update not 200 and 400");
       return false;
     }
   }
 
   Future<bool> changeUserEmail() async {
-
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
     var url = Uri.parse("$urlString/user/change-user-email");
 
@@ -108,32 +101,25 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     };
 
     var body = json.encode(data);
-    var answer = await http.post(
-        url,
-        body: body,
-        headers: {
-          "Authorization": "Bearer ${widget.token}"}
-    );
+    var answer = await http.post(url,
+        body: body, headers: {"Authorization": "Bearer ${widget.token}"});
 
-    if(answer.statusCode == 200){
+    if (answer.statusCode == 200) {
       print("email update success");
       return true;
-    }
-    else if(answer.statusCode == 400) {
+    } else if (answer.statusCode == 400) {
       print("email update NOT success");
       ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
       print(resp.kind);
       print(resp.message);
       return false;
-    }
-    else {
+    } else {
       print("email update not 200 and 400");
       return false;
     }
   }
 
   Future<bool> changeUserPhone() async {
-
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
     var url = Uri.parse("$urlString/user/change-user-phone");
 
@@ -143,32 +129,25 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     };
 
     var body = json.encode(data);
-    var answer = await http.post(
-        url,
-        body: body,
-        headers: {
-          "Authorization": "Bearer ${widget.token}"}
-    );
+    var answer = await http.post(url,
+        body: body, headers: {"Authorization": "Bearer ${widget.token}"});
 
-    if(answer.statusCode == 200){
+    if (answer.statusCode == 200) {
       print("phone update success");
       return true;
-    }
-    else if(answer.statusCode == 400) {
+    } else if (answer.statusCode == 400) {
       print("phone update NOT success");
       ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
       print(resp.kind);
       print(resp.message);
       return false;
-    }
-    else {
+    } else {
       print("email update not 200 and 400");
       return false;
     }
   }
 
   Future<bool> changeUserPassword() async {
-
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
     var url = Uri.parse("$urlString/user/change-user-password");
 
@@ -178,25 +157,19 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     };
 
     var body = json.encode(data);
-    var answer = await http.post(
-        url,
-        body: body,
-        headers: {
-          "Authorization": "Bearer ${widget.token}"}
-    );
+    var answer = await http.post(url,
+        body: body, headers: {"Authorization": "Bearer ${widget.token}"});
 
-    if(answer.statusCode == 200){
+    if (answer.statusCode == 200) {
       print("phone update success");
       return true;
-    }
-    else if(answer.statusCode == 400) {
+    } else if (answer.statusCode == 400) {
       print("phone update NOT success");
       ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
       print(resp.kind);
       print(resp.message);
       return false;
-    }
-    else {
+    } else {
       print("email update not 200 and 400");
       return false;
     }
@@ -207,7 +180,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   late bool emailChange = false;
   late bool phoneChange = false;
   late bool passwordChange = false;
-
 
   @override
   Widget build(BuildContext context) {
@@ -236,7 +208,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     TextField(
                       style: const TextStyle(
                           fontSize: 20,
-                          color: Colors.white),
+                          color: Colors.white,
+                          fontFamily: 'Ubuntu'),
                       controller: nameController,
                       onChanged: (text) {
                         setState(() {
@@ -254,11 +227,14 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 15,),
+                    SizedBox(
+                      height: 15,
+                    ),
                     TextField(
                       style: const TextStyle(
                           fontSize: 20,
-                          color: Colors.white),
+                          color: Colors.white,
+                          fontFamily: 'Ubuntu'),
                       controller: surnameController,
                       onChanged: (text) {
                         setState(() {
@@ -276,9 +252,14 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 15,),
+                    SizedBox(
+                      height: 15,
+                    ),
                     TextField(
-                      style: const TextStyle(fontSize: 20, color: Colors.white),
+                      style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontFamily: 'Ubuntu'),
                       controller: emailController,
                       onChanged: (text) {
                         setState(() {
@@ -296,9 +277,14 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 15,),
+                    SizedBox(
+                      height: 15,
+                    ),
                     TextField(
-                      style: const TextStyle(fontSize: 20, color: Colors.white),
+                      style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontFamily: 'Ubuntu'),
                       controller: phoneController,
                       onChanged: (text) {
                         setState(() {
@@ -316,10 +302,15 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 15,),
+                    SizedBox(
+                      height: 15,
+                    ),
                     TextField(
                       obscureText: _isObscure,
-                      style: const TextStyle(fontSize: 20, color: Colors.white),
+                      style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontFamily: 'Ubuntu'),
                       controller: passwordController,
                       onChanged: (text) {
                         setState(() {
@@ -349,88 +340,82 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                   ],
                 ),
               ),
-              const SizedBox(height: 20,),
+              const SizedBox(
+                height: 20,
+              ),
               ElevatedButton(
-                  onPressed: () async {
+                onPressed: () async {
+                  bool errorFlag = false;
 
-                    bool errorFlag = false;
+                  if (nameChange == true) {
+                    var ans = await changeUsername();
 
-                    if(nameChange == true){
-                      var ans = await changeUsername();
-
-                      if(ans == true){
-                        print("success update Username button");
-                        //Navigator.pop(context);
-                      }
-                      else if(ans == false){
-                        print("error update Username button");
-                        errorFlag = true;
-                      }
+                    if (ans == true) {
+                      print("success update Username button");
+                      //Navigator.pop(context);
+                    } else if (ans == false) {
+                      print("error update Username button");
+                      errorFlag = true;
                     }
+                  }
 
-                    if(surnameChange == true){
-                      var ans = await changeUsername();
+                  if (surnameChange == true) {
+                    var ans = await changeUsername();
 
-                      if(ans == true){
-                        print("success update Username button");
-                        //Navigator.pop(context);
-                      }
-                      else if(ans == false){
-                        print("error update Username button");
-                        errorFlag = true;
-                      }
+                    if (ans == true) {
+                      print("success update Username button");
+                      //Navigator.pop(context);
+                    } else if (ans == false) {
+                      print("error update Username button");
+                      errorFlag = true;
                     }
+                  }
 
-                    if(emailChange == true){
-                      var ans = await changeUserEmail();
+                  if (emailChange == true) {
+                    var ans = await changeUserEmail();
 
-                      if(ans == true){
-                        print("success update Email button");
-                        //Navigator.pop(context);
-                      }
-                      else if(ans == false){
-                        print("error update Email button");
-                        errorFlag = true;
-                      }
+                    if (ans == true) {
+                      print("success update Email button");
+                      //Navigator.pop(context);
+                    } else if (ans == false) {
+                      print("error update Email button");
+                      errorFlag = true;
                     }
+                  }
 
-                    if(phoneChange == true){
-                      var ans = await changeUserPhone();
+                  if (phoneChange == true) {
+                    var ans = await changeUserPhone();
 
-                      if(ans == true){
-                        print("success update phone button");
-                        //Navigator.pop(context);
-                      }
-                      else if(ans == false){
-                        print("error update phone button");
-                        errorFlag = true;
-                      }
+                    if (ans == true) {
+                      print("success update phone button");
+                      //Navigator.pop(context);
+                    } else if (ans == false) {
+                      print("error update phone button");
+                      errorFlag = true;
                     }
+                  }
 
-                    if(passwordChange == true){
-                      var ans = await changeUserPassword();
+                  if (passwordChange == true) {
+                    var ans = await changeUserPassword();
 
-                      if(ans == true){
-                        print("success update password button");
-                        //Navigator.pop(context);
-                      }
-                      else if(ans == false){
-                        print("error update password button");
-                        errorFlag = true;
-                      }
+                    if (ans == true) {
+                      print("success update password button");
+                      //Navigator.pop(context);
+                    } else if (ans == false) {
+                      print("error update password button");
+                      errorFlag = true;
                     }
+                  }
 
-                    if(errorFlag == false){
-                      Navigator.pop(context);
-                    }
-
-                  },
-                  style: ElevatedButton.styleFrom(
-                    //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0),),
-                      primary: Colors.white,
-
-                  ),
-                  child: const Text("KAYDET"),
+                  if (errorFlag == false) {
+                    Navigator.pop(context);
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0),),
+                  primary: Colors.white,
+                ),
+                child: const Text("KAYDET"),
               ),
             ],
           ),

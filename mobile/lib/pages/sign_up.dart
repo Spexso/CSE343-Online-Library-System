@@ -18,10 +18,8 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  var snackBar = const SnackBar(content: Text("Sign Up Error"));
 
-  var snackBar = const SnackBar(
-      content: Text("Sign Up Error")
-  );
 /*
   ErrorMessage parseSignUp(String ans) {
     return ErrorMessage.fromJson(json.decode(ans));
@@ -48,33 +46,27 @@ class _SignUpPageState extends State<SignUpPage> {
 
     var body = json.encode(data);
 
-    var answer = await http.post(
-        url,
-        body: body
-    );
+    var answer = await http.post(url, body: body);
 
     print("all sign up");
 
     if (answer.statusCode == 200) {
       print("sucsesss signup 200");
       return true;
-    }
-    else if(answer.statusCode == 400) {
+    } else if (answer.statusCode == 400) {
       print("errorr signup");
       ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
       //print(resp);
       print(resp.kind);
       print(resp.message);
       return false;
-    }
-    else {
+    } else {
       print("not 200 and 400");
       return false;
     }
 
     //return parseSignUp(answer.body);
   }
-
 
   final _tfNameController = TextEditingController();
   final _tfSurnameController = TextEditingController();
@@ -86,209 +78,240 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        decoration: ProjectUtility().customgradient(),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Container(
-              height: MediaQuery.of(context).size.height / 40 * 32,
-              width: MediaQuery.of(context).size.width / 5 * 4,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.transparent,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const CustomTitle(
-                    str: 'Kayıt Ol',
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      decoration: ProjectUtility().customgradient(),
+      child: Center(
+        child: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).size.height / 40 * 32,
+            width: MediaQuery.of(context).size.width / 5 * 4,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.transparent,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const CustomTitle(
+                  str: 'Kayıt Ol',
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: TextField(
+                    style: const TextStyle(color: Colors.white, fontSize: 20),
+                    controller: _tfNameController,
+                    cursorColor: Colors.white,
+                    decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color.fromRGBO(42, 43, 46, 1),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 1.5, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 2, color: Colors.white),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        hintStyle: const TextStyle(
+                            color: Colors.white, fontFamily: 'Ubuntu'),
+                        suffixIcon: const Icon(
+                          Icons.person,
+                          color: Colors.white,
+                        ),
+                        hintText: "İsim",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10))),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: TextField(
-                      style: const TextStyle(color: Colors.white, fontSize: 20),
-                      controller: _tfNameController,
-                      decoration: InputDecoration(
-                          filled: true,
-                          fillColor: const Color.fromRGBO(42, 43, 46, 1),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(width: 1.5, color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(width: 2, color: Colors.white),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          hintStyle: const TextStyle(color: Colors.white),
-                          suffixIcon: const Icon(Icons.person, color: Colors.white,),
-                          hintText: "İsim",
-                          border:
-                            OutlineInputBorder(borderRadius: BorderRadius.circular(10))
-                      ),
-                    ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: TextField(
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontFamily: 'Ubuntu'),
+                    controller: _tfSurnameController,
+                    cursorColor: Colors.white,
+                    decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color.fromRGBO(42, 43, 46, 1),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 1.5, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 2, color: Colors.white),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        hintStyle: const TextStyle(
+                            color: Colors.white, fontFamily: 'Ubuntu'),
+                        suffixIcon: const Icon(
+                          Icons.person,
+                          color: Colors.white,
+                        ),
+                        hintText: "Soyisim",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10))),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: TextField(
-                      style: const TextStyle(color: Colors.white, fontSize: 20),
-                      controller: _tfSurnameController,
-                      decoration: InputDecoration(
-                          filled: true,
-                          fillColor: const Color.fromRGBO(42, 43, 46, 1),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(width: 1.5, color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(width: 2, color: Colors.white),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          hintStyle: const TextStyle(color: Colors.white),
-                          suffixIcon: const Icon(Icons.person, color: Colors.white,),
-                          hintText: "Soyisim",
-                          border:
-                          OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
-                    ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: TextField(
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontFamily: 'Ubuntu'),
+                    controller: _tfEmailController,
+                    cursorColor: Colors.white,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color.fromRGBO(42, 43, 46, 1),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 1.5, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 2, color: Colors.white),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        hintStyle: const TextStyle(
+                            color: Colors.white, fontFamily: 'Ubuntu'),
+                        suffixIcon: const Icon(
+                          Icons.mail,
+                          color: Colors.white,
+                        ),
+                        hintText: "Email",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10))),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: TextField(
-                      style: const TextStyle(color: Colors.white, fontSize: 20),
-                      controller: _tfEmailController,
-                      decoration: InputDecoration(
-                          filled: true,
-                          fillColor: const Color.fromRGBO(42, 43, 46, 1),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(width: 1.5, color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(width: 2, color: Colors.white),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          hintStyle: const TextStyle(color: Colors.white),
-                          suffixIcon: const Icon(Icons.mail, color: Colors.white,),
-                          hintText: "Email",
-                          border:
-                          OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
-                    ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: TextField(
+                    style: const TextStyle(color: Colors.white, fontSize: 20),
+                    controller: _tfKeyController,
+                    keyboardType: TextInputType.visiblePassword,
+                    obscureText: true,
+                    cursorColor: Colors.white,
+                    decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color.fromRGBO(42, 43, 46, 1),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 1.5, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 2, color: Colors.white),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        hintStyle: const TextStyle(
+                            color: Colors.white, fontFamily: 'Ubuntu'),
+                        suffixIcon: const Icon(
+                          Icons.password,
+                          color: Colors.white,
+                        ),
+                        hintText: "Şifre",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10))),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: TextField(
-                      style: const TextStyle(color: Colors.white, fontSize: 20),
-                      controller: _tfKeyController,
-                      decoration: InputDecoration(
-                          filled: true,
-                          fillColor: const Color.fromRGBO(42, 43, 46, 1),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(width: 1.5, color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(width: 2, color: Colors.white),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          hintStyle: const TextStyle(color: Colors.white),
-                          suffixIcon: const Icon(Icons.password, color: Colors.white,),
-                          hintText: "Şifre",
-                          border:
-                          OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
-                    ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: TextField(
+                    style: const TextStyle(color: Colors.white, fontSize: 20),
+                    controller: _tfPhoneController,
+                    cursorColor: Colors.white,
+                    decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color.fromRGBO(42, 43, 46, 1),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 1.5, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 2, color: Colors.white),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        hintStyle: const TextStyle(
+                            color: Colors.white, fontFamily: 'Ubuntu'),
+                        suffixIcon: const Icon(
+                          Icons.phone,
+                          color: Colors.white,
+                        ),
+                        hintText: "Telefon",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10))),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: TextField(
-                      style: const TextStyle(color: Colors.white, fontSize: 20),
-                      controller: _tfPhoneController,
-                      decoration: InputDecoration(
-                          filled: true,
-                          fillColor: const Color.fromRGBO(42, 43, 46, 1),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(width: 1.5, color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(width: 2, color: Colors.white),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          hintStyle: const TextStyle(color: Colors.white),
-                          suffixIcon: const Icon(Icons.phone, color: Colors.white,),
-                          hintText: "Telefon",
-                          border:
-                          OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
-                    ),
-                  ),
-                  Center(
-                    child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 12, bottom: 10),
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  primary: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                  elevation: 5,
-                                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                                ),
-                                onPressed: () async {
-
-                                  var ans = await signUpState();
-
-                                  if(ans == true){
-                                    print("trueee2");
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                          const LoginPage()),
-                                    );
-                                  }
-                                  else{
-                                    print("idk2");
-                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                  }
-                                },
-                                child: const Text(
-                                  "Kayıt Ol",
-                                  style: TextStyle(fontSize: 20, color: Colors.black),
-                                )
+                ),
+                Center(
+                  child: Column(children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12, bottom: 10),
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
                             ),
+                            elevation: 5,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 15),
                           ),
+                          onPressed: () async {
+                            var ans = await signUpState();
 
-                          TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text('Zaten Hesabım Var',
-                                  style: TextStyle(
-                                      decoration: TextDecoration.underline,
-                                      color: Colors.white,
-                                      fontSize: 18)))
-                      ]
+                            if (ans == true) {
+                              print("trueee2");
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginPage()),
+                              );
+                            } else {
+                              print("idk2");
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            }
+                          },
+                          child: const Text(
+                            "Kayıt Ol",
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.black,
+                                fontFamily: 'Ubuntu'),
+                          )),
                     ),
-                  )
-                ],
-              ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Zaten Hesabım Var',
+                            style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontFamily: 'Ubuntu')))
+                  ]),
+                )
+              ],
             ),
           ),
         ),
-      )
-    );
+      ),
+    ));
   }
 }
 
@@ -332,8 +355,5 @@ SingleChildScrollView(
       ),
  */
 
-
 //Future<Datas> a = dataSearch();
 //a.then((value) => print(value.toString()));
-
-

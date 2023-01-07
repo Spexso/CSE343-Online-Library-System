@@ -61,7 +61,7 @@ class _RequestsPageState extends State<RequestsPage> {
     return resp;
   }
 
-  Future<bool> MarkPresence() async{
+  Future<bool> MarkPresence() async {
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
     var url = Uri.parse("$urlString/user/mark-presence");
 
@@ -73,7 +73,6 @@ class _RequestsPageState extends State<RequestsPage> {
       return true;
     } else if (answer.statusCode == 400) {
       print("request 400");
-
     }
     return false;
   }
@@ -195,7 +194,8 @@ class _RequestsPageState extends State<RequestsPage> {
                                       style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 20,
-                                          fontWeight: FontWeight.bold),
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Ubuntu'),
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.center,
@@ -204,13 +204,20 @@ class _RequestsPageState extends State<RequestsPage> {
                                   Text(
                                     "${snapshot.data![1].requestList[index].position}. Sıradasınız",
                                     style: const TextStyle(
-                                        color: Colors.white, fontSize: 18),
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontFamily: 'Ubuntu'),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   ElevatedButton(
-                                    onPressed: () async {await MarkPresence();},
-                                    child: Text("Kitabı Al"),
+                                    onPressed: () async {
+                                      await MarkPresence();
+                                    },
+                                    child: Text(
+                                      "Kitabı Al",
+                                      style: TextStyle(fontFamily: 'Ubuntu'),
+                                    ),
                                     style: ButtonStyle(
                                         backgroundColor:
                                             MaterialStateProperty.all(
@@ -224,10 +231,14 @@ class _RequestsPageState extends State<RequestsPage> {
                                               "0")
                                       ? Text(
                                           "${_timestampConverter(snapshot.data![1].requestList[index].validUntil)} Tarihine Kadar Alabilirsiniz",
-                                          style: TextStyle(color: Colors.white))
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Ubuntu'))
                                       : Text(
                                           "Sıranız Gelmedi",
-                                          style: TextStyle(color: Colors.white),
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Ubuntu'),
                                         ),
                                 ],
                               ),
@@ -241,7 +252,11 @@ class _RequestsPageState extends State<RequestsPage> {
               },
             );
           } else if (snapshot.hasError) {
-            return Text('${snapshot.error}');
+            return Center(
+                child: Text(
+              'NO DATA',
+              style: TextStyle(color: Colors.white, fontSize: 15),
+            ));
           }
 
           // By default, show a loading spinner.

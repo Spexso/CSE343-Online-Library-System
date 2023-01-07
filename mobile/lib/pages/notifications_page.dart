@@ -78,9 +78,7 @@ class Notification extends StatelessWidget {
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 25,
-                ),
+                    color: Colors.white, fontSize: 25, fontFamily: 'Ubuntu'),
                 textAlign: TextAlign.center,
               ),
             ),

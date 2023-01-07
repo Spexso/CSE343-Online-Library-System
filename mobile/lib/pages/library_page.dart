@@ -17,6 +17,7 @@ import '../model/error_message.dart';
 
 class LibraryPage extends StatefulWidget {
   final String token;
+
   const LibraryPage({Key? key, required this.token}) : super(key: key);
 
   @override
@@ -27,9 +28,7 @@ class _LibraryPageState extends State<LibraryPage> {
   final _tfBookNameController = TextEditingController();
   bool isGridView = false;
 
-
   Future<IsbnListResponse> isbnListState() async {
-
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
     var url = Uri.parse("$urlString/user/isbn-list");
 
@@ -47,25 +46,21 @@ class _LibraryPageState extends State<LibraryPage> {
 
     var body = json.encode(data);
 
-    var answer = await http.post(
-        url,
-        body: body,
-        headers: {
-          "Authorization": "Bearer ${widget.token}"}
-    );
+    var answer = await http.post(url,
+        body: body, headers: {"Authorization": "Bearer ${widget.token}"});
 
     IsbnListResponse resp = IsbnListResponse([]);
 
-    if(answer.statusCode == 200){
+    if (answer.statusCode == 200) {
       print("request 200");
       print(json.decode(answer.body));
-      resp = await IsbnListResponse.fromJson(json.decode(utf8.decode(answer.bodyBytes)));
+      resp = await IsbnListResponse.fromJson(
+          json.decode(utf8.decode(answer.bodyBytes)));
       print("ISBN LIST RESP");
       print(await resp);
       print(await resp.isbnList[0].name);
       return resp;
-    }
-    else if(answer.statusCode == 400){
+    } else if (answer.statusCode == 400) {
       print("request 400");
       ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
       print(resp.kind);
@@ -73,15 +68,12 @@ class _LibraryPageState extends State<LibraryPage> {
     return resp;
   }
 
-
   @override
   void initState() {
-
     //isbnPicture().then((value){
     //});
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -93,19 +85,23 @@ class _LibraryPageState extends State<LibraryPage> {
                 padding: const EdgeInsets.all(10.0),
                 child: TextField(
                   controller: _tfBookNameController,
-                  style: const TextStyle(color: Colors.white, fontSize: 20),
+                  style: const TextStyle(
+                      color: Colors.white, fontSize: 20, fontFamily: 'Ubuntu'),
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: const Color.fromRGBO(100, 100, 100, 1),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(width: 1.5, color: Colors.grey),
+                      borderSide:
+                          const BorderSide(width: 1.5, color: Colors.grey),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(width: 2, color: Colors.white),
+                      borderSide:
+                          const BorderSide(width: 2, color: Colors.white),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    hintStyle: const TextStyle(color: Colors.white),
+                    hintStyle: const TextStyle(
+                        color: Colors.white, fontFamily: 'Ubuntu'),
                     suffixIcon: const Icon(
                       Icons.search,
                       color: Colors.white,
@@ -191,15 +187,15 @@ class _LibraryPageState extends State<LibraryPage> {
                   ],
                 ),
               ),
-
               FutureBuilder<IsbnListResponse>(
                 future: isbnListState(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return GridView.builder(
                       scrollDirection: Axis.vertical,
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,      childAspectRatio: 0.5),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2, childAspectRatio: 0.5),
                       itemCount: snapshot.data!.isbnList.length,
                       physics: const ClampingScrollPhysics(),
                       shrinkWrap: true,
@@ -209,20 +205,32 @@ class _LibraryPageState extends State<LibraryPage> {
                             author: snapshot.data!.isbnList[index].author,
                             publisher: snapshot.data!.isbnList[index].publisher,
                             picture: snapshot.data!.isbnList[index].picture,
-                            classNum: snapshot.data!.isbnList[index].classNumber,
-                            cutterNum: snapshot.data!.isbnList[index].cutterNumber,
+                            classNum:
+                                snapshot.data!.isbnList[index].classNumber,
+                            cutterNum:
+                                snapshot.data!.isbnList[index].cutterNumber,
                             isbn: snapshot.data!.isbnList[index].isbn,
-                            year: snapshot.data!.isbnList[index].publicationYear,
-                            token: widget.token
-                        );
+                            year:
+                                snapshot.data!.isbnList[index].publicationYear,
+                            token: widget.token);
                       },
                     );
                   } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
+                    return Center(
+                        child: Text(
+                      'NO DATA',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontFamily: 'Ubuntu'),
+                    ));
                   }
 
                   // By default, show a loading spinner.
-                  return Center(child: const CircularProgressIndicator(color: Colors.white,));
+                  return Center(
+                      child: const CircularProgressIndicator(
+                    color: Colors.white,
+                  ));
                 },
               ),
             ],
@@ -232,19 +240,23 @@ class _LibraryPageState extends State<LibraryPage> {
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: TextField(
-                  style: const TextStyle(color: Colors.white, fontSize: 20),
+                  style: const TextStyle(
+                      color: Colors.white, fontSize: 20, fontFamily: 'Ubuntu'),
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: const Color.fromRGBO(100, 100, 100, 1),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(width: 1.5, color: Colors.grey),
+                      borderSide:
+                          const BorderSide(width: 1.5, color: Colors.grey),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(width: 2, color: Colors.white),
+                      borderSide:
+                          const BorderSide(width: 2, color: Colors.white),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    hintStyle: const TextStyle(color: Colors.white),
+                    hintStyle: const TextStyle(
+                        color: Colors.white, fontFamily: 'Ubuntu'),
                     suffixIcon: const Icon(
                       Icons.search,
                       color: Colors.white,
@@ -268,7 +280,6 @@ class _LibraryPageState extends State<LibraryPage> {
                           child: InkWell(
                             borderRadius: BorderRadius.circular(5),
                             onTap: (() {
-
                               setState(() {
                                 isGridView = true;
                               });
@@ -345,20 +356,32 @@ class _LibraryPageState extends State<LibraryPage> {
                             author: snapshot.data!.isbnList[index].author,
                             publisher: snapshot.data!.isbnList[index].publisher,
                             picture: snapshot.data!.isbnList[index].picture,
-                            classNum: snapshot.data!.isbnList[index].classNumber,
-                            cutterNum: snapshot.data!.isbnList[index].cutterNumber,
+                            classNum:
+                                snapshot.data!.isbnList[index].classNumber,
+                            cutterNum:
+                                snapshot.data!.isbnList[index].cutterNumber,
                             isbn: snapshot.data!.isbnList[index].isbn,
-                            year: snapshot.data!.isbnList[index].publicationYear,
-                            token: widget.token
-                        );
+                            year:
+                                snapshot.data!.isbnList[index].publicationYear,
+                            token: widget.token);
                       },
                     );
                   } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
+                    return Center(
+                        child: Text(
+                      'NO DATA',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontFamily: 'Ubuntu'),
+                    ));
                   }
 
                   // By default, show a loading spinner.
-                  return Center(child: const CircularProgressIndicator(color: Colors.white,));
+                  return Center(
+                      child: const CircularProgressIndicator(
+                    color: Colors.white,
+                  ));
                 },
               ),
             ],
@@ -378,18 +401,25 @@ class BookingList extends StatefulWidget {
   final String cutterNum;
   final String isbn;
   final token;
-  const BookingList({Key? key,
-    required this.name, required this.author,
-    required this.publisher, required this.picture,
-    required this.classNum, required this.cutterNum,
-    required this.isbn, required this.year, required this.token}) : super(key: key);
+
+  const BookingList(
+      {Key? key,
+      required this.name,
+      required this.author,
+      required this.publisher,
+      required this.picture,
+      required this.classNum,
+      required this.cutterNum,
+      required this.isbn,
+      required this.year,
+      required this.token})
+      : super(key: key);
 
   @override
   State<BookingList> createState() => _BookingListState();
 }
 
 class _BookingListState extends State<BookingList> {
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -408,18 +438,17 @@ class _BookingListState extends State<BookingList> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        BookPage(
-                          name: widget.name,
-                          author: widget.author,
-                          publisher: widget.publisher,
-                          year: widget.year,
-                          classNum: widget.classNum,
-                          cutterNum: widget.cutterNum,
-                          isbn: widget.isbn,
-                          picture: widget.picture,
-                          token: widget.token,
-                        ),
+                  builder: (context) => BookPage(
+                    name: widget.name,
+                    author: widget.author,
+                    publisher: widget.publisher,
+                    year: widget.year,
+                    classNum: widget.classNum,
+                    cutterNum: widget.cutterNum,
+                    isbn: widget.isbn,
+                    picture: widget.picture,
+                    token: widget.token,
+                  ),
                 ),
               );
             },
@@ -428,9 +457,9 @@ class _BookingListState extends State<BookingList> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: SizedBox(
-                    height: 200, width: 150,
-                      child: Image.memory(base64Decode(widget.picture))
-                  ),
+                      height: 200,
+                      width: 150,
+                      child: Image.memory(base64Decode(widget.picture))),
                 ),
                 Expanded(
                   child: Column(
@@ -445,21 +474,26 @@ class _BookingListState extends State<BookingList> {
                               color: Colors.white,
                               fontSize: 23,
                               fontWeight: FontWeight.bold,
-                              fontFamily: 'Ubuntu'
-                          ),
+                              fontFamily: 'Ubuntu'),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Text(
                         widget.author,
-                        style: const TextStyle(color: Colors.white, fontSize: 18),
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontFamily: 'Ubuntu'),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         widget.publisher,
-                        style: const TextStyle(color: Colors.white, fontSize: 18),
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontFamily: 'Ubuntu'),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -487,18 +521,25 @@ class BookingGrid extends StatefulWidget {
   final String cutterNum;
   final String isbn;
   final String token;
-  const BookingGrid({Key? key,
-    required this.name, required this.author,
-    required this.publisher, required this.picture,
-    required this.classNum, required this.cutterNum,
-    required this.isbn, required this.year, required this.token}) : super(key: key);
+
+  const BookingGrid(
+      {Key? key,
+      required this.name,
+      required this.author,
+      required this.publisher,
+      required this.picture,
+      required this.classNum,
+      required this.cutterNum,
+      required this.isbn,
+      required this.year,
+      required this.token})
+      : super(key: key);
 
   @override
   State<BookingGrid> createState() => _BookingGridState();
 }
 
 class _BookingGridState extends State<BookingGrid> {
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -518,64 +559,69 @@ class _BookingGridState extends State<BookingGrid> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => BookPage(
-                      name: widget.name,
-                      author: widget.author,
-                      publisher: widget.publisher,
-                      year: widget.year,
-                      classNum: widget.classNum,
-                      cutterNum: widget.cutterNum,
-                      isbn: widget.isbn,
-                      picture: widget.picture,
-                      token: widget.token,
-                    ),),
+                  builder: (context) => BookPage(
+                    name: widget.name,
+                    author: widget.author,
+                    publisher: widget.publisher,
+                    year: widget.year,
+                    classNum: widget.classNum,
+                    cutterNum: widget.cutterNum,
+                    isbn: widget.isbn,
+                    picture: widget.picture,
+                    token: widget.token,
+                  ),
+                ),
               );
             },
             child: Column(
-
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(5),
                   child: SizedBox(
-                    height: 200, width: 150,
-                      child: Image.memory(base64Decode(widget.picture))
+                      height: 200,
+                      width: 150,
+                      child: Image.memory(base64Decode(widget.picture))),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
+                  child: Text(
+                    widget.name,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 23,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Ubuntu'),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
                   ),
                 ),
                 Padding(
-                    padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
-                    child: Text(
-                      widget.name,
-                      style: const TextStyle(color: Colors.white, fontSize: 23, fontWeight: FontWeight.bold),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                    ),
+                  padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
+                  child: Text(
+                    widget.author,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontFamily: 'Ubuntu'),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
                   ),
-
-
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8,left: 8, right: 8),
-                    child: Text(
-                      widget.author,
-                      style: const TextStyle(color: Colors.white, fontSize: 18),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                    ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
+                  child: Text(
+                    widget.publisher,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontFamily: 'Ubuntu'),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
                   ),
-
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8, right: 8,top: 8),
-                    child: Text(
-                      widget.publisher,
-                      style: const TextStyle(color: Colors.white, fontSize: 18),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-
+                ),
               ],
             ),
           ),

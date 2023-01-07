@@ -11,12 +11,11 @@ import 'package:login_page/model/saved_book_list.dart';
 import 'dart:typed_data';
 import 'book_page.dart';
 
-
-
 import '../model/error_message.dart';
 
 class SavedPage extends StatefulWidget {
   final String token;
+
   const SavedPage({Key? key, required this.token}) : super(key: key);
 
   @override
@@ -24,28 +23,22 @@ class SavedPage extends StatefulWidget {
 }
 
 class _SavedPageState extends State<SavedPage> {
-
   var pictureList = List<String>.filled(4, "", growable: false);
   var nameList = List<String>.filled(4, "", growable: false);
-
-
 
   Future<List<String>> savedBooks() async {
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
     var url = Uri.parse("$urlString/user/saved-books");
-    var answer = await http.post(url , headers: {"Authorization": "Bearer ${widget.token}"});
+    var answer = await http
+        .post(url, headers: {"Authorization": "Bearer ${widget.token}"});
     var isbnList = SavedBooks(books: [""]);
-    if(answer.statusCode == 200)
-      {
-        isbnList = SavedBooks.fromJson(json.decode(answer.body));
+    if (answer.statusCode == 200) {
+      isbnList = SavedBooks.fromJson(json.decode(answer.body));
 
-        return isbnList.books;
-      }
+      return isbnList.books;
+    }
     print(isbnList.toList());
     return isbnList.books;
-
-
-
   }
 
   Future<List<IsbnProfile>> isbnProfileState() async {
@@ -53,41 +46,41 @@ class _SavedPageState extends State<SavedPage> {
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
     var url = Uri.parse("$urlString/user/isbn-profile");
     var list = await savedBooks();
-    var data = List.filled(list.length,{"isbn" : list[0]});
-    for(int i=0;i<list.length;++i)
-      {
-        data[i] = {"isbn" : list[i]};
-      }
+    var data = List.filled(list.length, {"isbn": list[0]});
+    for (int i = 0; i < list.length; ++i) {
+      data[i] = {"isbn": list[i]};
+    }
     var body = List.filled(list.length, json.encode(data));
-    for(int i=0;i<list.length;++i)
-    {
+    for (int i = 0; i < list.length; ++i) {
       body[i] = json.encode(data[i]);
     }
     print(body);
     print(body[0].runtimeType);
-    var answer = List.filled(list.length, await http.post(url, body: body[0],headers: {"Authorization": "Bearer ${widget.token}"} ));
-    for(int i=0; i<list.length;++i)
-      {
-        answer[i] = await http.post(url, body: body[i],headers: {"Authorization": "Bearer ${widget.token}"} );
-      }
+    var answer = List.filled(
+        list.length,
+        await http.post(url,
+            body: body[0],
+            headers: {"Authorization": "Bearer ${widget.token}"}));
+    for (int i = 0; i < list.length; ++i) {
+      answer[i] = await http.post(url,
+          body: body[i], headers: {"Authorization": "Bearer ${widget.token}"});
+    }
     bool flag = true;
-    for (int i=0;i<list.length;++i)
-    {
-      if(answer[i].statusCode == 400)
-      {
+    for (int i = 0; i < list.length; ++i) {
+      if (answer[i].statusCode == 400) {
         flag = false;
       }
     }
 
-    var resp = List.filled(list.length, IsbnProfile("", "", "", "", "", "", "",""));
-    if(flag){
+    var resp =
+        List.filled(list.length, IsbnProfile("", "", "", "", "", "", "", ""));
+    if (flag) {
       print("isbn profile success");
-      for(int i=0;i<list.length;++i)
-      {
-        resp[i] = IsbnProfile.fromJson(json.decode(utf8.decode(answer[i].bodyBytes)));
+      for (int i = 0; i < list.length; ++i) {
+        resp[i] =
+            IsbnProfile.fromJson(json.decode(utf8.decode(answer[i].bodyBytes)));
       }
-    }
-    else{
+    } else {
       print("isbn profile not success");
       ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer[0].body));
       print(resp.kind);
@@ -96,7 +89,6 @@ class _SavedPageState extends State<SavedPage> {
     return resp;
   }
 
-
   @override
   void initState() {
     savedBooks().then((value) => null);
@@ -104,6 +96,7 @@ class _SavedPageState extends State<SavedPage> {
     //});
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<IsbnProfile>>(
@@ -129,23 +122,20 @@ class _SavedPageState extends State<SavedPage> {
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                BookPage(
-                                  name: snapshot.data![index].name,
-                                  author: snapshot.data![index].author,
-                                  publisher: snapshot.data![index].publisher,
-                                  year: snapshot.data![index].publicationYear,
-                                  classNum: snapshot.data![index].classNumber,
-                                  cutterNum: snapshot.data![index].cutterNumber,
-                                  isbn: snapshot.data![index].isbn,
-                                  picture: snapshot.data![index].picture,
-                                  token: widget.token,
-                                ),
+                            builder: (context) => BookPage(
+                              name: snapshot.data![index].name,
+                              author: snapshot.data![index].author,
+                              publisher: snapshot.data![index].publisher,
+                              year: snapshot.data![index].publicationYear,
+                              classNum: snapshot.data![index].classNumber,
+                              cutterNum: snapshot.data![index].cutterNumber,
+                              isbn: snapshot.data![index].isbn,
+                              picture: snapshot.data![index].picture,
+                              token: widget.token,
+                            ),
                           ),
                         );
-                        setState(() {
-
-                        });
+                        setState(() {});
                       },
                       child: Row(
                         children: [
@@ -156,38 +146,49 @@ class _SavedPageState extends State<SavedPage> {
                             child: SizedBox(
                                 height: 200,
                                 width: 150,
-                                child: Image.memory(base64Decode(snapshot.data![index].picture))),
+                                child: Image.memory(base64Decode(
+                                    snapshot.data![index].picture))),
                           ),
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-
                                   Text(
                                     snapshot.data![index].name,
-                                    style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Ubuntu'),
                                     maxLines: 2,
                                     textAlign: TextAlign.center,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   Text(
                                     snapshot.data![index].author,
-                                    style: const TextStyle(color: Colors.white, fontSize: 18),
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontFamily: 'Ubuntu'),
                                     maxLines: 3,
                                     textAlign: TextAlign.center,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   Text(
                                     snapshot.data![index].publisher,
-                                    style: const TextStyle(color: Colors.white, fontSize: 18),
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontFamily: 'Ubuntu'),
                                     maxLines: 3,
                                     textAlign: TextAlign.center,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-
                                 ],
                               ),
                             ),
@@ -201,17 +202,23 @@ class _SavedPageState extends State<SavedPage> {
             },
           );
         } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
+          return Center(
+              child: Text('NO DATA',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontFamily: 'Ubuntu')));
         }
 
         // By default, show a loading spinner.
-        return const Center(child:  CircularProgressIndicator(color: Colors.white,));
+        return const Center(
+            child: CircularProgressIndicator(
+          color: Colors.white,
+        ));
       },
     );
-
-
-
   }
+
   ButtonStyle buildButtonStyle() {
     return ButtonStyle(
         backgroundColor: MaterialStateProperty.all(Colors.white),
@@ -220,10 +227,9 @@ class _SavedPageState extends State<SavedPage> {
         shape: MaterialStateProperty.all(const CircleBorder()));
   }
 
-  TextStyle buildTextStyle() => const TextStyle(color: Colors.black);
+  TextStyle buildTextStyle() =>
+      const TextStyle(color: Colors.black, fontFamily: 'Ubuntu');
 }
-
-
 
 /* UNSAVE BOOK
 Future<bool> unsaveBook(isbn, token) async {
@@ -243,5 +249,3 @@ Future<bool> unsaveBook(isbn, token) async {
     return false;
   }
  */
-
-

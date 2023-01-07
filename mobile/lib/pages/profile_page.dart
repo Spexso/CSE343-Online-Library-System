@@ -82,7 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if (answer.statusCode == 200) {
       print("user profile success");
-      resp = UserProfile.fromJson(json.decode(answer.body));
+      resp = UserProfile.fromJson(json.decode(utf8.decode(answer.bodyBytes)));
       name = resp.name;
       surname = resp.surname;
       email = resp.email;

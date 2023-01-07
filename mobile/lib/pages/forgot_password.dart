@@ -42,12 +42,14 @@ class ForgotPassword extends StatelessWidget {
                               const BorderSide(width: 2, color: Colors.white),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        hintStyle: const TextStyle(color: Colors.white),
+                        hintStyle: const TextStyle(color: Colors.white,
+                            fontFamily: 'Ubuntu'),
                         suffixIcon: const Icon(
                           Icons.email,
                           color: Colors.white,
                         ),
                         hintText: "Email Address",
+
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10))),
                   ),

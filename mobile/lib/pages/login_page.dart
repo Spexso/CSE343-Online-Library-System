@@ -19,7 +19,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  var snackBar = const SnackBar(content: Text("Login Error"));
+  var snackBar = const SnackBar(
+      content: Text(
+    "Login Error",
+    style: TextStyle(fontFamily: 'Ubuntu'),
+  ));
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -85,8 +89,12 @@ class _LoginPageState extends State<LoginPage> {
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: TextField(
                     keyboardType: TextInputType.emailAddress,
-                    style: const TextStyle(color: Colors.white, fontSize: 20),
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontFamily: 'Ubuntu'),
                     controller: emailController,
+                    cursorColor: Colors.white,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: const Color.fromRGBO(42, 43, 46, 1),
@@ -100,7 +108,8 @@ class _LoginPageState extends State<LoginPage> {
                             const BorderSide(width: 2, color: Colors.white),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      hintStyle: const TextStyle(color: Colors.white),
+                      hintStyle: const TextStyle(
+                          color: Colors.white, fontFamily: 'Ubuntu'),
                       suffixIcon: const Icon(
                         Icons.mail,
                         color: Colors.white,
@@ -115,9 +124,13 @@ class _LoginPageState extends State<LoginPage> {
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: TextField(
                     keyboardType: TextInputType.visiblePassword,
-                    style: const TextStyle(color: Colors.white, fontSize: 20),
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontFamily: 'Ubuntu'),
                     obscureText: true,
                     controller: passwordController,
+                    cursorColor: Colors.white,
                     decoration: InputDecoration(
                       suffixIcon: const Icon(
                         Icons.password,
@@ -136,7 +149,8 @@ class _LoginPageState extends State<LoginPage> {
                             const BorderSide(width: 2, color: Colors.white),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      hintStyle: const TextStyle(color: Colors.white),
+                      hintStyle: const TextStyle(
+                          color: Colors.white, fontFamily: 'Ubuntu'),
                     ),
                   ),
                 ),
@@ -148,7 +162,8 @@ class _LoginPageState extends State<LoginPage> {
                         Checkbox(value: true, onChanged: null),
                         Text(
                           "Beni Hatırla",
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(
+                              color: Colors.white, fontFamily: 'Ubuntu'),
                         )
                       ],
                     ),
@@ -166,7 +181,8 @@ class _LoginPageState extends State<LoginPage> {
                           textAlign: TextAlign.end,
                           style: TextStyle(
                               color: Colors.white,
-                              decoration: TextDecoration.underline),
+                              decoration: TextDecoration.underline,
+                              fontFamily: 'Ubuntu'),
                         )),
                   ],
                 ),
@@ -203,7 +219,10 @@ class _LoginPageState extends State<LoginPage> {
                           },
                           child: const Text(
                             "Giriş Yap",
-                            style: TextStyle(fontSize: 20, color: Colors.black),
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.black,
+                                fontFamily: 'Ubuntu'),
                           )),
                       TextButton(
                           onPressed: () => {
@@ -217,7 +236,8 @@ class _LoginPageState extends State<LoginPage> {
                               style: TextStyle(
                                   decoration: TextDecoration.underline,
                                   color: Colors.white,
-                                  fontSize: 18)))
+                                  fontSize: 18,
+                                  fontFamily: 'Ubuntu')))
                     ],
                   ),
                 )
@@ -263,7 +283,8 @@ class CustomButton extends StatelessWidget {
         onPressed: () => {},
         child: Text(
           title,
-          style: const TextStyle(fontSize: 20, color: Colors.black),
+          style: const TextStyle(
+              fontSize: 20, color: Colors.black, fontFamily: 'Ubuntu'),
         ));
   }
 }
@@ -298,10 +319,10 @@ class CustomTitle extends StatelessWidget {
       child: Text(
         str,
         style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 35,
-          color: Colors.white,
-        ),
+            fontWeight: FontWeight.bold,
+            fontSize: 35,
+            color: Colors.white,
+            fontFamily: 'Ubuntu'),
       ),
     );
   }
