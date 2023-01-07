@@ -26,14 +26,14 @@ class LibraryPage extends StatefulWidget {
 
 class _LibraryPageState extends State<LibraryPage> {
   final _tfBookNameController = TextEditingController();
-  String bookNameSearch = "";
+  String _bookNameSearch = "";
   bool isGridView = false;
-  bool _isDetailedSearch = false;
+
   Future<IsbnListResponse> isbnListState() async {
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
     var url = Uri.parse("$urlString/user/isbn-list");
     var data = {
-      "name": bookNameSearch,
+      "name": _bookNameSearch,
       "author": "",
       "publisher": "",
       "year-start": "",
@@ -76,14 +76,12 @@ class _LibraryPageState extends State<LibraryPage> {
   @override
   Widget build(BuildContext context) {
     return Column(
-
       children: [
-
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: TextField(
-            onChanged: (value)=>{bookNameSearch = value, setState(() {})},
-            onSubmitted: (value)=>{setState(() {})},
+            onChanged: (value) => {_bookNameSearch = value, setState(() {})},
+            onSubmitted: (value) => {setState(() {})},
             controller: _tfBookNameController,
             style: const TextStyle(
                 color: Colors.white, fontSize: 20, fontFamily: 'Ubuntu'),
@@ -169,7 +167,7 @@ class _LibraryPageState extends State<LibraryPage> {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(5),
                     onTap: (() {
-                      _isDetailedSearch = !_isDetailedSearch;
+
                     }),
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
@@ -182,7 +180,6 @@ class _LibraryPageState extends State<LibraryPage> {
                   ),
                 ),
               ),
-             // (_isDetailedSearch) ? Container(color: Colors.red,height: 100,width: 100,) : null
             ],
           ),
         ),
