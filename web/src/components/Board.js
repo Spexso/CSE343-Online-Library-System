@@ -2,16 +2,16 @@ import React from "react";
 import { useState } from "react";
 import PopBook from "./popBook";
 
-const Board = ({book, search}) => {
-    console.log(book);
+const Board = ({books, search}) => {
     console.log(search);
 
     const [show, setShow] = useState(false);
     const [bookItem,setItem] = useState();
     return ( 
-        <>
+        <div>{console.log("Test",books)}
             {
-                book.map(item => {
+                
+                books.map(item => {
                     if(item.name === search || item["publication-year"] === search || item.author === search || item.publisher === search)
                     {
                         return(
@@ -31,7 +31,7 @@ const Board = ({book, search}) => {
                      return null;
                 })
             }    
-        </>
+        </div>
      );
 }
  

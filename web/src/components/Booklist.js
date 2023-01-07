@@ -38,6 +38,7 @@ const Booklist = () => {
                 return res.json();  
             })
             .then((data) => {
+                console.log(data)
                 setBook(data)
                 
             }).catch( err => {
@@ -70,7 +71,7 @@ const Booklist = () => {
             </div>
         <div className="container">
             {
-                <Board book={bookData} search={search}/>
+                <Board books={bookData} search={search}/>
             }          
         </div>
         </>
