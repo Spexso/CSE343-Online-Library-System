@@ -85,7 +85,7 @@ class _SignUpPageState extends State<SignUpPage> {
         child: SingleChildScrollView(
           child: Container(
             height: MediaQuery.of(context).size.height / 40 * 32,
-            width: MediaQuery.of(context).size.width / 5 * 4,
+            width: MediaQuery.of(context).size.width / 5 * 4.50,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
@@ -291,7 +291,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             style: TextStyle(
                                 fontSize: 20,
                                 color: Colors.black,
-                                fontFamily: 'Ubuntu'),
+                                fontFamily: 'Ubuntu',
+                                fontWeight: FontWeight.bold
+                            ),
                           )),
                     ),
                     TextButton(

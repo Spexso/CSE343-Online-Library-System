@@ -72,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Center(
           child: Container(
             height: MediaQuery.of(context).size.height / 5 * 3,
-            width: MediaQuery.of(context).size.width / 5 * 4,
+            width: MediaQuery.of(context).size.width / 5 * 4.50,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
@@ -116,7 +116,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       hintText: "Email",
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                          borderRadius: BorderRadius.circular(10)
+                      ),
                     ),
                   ),
                 ),
@@ -167,23 +168,6 @@ class _LoginPageState extends State<LoginPage> {
                         )
                       ],
                     ),
-                    TextButton(
-                        onPressed: () => {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ForgotPassword()),
-                              )
-                            },
-                        child: const Text(
-                          'Şifremi Unuttum',
-                          textAlign: TextAlign.end,
-                          style: TextStyle(
-                              color: Colors.white,
-                              decoration: TextDecoration.underline,
-                              fontFamily: 'Ubuntu'),
-                        )),
                   ],
                 ),
                 Center(
@@ -222,7 +206,8 @@ class _LoginPageState extends State<LoginPage> {
                             style: TextStyle(
                                 fontSize: 20,
                                 color: Colors.black,
-                                fontFamily: 'Ubuntu'),
+                                fontFamily: 'Ubuntu',
+                                fontWeight: FontWeight.bold),
                           )),
                       TextButton(
                           onPressed: () => {
@@ -237,7 +222,10 @@ class _LoginPageState extends State<LoginPage> {
                                   decoration: TextDecoration.underline,
                                   color: Colors.white,
                                   fontSize: 18,
-                                  fontFamily: 'Ubuntu')))
+                                  fontFamily: 'Ubuntu',
+                              )
+                          )
+                      )
                     ],
                   ),
                 )
@@ -322,7 +310,8 @@ class CustomTitle extends StatelessWidget {
             fontWeight: FontWeight.bold,
             fontSize: 35,
             color: Colors.white,
-            fontFamily: 'Ubuntu'),
+            fontFamily: 'Ubuntu',
+        ),
       ),
     );
   }
