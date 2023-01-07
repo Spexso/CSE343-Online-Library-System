@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:login_page/model/isbn_list.dart';
 
 class IsbnListResponse {
@@ -8,11 +6,12 @@ class IsbnListResponse {
 
   IsbnListResponse(this.isbnList);
 
-  factory IsbnListResponse.fromJson(List<dynamic> json){
+  factory IsbnListResponse.fromJson(Map<String, dynamic> json){
 
-    //var isbnListJson = json["isbn-list"] as List;
-
-    List<IsbnList> isbnListList = json.map((e) => IsbnList.fromJson(e)).toList();
+    var isbnListJson = json["isbn-list"] as List;
+    print("ISBN LIST JSON");
+    print(json["isbn-list"]);
+    List<IsbnList> isbnListList = isbnListJson.map((e) => IsbnList.fromJson(e)).toList();
     return IsbnListResponse(isbnListList);
   }
 }

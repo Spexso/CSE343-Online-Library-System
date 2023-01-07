@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:login_page/model/suspend_until.dart';
 import 'package:login_page/model/user_profile.dart';
+import 'package:login_page/pages/borrowed_page.dart';
 import 'package:login_page/pages/login_page.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
@@ -210,9 +211,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   phone: phone,
                                 )),
                       );
-                      setState(() {
-                        //_isEnable = true;
-                      });
+                      setState(() {});
                     },
                     style: ElevatedButton.styleFrom(
                         //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0),),
@@ -277,11 +276,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     return Text("ERROR");
                   }
                   // else
-                  return CircularProgressIndicator(
+                  return const CircularProgressIndicator(
                     color: Colors.white,
                   );
-                }),
-
+                }
+            ),
             SizedBox(
               width: 225,
               child: SizedBox(
@@ -291,7 +290,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const LoginPage()),
+                          builder: (context) => BorrowedPage(token: widget.token,)),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -302,14 +301,49 @@ class _ProfilePageState extends State<ProfilePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: const [
                       Text(
-                        "Çıkış Yap",
-                        style: TextStyle(color: Colors.red, fontSize: 15),
+                        "Ödünç Kitaplar",
+                        style: TextStyle(color: Colors.white, fontSize: 15),
                       ),
                       Icon(
                         Icons.keyboard_arrow_right_rounded,
                         color: Colors.grey,
                       )
                     ],
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: SizedBox(
+                width: 225,
+                child: SizedBox(
+                  height: 40,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginPage()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                        primary: const Color.fromRGBO(100, 100, 100, 1),
+                        side: const BorderSide(color: Colors.grey)),
+                    child: Row(
+                      //mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Text(
+                          "Çıkış Yap",
+                          style: TextStyle(color: Colors.red, fontSize: 15),
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_right_rounded,
+                          color: Colors.grey,
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),

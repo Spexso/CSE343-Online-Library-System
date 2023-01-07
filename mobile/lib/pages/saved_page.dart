@@ -125,8 +125,8 @@ class _SavedPageState extends State<SavedPage> {
                         color: const Color.fromRGBO(42, 43, 46, 1),
                         borderRadius: BorderRadius.circular(10)),
                     child: InkWell(
-                      onTap: () {
-                        Navigator.push(
+                      onTap: () async {
+                        await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
@@ -143,6 +143,9 @@ class _SavedPageState extends State<SavedPage> {
                                 ),
                           ),
                         );
+                        setState(() {
+
+                        });
                       },
                       child: Row(
                         children: [

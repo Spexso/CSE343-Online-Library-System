@@ -144,8 +144,8 @@ class _RequestsPageState extends State<RequestsPage> {
                   padding: const EdgeInsets.all(10.0),
                   child: Center(
                     child: InkWell(
-                      onTap: () {
-                        Navigator.push(
+                      onTap: () async {
+                        await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => BookPage(
@@ -161,6 +161,7 @@ class _RequestsPageState extends State<RequestsPage> {
                             ),
                           ),
                         );
+                        setState(() {});
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width,
