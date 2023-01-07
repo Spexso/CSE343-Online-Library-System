@@ -8,7 +8,7 @@ const Board = ({books, search}) => {
     const [show, setShow] = useState(false);
     const [bookItem,setItem] = useState();
     return ( 
-        <div>{console.log("Test",books)}
+        <>
             {
                 
                 books.map(item => {
@@ -31,7 +31,7 @@ const Board = ({books, search}) => {
                      return null;
                 })
             }    
-        </div>
+        </>
      );
 }
  
