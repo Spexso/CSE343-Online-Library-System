@@ -38,7 +38,7 @@ const Booklist = () => {
                 return res.json();  
             })
             .then((data) => {
-                console.log(data)
+                console.log(data['isbn-list'])
                 setBook(data)
                 
             }).catch( err => {
