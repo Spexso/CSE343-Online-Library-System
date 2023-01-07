@@ -133,17 +133,19 @@ class _RequestsPageState extends State<RequestsPage> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 12.0),
+          padding: const EdgeInsets.only(top: 12.0, bottom: 8),
           child: ElevatedButton(
             onPressed: () async {
               await MarkPresence();
             },
             child: Text(
               "Buradayım",
-              style: TextStyle(fontFamily: 'Ubuntu'),
+              style: TextStyle(fontFamily: 'Ubuntu', fontSize: 17, fontWeight: FontWeight.bold),
             ),
             style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.white)),
+                backgroundColor: MaterialStateProperty.all(Colors.white),
+                padding: MaterialStateProperty.all(const EdgeInsets.all(17)),
+            ),
           ),
         ),
 

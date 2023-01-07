@@ -34,7 +34,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   late String email;
   late String phone;
 
-  //late String password;
+  late String password = widget.password;
 
   late bool _isObscure = true;
 
@@ -42,7 +42,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   late TextEditingController surnameController;
   late TextEditingController emailController;
   late TextEditingController phoneController;
-  late TextEditingController passwordController;
+  late TextEditingController oldPasswordController;
+  late TextEditingController newPasswordController;
 
   @override
   void initState() {
@@ -52,13 +53,16 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     surnameController = TextEditingController(text: widget.surname);
     emailController = TextEditingController(text: widget.email);
     phoneController = TextEditingController(text: widget.phone);
-    passwordController = TextEditingController(text: widget.password);
+    oldPasswordController = TextEditingController();
+    newPasswordController = TextEditingController();
   }
 
   @override
   void dispose() {
     nameController.dispose();
+    surnameController.dispose();
     emailController.dispose();
+    phoneController.dispose();
     super.dispose();
   }
 
@@ -96,7 +100,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     var url = Uri.parse("$urlString/user/change-user-email");
 
     var data = {
-      "password": widget.password,
+      "password": password,
       "new-email": emailController.text,
     };
 
@@ -124,7 +128,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     var url = Uri.parse("$urlString/user/change-user-phone");
 
     var data = {
-      "password": widget.password,
+      "password": password,
       "new-phone": phoneController.text,
     };
 
@@ -152,8 +156,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     var url = Uri.parse("$urlString/user/change-user-password");
 
     var data = {
-      "old-password": widget.password,
-      "new-password": passwordController.text,
+      "old-password": password, // coming from profile
+      "new-password": newPasswordController.text, // todo: come from alertbox
     };
 
     var body = json.encode(data);
@@ -161,18 +165,84 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         body: body, headers: {"Authorization": "Bearer ${widget.token}"});
 
     if (answer.statusCode == 200) {
-      print("phone update success");
+      print("password update success");
       return true;
     } else if (answer.statusCode == 400) {
-      print("phone update NOT success");
+      print("password update NOT success");
       ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
       print(resp.kind);
       print(resp.message);
       return false;
     } else {
-      print("email update not 200 and 400");
+      print("password update not 200 and 400");
       return false;
     }
+  }
+
+  Future<void> changePasswordAlertBox(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context){
+          bool isTextClear = true;
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                title: Text("Şifre Değiştir"),
+                actions: [
+                  TextField(
+                    controller: oldPasswordController,
+                    onChanged: (val) {
+                      setState(() {
+                        if (oldPasswordController.text.isEmpty) {
+                          isTextClear = true;
+                        } else {
+                          isTextClear = false;
+                        }
+                      },
+                      );
+                    },
+                  ),
+                  TextField(
+                    controller: newPasswordController,
+                    onChanged: (val) {
+                      setState(() {
+                        if (newPasswordController.text.isEmpty) {
+                          isTextClear = true;
+                        } else {
+                          isTextClear = false;
+                        }
+                      },
+                      );
+                    },
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (oldPasswordController.text == password) {
+                        print("old password true");
+                        await changeUserPassword();
+                        setState(() {
+                          password = newPasswordController.text;
+                        });
+                      }
+                      else {
+                        print("old password false");
+                        print(oldPasswordController.text);
+                      }
+                      Navigator.pop(context);
+                      setState(() {
+                        isTextClear = true;
+                        oldPasswordController.clear();
+                        newPasswordController.clear();
+                      });
+                    },
+                    child: Text("Kaydet"),
+                  ),
+                ],
+              );
+            }
+          );
+        }
+    );
   }
 
   late bool nameChange = false;
@@ -305,13 +375,14 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     SizedBox(
                       height: 15,
                     ),
+                    /*
                     TextField(
                       obscureText: _isObscure,
                       style: const TextStyle(
                           fontSize: 20,
                           color: Colors.white,
                           fontFamily: 'Ubuntu'),
-                      controller: passwordController,
+                      controller: oldPasswordController,
                       onChanged: (text) {
                         setState(() {
                           print("password changed");
@@ -336,12 +407,22 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                           borderSide: BorderSide(color: Colors.white),
                         ),
                       ),
-                    ),
+                    ), */
                   ],
                 ),
               ),
               const SizedBox(
                 height: 20,
+              ),
+              ElevatedButton(
+                  onPressed: () async {
+                    await changePasswordAlertBox(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                  //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0),),
+                     primary: Colors.white,
+                ),
+                  child: Text("Şifreyi Değiştir"),
               ),
               ElevatedButton(
                 onPressed: () async {

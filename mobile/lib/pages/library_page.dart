@@ -99,11 +99,12 @@ class _LibraryPageState extends State<LibraryPage> {
             return SingleChildScrollView(
               child: AlertDialog(
                 backgroundColor: const Color.fromRGBO(60, 60, 60, 1),
-                title: Center(
+                title: const Center(
                     child: Text(
                   'Detaylı Arama',
                   style: TextStyle(color: Colors.white),
-                )),
+                    )
+                ),
                 actions: <Widget>[
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -122,8 +123,8 @@ class _LibraryPageState extends State<LibraryPage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         hintStyle: const TextStyle(
-                            color: Colors.white, fontFamily: 'Ubuntu'),
-                        hintText: "Yazar Adı Giriniz",
+                            color: Colors.grey, fontFamily: 'Ubuntu'),
+                        hintText: "Yazar adı giriniz",
                       ),
                       controller: authorController,
                       onChanged: (value) => {authorSearch = value},
@@ -146,8 +147,8 @@ class _LibraryPageState extends State<LibraryPage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         hintStyle: const TextStyle(
-                            color: Colors.white, fontFamily: 'Ubuntu'),
-                        hintText: "Yayımcı Adı Giriniz",
+                            color: Colors.grey, fontFamily: 'Ubuntu'),
+                        hintText: "Yayımcı adı giriniz",
                       ),
                       controller: publisherController,
                       onChanged: (value) => {publisherSearch = value},
@@ -170,8 +171,8 @@ class _LibraryPageState extends State<LibraryPage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         hintStyle: const TextStyle(
-                            color: Colors.white, fontFamily: 'Ubuntu'),
-                        hintText: "Başlangıç Yılı Giriniz",
+                            color: Colors.grey, fontFamily: 'Ubuntu'),
+                        hintText: "Başlangıç yılı giriniz",
                       ),
                       controller: yearStartController,
                       onChanged: (value) => {yearStartSearch = value},
@@ -194,8 +195,8 @@ class _LibraryPageState extends State<LibraryPage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         hintStyle: const TextStyle(
-                            color: Colors.white, fontFamily: 'Ubuntu'),
-                        hintText: "Bitiş Yılı Giriniz",
+                            color: Colors.grey, fontFamily: 'Ubuntu'),
+                        hintText: "Bitiş yılı giriniz",
                       ),
                       controller: yearEndController,
                       onChanged: (value) => {yearEndSearch = value},
@@ -218,10 +219,10 @@ class _LibraryPageState extends State<LibraryPage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         hintStyle: const TextStyle(
-                            color: Colors.white,
+                            color: Colors.grey,
                             fontFamily: 'Ubuntu',
                             fontSize: 18),
-                        hintText: "Sınıflandırma Numarası Giriniz",
+                        hintText: "Sınıflandırma numarası giriniz",
                       ),
                       controller: classNumberController,
                       onChanged: (value) => {classNumberSearch = value},
@@ -244,8 +245,8 @@ class _LibraryPageState extends State<LibraryPage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         hintStyle: const TextStyle(
-                            color: Colors.white, fontFamily: 'Ubuntu'),
-                        hintText: "Cutter Number Giriniz",
+                            color: Colors.grey, fontFamily: 'Ubuntu'),
+                        hintText: "Yazar numarası giriniz",
                       ),
                       controller: cutterNumberController,
                       onChanged: (value) => {cutterNumberSearch = value},
@@ -280,10 +281,10 @@ class _LibraryPageState extends State<LibraryPage> {
                             cutterNumberController.text = "";
                             cutterNumberSearch = "";
                           }),
-                          child: Text("Reset"),
+                          child: Text("Sıfırla"),
                         ),
                         ElevatedButton(
-                          child: Text('OK'),
+                          child: Text('Tamam'),
                           style: ButtonStyle(
                               backgroundColor:
                               MaterialStateProperty.all(Colors.white),
