@@ -47,7 +47,7 @@ var (
 	ErrBookHasBorrower   = New("err-book-has-borrower", "book is currently borrowed")
 	ErrUserNotEligible   = New("err-user-not-eligible", "no books available for user position in queue")
 	ErrUserNotBorrower   = New("err-user-not-borrower", "user is not the borrower of the book")
-	ErrPastDue           = New("err-past-due", "user has not returned a book in time")
+	ErrPastDue           = New("err-past-due", "user has not returned a book on time")
 	ErrAlreadyBorrowed   = New("err-already-borrowed", "user has already borrowed the book")
 	ErrUserNotPresent    = New("err-user-not-present", "user has not marked their presence")
 	ErrBookIsSaved       = New("err-book-is-saved", "book is already in saved books")
