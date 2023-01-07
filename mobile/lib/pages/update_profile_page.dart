@@ -191,6 +191,9 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                 actions: [
                   TextField(
                     controller: oldPasswordController,
+                    decoration: const InputDecoration(
+                      hintText: "Eski şifreyi giriniz"
+                    ),
                     onChanged: (val) {
                       setState(() {
                         if (oldPasswordController.text.isEmpty) {
@@ -204,6 +207,9 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                   ),
                   TextField(
                     controller: newPasswordController,
+                    decoration: const InputDecoration(
+                        hintText: "Yeni şifreyi giriniz"
+                    ),
                     onChanged: (val) {
                       setState(() {
                         if (newPasswordController.text.isEmpty) {
@@ -215,27 +221,33 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                       );
                     },
                   ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (oldPasswordController.text == password) {
-                        print("old password true");
-                        await changeUserPassword();
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey[700]
+                      ),
+                      onPressed: () async {
+                        if (oldPasswordController.text == password) {
+                          print("old password true");
+                          await changeUserPassword();
+                          setState(() {
+                            password = newPasswordController.text;
+                          });
+                        }
+                        else {
+                          print("old password false");
+                          print(oldPasswordController.text);
+                        }
+                        Navigator.pop(context);
                         setState(() {
-                          password = newPasswordController.text;
+                          isTextClear = true;
+                          oldPasswordController.clear();
+                          newPasswordController.clear();
                         });
-                      }
-                      else {
-                        print("old password false");
-                        print(oldPasswordController.text);
-                      }
-                      Navigator.pop(context);
-                      setState(() {
-                        isTextClear = true;
-                        oldPasswordController.clear();
-                        newPasswordController.clear();
-                      });
-                    },
-                    child: Text("Kaydet"),
+                      },
+                      child: Text("Kaydet", style: TextStyle(color: Colors.white),),
+                    ),
                   ),
                 ],
               );

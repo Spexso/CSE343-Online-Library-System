@@ -57,6 +57,7 @@ class _NewHomePageState extends State<NewHomePage> {
         iconTheme: const IconThemeData(size: 30, color: Colors.white),
         automaticallyImplyLeading: false,
         backgroundColor: const Color.fromRGBO(42, 43, 46, 1),
+        /*
         actions: [
           IconButton(
               onPressed: () => {
@@ -70,7 +71,7 @@ class _NewHomePageState extends State<NewHomePage> {
                 Icons.notifications,
                 color: Colors.white,
               )),
-        ],
+        ],*/
       ),
       body: _children[_selectedIndex],
       bottomNavigationBar: Container(
