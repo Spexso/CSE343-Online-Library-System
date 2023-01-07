@@ -13,6 +13,10 @@ type UserLogin struct {
 	Token string `json:"token"`
 }
 
+type BookAdd struct {
+	Id string `json:"id"`
+}
+
 type UserProfile struct {
 	Name    string `json:"name"`
 	Surname string `json:"surname"`

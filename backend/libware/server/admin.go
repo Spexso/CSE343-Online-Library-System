@@ -110,6 +110,11 @@ func (l *LibraryHandler) bookAdd(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	response := responses.BookAdd{
+		Id: strconv.FormatInt(id, 10),
+	}
+	helpers.WriteResponse(w, response)
+
 	w.WriteHeader(http.StatusOK)
 	log.Printf("book-add: a copy of %q with id %q inserted", req.Isbn, id)
 }
