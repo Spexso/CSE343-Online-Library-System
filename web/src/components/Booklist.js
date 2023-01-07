@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 const Booklist = () => {
     // eslint-disable-next-line
     const [search,setSearch]=useState("");
-    const [bookData, setBook] = useState();
+    const [bookData, setBook] = useState(0);
     const historyN = useHistory();
     const {REACT_APP_API_TOKEN} = process.env;
 
@@ -71,7 +71,7 @@ const Booklist = () => {
             </div>
         <div className="container">
             {
-                <Board books={bookData["isbn-list"]} search={search}/>
+                <Board books={bookData['isbn-list']} search={search}/>
             }          
         </div>
         </>
