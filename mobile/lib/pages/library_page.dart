@@ -70,322 +70,211 @@ class _LibraryPageState extends State<LibraryPage> {
 
   @override
   void initState() {
-    //isbnPicture().then((value){
-    //});
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return isGridView
-        ? ListView(
-            shrinkWrap: true,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: TextField(
-                  controller: _tfBookNameController,
-                  style: const TextStyle(
-                      color: Colors.white, fontSize: 20, fontFamily: 'Ubuntu'),
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: const Color.fromRGBO(100, 100, 100, 1),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(width: 1.5, color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(width: 2, color: Colors.white),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    hintStyle: const TextStyle(
-                        color: Colors.white, fontFamily: 'Ubuntu'),
-                    suffixIcon: const Icon(
-                      Icons.search,
-                      color: Colors.white,
-                    ),
-                    hintText: "Kitap Adı Giriniz",
-                  ),
-                ),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: TextField(
+            controller: _tfBookNameController,
+            style: const TextStyle(
+                color: Colors.white, fontSize: 20, fontFamily: 'Ubuntu'),
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: const Color.fromRGBO(100, 100, 100, 1),
+              enabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(width: 1.5, color: Colors.grey),
+                borderRadius: BorderRadius.circular(8),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Material(
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(5),
-                              bottomLeft: Radius.circular(5)),
-                          color: const Color.fromRGBO(42, 43, 46, 1),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(5),
-                            onTap: (() {
-                              setState(() {
-                                isGridView = true;
-                              });
-                            }),
-                            child: Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Icon(
-                                Icons.grid_on,
-                                size: 40,
-                                color: Colors.grey[400],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Material(
-                          borderRadius: const BorderRadius.only(
-                              topRight: Radius.circular(5),
-                              bottomRight: Radius.circular(5)),
-                          color: const Color.fromRGBO(42, 43, 46, 1),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(5),
-                            onTap: (() {
-                              setState(() {
-                                isGridView = false;
-                              });
-                            }),
-                            child: Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Icon(
-                                Icons.list,
-                                size: 40,
-                                color: Colors.grey[400],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Material(
+              focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(width: 2, color: Colors.white),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              hintStyle:
+                  const TextStyle(color: Colors.white, fontFamily: 'Ubuntu'),
+              suffixIcon: const Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+              hintText: "Kitap Adı Giriniz",
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Material(
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(5),
+                        bottomLeft: Radius.circular(5)),
+                    color: const Color.fromRGBO(42, 43, 46, 1),
+                    child: InkWell(
                       borderRadius: BorderRadius.circular(5),
-                      color: const Color.fromRGBO(42, 43, 46, 1),
-                      child: Tooltip(
-                        message: "Detaylı Arama",
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(5),
-                          onTap: (() {
-                            log("A");
-                          }),
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Icon(
-                              Icons.filter_alt_outlined,
-                              size: 40,
-                              color: Colors.grey[400],
-                            ),
-                          ),
+                      onTap: (() {
+                        setState(() {
+                          isGridView = true;
+                        });
+                      }),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Icon(
+                          Icons.grid_on,
+                          size: 40,
+                          color: Colors.grey[400],
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-              FutureBuilder<IsbnListResponse>(
-                future: isbnListState(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return GridView.builder(
-                      scrollDirection: Axis.vertical,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2, childAspectRatio: 0.5),
-                      itemCount: snapshot.data!.isbnList.length,
-                      physics: const ClampingScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return BookingGrid(
-                            name: snapshot.data!.isbnList[index].name,
-                            author: snapshot.data!.isbnList[index].author,
-                            publisher: snapshot.data!.isbnList[index].publisher,
-                            picture: snapshot.data!.isbnList[index].picture,
-                            classNum:
-                                snapshot.data!.isbnList[index].classNumber,
-                            cutterNum:
-                                snapshot.data!.isbnList[index].cutterNumber,
-                            isbn: snapshot.data!.isbnList[index].isbn,
-                            year:
-                                snapshot.data!.isbnList[index].publicationYear,
-                            token: widget.token);
-                      },
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(
-                        child: Text(
-                      'NO DATA',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontFamily: 'Ubuntu'),
-                    ));
-                  }
-
-                  // By default, show a loading spinner.
-                  return Center(
-                      child: const CircularProgressIndicator(
-                    color: Colors.white,
-                  ));
-                },
-              ),
-            ],
-          )
-        : ListView(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: TextField(
-                  style: const TextStyle(
-                      color: Colors.white, fontSize: 20, fontFamily: 'Ubuntu'),
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: const Color.fromRGBO(100, 100, 100, 1),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(width: 1.5, color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(width: 2, color: Colors.white),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    hintStyle: const TextStyle(
-                        color: Colors.white, fontFamily: 'Ubuntu'),
-                    suffixIcon: const Icon(
-                      Icons.search,
-                      color: Colors.white,
-                    ),
-                    hintText: "Kitap Adı Giriniz",
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Material(
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(5),
-                              bottomLeft: Radius.circular(5)),
-                          color: const Color.fromRGBO(42, 43, 46, 1),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(5),
-                            onTap: (() {
-                              setState(() {
-                                isGridView = true;
-                              });
-                            }),
-                            child: Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Icon(
-                                Icons.grid_on,
-                                size: 40,
-                                color: Colors.grey[400],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Material(
-                          borderRadius: const BorderRadius.only(
-                              topRight: Radius.circular(5),
-                              bottomRight: Radius.circular(5)),
-                          color: const Color.fromRGBO(42, 43, 46, 1),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(5),
-                            onTap: (() {
-                              setState(() {
-                                isGridView = false;
-                              });
-                            }),
-                            child: Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Icon(
-                                Icons.list,
-                                size: 40,
-                                color: Colors.grey[400],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Material(
+                  Material(
+                    borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(5),
+                        bottomRight: Radius.circular(5)),
+                    color: const Color.fromRGBO(42, 43, 46, 1),
+                    child: InkWell(
                       borderRadius: BorderRadius.circular(5),
-                      color: const Color.fromRGBO(42, 43, 46, 1),
-                      child: Tooltip(
-                        message: "Detaylı Arama",
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(5),
-                          onTap: (() {
-                            log("A");
-                          }),
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Icon(
-                              Icons.filter_alt_outlined,
-                              size: 40,
-                              color: Colors.grey[400],
-                            ),
-                          ),
+                      onTap: (() {
+                        setState(() {
+                          isGridView = false;
+                        });
+                      }),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Icon(
+                          Icons.list,
+                          size: 40,
+                          color: Colors.grey[400],
                         ),
                       ),
                     ),
-                  ],
+                  ),
+                ],
+              ),
+              Material(
+                borderRadius: BorderRadius.circular(5),
+                color: const Color.fromRGBO(42, 43, 46, 1),
+                child: Tooltip(
+                  message: "Detaylı Arama",
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(5),
+                    onTap: (() {
+                      log("A");
+                    }),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Icon(
+                        Icons.filter_alt_outlined,
+                        size: 40,
+                        color: Colors.grey[400],
+                      ),
+                    ),
+                  ),
                 ),
               ),
-              FutureBuilder<IsbnListResponse>(
-                future: isbnListState(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return ListView.builder(
-                      itemCount: snapshot.data!.isbnList.length,
-                      physics: const ClampingScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return BookingList(
-                            name: snapshot.data!.isbnList[index].name,
-                            author: snapshot.data!.isbnList[index].author,
-                            publisher: snapshot.data!.isbnList[index].publisher,
-                            picture: snapshot.data!.isbnList[index].picture,
-                            classNum:
-                                snapshot.data!.isbnList[index].classNumber,
-                            cutterNum:
-                                snapshot.data!.isbnList[index].cutterNumber,
-                            isbn: snapshot.data!.isbnList[index].isbn,
-                            year:
-                                snapshot.data!.isbnList[index].publicationYear,
-                            token: widget.token);
-                      },
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(
-                        child: Text(
-                      'NO DATA',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontFamily: 'Ubuntu'),
-                    ));
-                  }
-
-                  // By default, show a loading spinner.
-                  return Center(
-                      child: const CircularProgressIndicator(
-                    color: Colors.white,
-                  ));
-                },
-              ),
             ],
-          );
+          ),
+        ),
+        Expanded(
+          child: (isGridView
+              ? FutureBuilder<IsbnListResponse>(
+                  future: isbnListState(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return GridView.builder(
+                        scrollDirection: Axis.vertical,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2, childAspectRatio: 0.5),
+                        itemCount: snapshot.data!.isbnList.length,
+                        physics: const ClampingScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return BookingGrid(
+                              name: snapshot.data!.isbnList[index].name,
+                              author: snapshot.data!.isbnList[index].author,
+                              publisher:
+                                  snapshot.data!.isbnList[index].publisher,
+                              picture: snapshot.data!.isbnList[index].picture,
+                              classNum:
+                                  snapshot.data!.isbnList[index].classNumber,
+                              cutterNum:
+                                  snapshot.data!.isbnList[index].cutterNumber,
+                              isbn: snapshot.data!.isbnList[index].isbn,
+                              year: snapshot
+                                  .data!.isbnList[index].publicationYear,
+                              token: widget.token);
+                        },
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                          child: Text(
+                        'NO DATA',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontFamily: 'Ubuntu'),
+                      ));
+                    }
+
+                    // By default, show a loading spinner.
+                    return Center(
+                        child: const CircularProgressIndicator(
+                      color: Colors.white,
+                    ));
+                  })
+              : FutureBuilder<IsbnListResponse>(
+                  future: isbnListState(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView.builder(
+                        itemCount: snapshot.data!.isbnList.length,
+                        physics: const ClampingScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return BookingList(
+                              name: snapshot.data!.isbnList[index].name,
+                              author: snapshot.data!.isbnList[index].author,
+                              publisher:
+                                  snapshot.data!.isbnList[index].publisher,
+                              picture: snapshot.data!.isbnList[index].picture,
+                              classNum:
+                                  snapshot.data!.isbnList[index].classNumber,
+                              cutterNum:
+                                  snapshot.data!.isbnList[index].cutterNumber,
+                              isbn: snapshot.data!.isbnList[index].isbn,
+                              year: snapshot
+                                  .data!.isbnList[index].publicationYear,
+                              token: widget.token);
+                        },
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                          child: Text(
+                        'NO DATA',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontFamily: 'Ubuntu'),
+                      ));
+                    }
+
+                    // By default, show a loading spinner.
+                    return Center(
+                        child: const CircularProgressIndicator(
+                      color: Colors.white,
+                    ));
+                  },
+                )),
+        ),
+      ],
+    );
   }
 }
 

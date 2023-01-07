@@ -29,21 +29,19 @@ class _BorrowedPageState extends State<BorrowedPage> {
       print("boorowed request 200");
       resp = BorrowedListResponse.fromJson(
           json.decode(utf8.decode(answer.bodyBytes)));
-      for(int i=0;i<resp.borrowedList.length;++i)
-        {
-          DateTime tsdate =
-          DateTime.fromMillisecondsSinceEpoch(int.parse(resp.borrowedList[i].dueDate) * 1000);
-          resp.borrowedList[i].dueDate = tsdate.day.toString() +
-              "/" +
-              tsdate.month.toString() +
-              "/" +
-              tsdate.year.toString() +
-              "-" +
-              tsdate.hour.toString() +
-              ":" +
-              tsdate.minute.toString();
-
-        }
+      for (int i = 0; i < resp.borrowedList.length; ++i) {
+        DateTime tsdate = DateTime.fromMillisecondsSinceEpoch(
+            int.parse(resp.borrowedList[i].dueDate) * 1000);
+        resp.borrowedList[i].dueDate = tsdate.day.toString() +
+            "/" +
+            tsdate.month.toString() +
+            "/" +
+            tsdate.year.toString() +
+            "-" +
+            tsdate.hour.toString() +
+            ":" +
+            tsdate.minute.toString();
+      }
       return resp;
     } else if (answer.statusCode == 400) {
       print("request 400");
@@ -95,7 +93,8 @@ class _BorrowedPageState extends State<BorrowedPage> {
                               child: Text(
                                 snapshot.data!.borrowedList[index].name,
                                 style: const TextStyle(
-                                    color: Colors.white, fontSize: 18,
+                                    color: Colors.white,
+                                    fontSize: 18,
                                     fontFamily: 'Ubuntu'),
                               ),
                             ),
@@ -108,7 +107,8 @@ class _BorrowedPageState extends State<BorrowedPage> {
                               child: Text(
                                 "Kitabının Son Teslim Tarihi",
                                 style: TextStyle(
-                                    color: Colors.white, fontSize: 18,
+                                    color: Colors.white,
+                                    fontSize: 18,
                                     fontFamily: 'Ubuntu'),
                               ),
                             ),
@@ -122,7 +122,8 @@ class _BorrowedPageState extends State<BorrowedPage> {
                               child: Text(
                                 snapshot.data!.borrowedList[index].dueDate,
                                 style: const TextStyle(
-                                    color: Colors.white, fontSize: 18,
+                                    color: Colors.white,
+                                    fontSize: 18,
                                     fontFamily: 'Ubuntu'),
                               ),
                             ),
@@ -148,4 +149,3 @@ class _BorrowedPageState extends State<BorrowedPage> {
     );
   }
 }
-

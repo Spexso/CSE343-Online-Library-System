@@ -20,7 +20,9 @@ import '../model/error_message.dart';
 class ProfilePage extends StatefulWidget {
   final String token;
   final String password;
-  const ProfilePage({Key? key, required this.token, required this.password}) : super(key: key);
+
+  const ProfilePage({Key? key, required this.token, required this.password})
+      : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -33,6 +35,7 @@ class _ProfilePageState extends State<ProfilePage> {
   late String surname;
   late String email;
   late String phone;
+
   //late String password;
 
   Future<String> suspendedUntil() async {
@@ -45,9 +48,9 @@ class _ProfilePageState extends State<ProfilePage> {
       print("DATE SUCCESS");
       var resp = SuspendUntil.fromJson(json.decode(answer.body));
       String dateTime;
-      if(int.parse(resp.timestamp) > currentTime){
-        DateTime tsdate =
-        DateTime.fromMillisecondsSinceEpoch(int.parse(resp.timestamp) * 1000);
+      if (int.parse(resp.timestamp) > currentTime) {
+        DateTime tsdate = DateTime.fromMillisecondsSinceEpoch(
+            int.parse(resp.timestamp) * 1000);
         dateTime = tsdate.day.toString() +
             "/" +
             tsdate.month.toString() +
@@ -57,10 +60,9 @@ class _ProfilePageState extends State<ProfilePage> {
             tsdate.hour.toString() +
             ":" +
             tsdate.minute.toString();
-      }else
-        {
-          dateTime = "-";
-        }
+      } else {
+        dateTime = "-";
+      }
 
       return dateTime;
     } else {
@@ -173,31 +175,36 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 20,),
-                        Text(name + " " + surname,
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          name + " " + surname,
                           style: TextStyle(
                               fontSize: 30,
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
-                              fontFamily: 'Ubuntu'
-                          ),
-
+                              fontFamily: 'Ubuntu'),
                         ),
-                        SizedBox(height: 10,),
-                        Text(email,
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          email,
                           style: TextStyle(
                               fontSize: 18,
                               color: Colors.white,
-                              fontFamily: 'Ubuntu'
-                          ),
+                              fontFamily: 'Ubuntu'),
                         ),
-                        SizedBox(height: 10,),
-                        Text(phone,
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          phone,
                           style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                              fontFamily: 'Ubuntu'
-                          ),
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontFamily: 'Ubuntu'),
                         ),
                       ],
                     ),
@@ -271,11 +278,12 @@ class _ProfilePageState extends State<ProfilePage> {
                       height: 90,
                       width: 225,
                       decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.grey,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          color: const Color.fromRGBO(100, 100, 100, 1),),
+                        border: Border.all(
+                          color: const Color.fromRGBO(42, 43, 46, 1),
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        color: const Color.fromRGBO(100, 100, 100, 1),
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: Column(
@@ -288,10 +296,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                   fontWeight: FontWeight.bold,
                                   color: Colors.red),
                             ),
-                            const Divider(),
+                            const Divider(
+                              thickness: 1,
+                              color: const Color.fromRGBO(42, 43, 46, 1),
+                            ),
                             const Text(
                               "Zamanına Kadar Ceza",
-                              style: TextStyle(fontSize: 17,color: Colors.white),
+                              style:
+                                  TextStyle(fontSize: 17, color: Colors.white),
                             )
                           ],
                         ),
@@ -304,8 +316,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   return const CircularProgressIndicator(
                     color: Colors.white,
                   );
-                }
-            ),
+                }),
             SizedBox(
               width: 225,
               child: SizedBox(
@@ -315,12 +326,16 @@ class _ProfilePageState extends State<ProfilePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => BorrowedPage(token: widget.token,)),
+                          builder: (context) => BorrowedPage(
+                                token: widget.token,
+                              )),
                     );
                   },
                   style: ElevatedButton.styleFrom(
                       primary: const Color.fromRGBO(100, 100, 100, 1),
-                      side: const BorderSide(color: Colors.grey)),
+                      side: const BorderSide(
+                        color: const Color.fromRGBO(42, 43, 46, 1),
+                      )),
                   child: Row(
                     //mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -354,7 +369,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     },
                     style: ElevatedButton.styleFrom(
                         primary: const Color.fromRGBO(100, 100, 100, 1),
-                        side: const BorderSide(color: Colors.grey)),
+                        side: const BorderSide(
+                          color: const Color.fromRGBO(42, 43, 46, 1),
+                        )),
                     child: Row(
                       //mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
