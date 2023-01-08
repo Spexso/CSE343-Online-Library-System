@@ -18,7 +18,7 @@ const Userlist = () => {
     const [users, setUsers] = useState([]);
     
     useEffect( () => {
-        
+
         const getUsers = async () => {
             const response = await fetch(`${REACT_APP_API_TOKEN}/admin/user-list`, {
                 method: 'POST',
@@ -39,7 +39,7 @@ const Userlist = () => {
         };
         
         getUsers();
-
+    // eslint-disable-next-line
     }, []);
 
     return ( 

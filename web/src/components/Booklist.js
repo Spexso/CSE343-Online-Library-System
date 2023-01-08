@@ -7,8 +7,9 @@ import { useHistory } from "react-router-dom";
 const Booklist = () => {
     // eslint-disable-next-line
     const [search,setSearch]=useState("");
-    const [bookData, setBook] = useState([]);
+    const [bookDatas, setBooks] = useState([]);
     const historyN = useHistory();
+    const [status, setStatus]=useState(false);
     const {REACT_APP_API_TOKEN} = process.env;
 
     const BackToMain = () => historyN.push("/main");
@@ -34,13 +35,16 @@ const Booklist = () => {
                         "page": "1"
                     }
                 )
-            }).then( res => {   
+            }).then( res => {  
+                console.log("H")
+                console.log(res)
+                console.log("H")
                 return res.json();  
             })
             .then((data) => {
                 console.log(data['isbn-list'])
-                setBook(data)
-                
+                setBooks(data['isbn-list'])
+                setStatus(true)       
             }).catch( err => {
                 console.log("False");
             })
@@ -71,7 +75,7 @@ const Booklist = () => {
             </div>
         <div className="container">
             {
-                <Board books={bookData['isbn-list']} search={search}/>
+                <Board books={bookDatas} search={search} status={status}/>
             }          
         </div>
         </>
