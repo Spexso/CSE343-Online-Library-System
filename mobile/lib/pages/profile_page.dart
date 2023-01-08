@@ -8,6 +8,7 @@ import 'package:login_page/pages/login_page.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:login_page/pages/update_profile_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import '../model/error_message.dart';
@@ -35,6 +36,7 @@ class _ProfilePageState extends State<ProfilePage> {
   late String surname;
   late String email;
   late String phone;
+  //String password = widget.password;
 
   //late String password;
 
@@ -51,15 +53,7 @@ class _ProfilePageState extends State<ProfilePage> {
       if (int.parse(resp.timestamp) > currentTime) {
         DateTime tsdate = DateTime.fromMillisecondsSinceEpoch(
             int.parse(resp.timestamp) * 1000);
-        dateTime = tsdate.day.toString() +
-            "/" +
-            tsdate.month.toString() +
-            "/" +
-            tsdate.year.toString() +
-            "-" +
-            tsdate.hour.toString() +
-            ":" +
-            tsdate.minute.toString();
+        dateTime = "${tsdate.day}/${tsdate.month}/${tsdate.year}-${tsdate.hour}:${tsdate.minute}";
       } else {
         dateTime = "-";
       }
@@ -104,17 +98,19 @@ class _ProfilePageState extends State<ProfilePage> {
 
     super.initState();
   }
-
-  late TextEditingController nameController = TextEditingController(text: name);
+/*
+  late TextEditingController nameController =
+      TextEditingController(text: name);
   late TextEditingController emailController =
       TextEditingController(text: surname);
   late TextEditingController phoneController =
       TextEditingController(text: phone);
   late TextEditingController passwordController =
-      TextEditingController(text: widget.password);
+      TextEditingController(text: widget.password); */
 
   late bool _isEnable = false;
   bool passenable = true;
+  bool? rememberMe;
 
   late bool _isObscure = true;
 
@@ -151,6 +147,27 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  Future<void> dataRead() async{
+    var sp = await SharedPreferences.getInstance();
+
+    setState(() {
+      email = sp.getString("email") ?? "no name";
+      //widget.password = sp.getString("password") ?? "no key";
+      rememberMe = sp.getBool("remember_me") ?? false;
+    });
+  }
+
+  Future<void> exit() async{
+    var sp = await SharedPreferences.getInstance();
+
+    if(rememberMe == false){
+      sp.remove("email");
+      sp.remove("password");
+    }
+
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -175,12 +192,12 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Text(
-                          name + " " + surname,
-                          style: TextStyle(
+                          "$name $surname",
+                          style: const TextStyle(
                               fontSize: 30,
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -361,11 +378,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   height: 40,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginPage()),
-                      );
+                      exit();
                     },
                     style: ElevatedButton.styleFrom(
                         primary: const Color.fromRGBO(100, 100, 100, 1),

@@ -10,6 +10,7 @@ import 'package:login_page/pages/forgot_password.dart';
 import 'package:login_page/pages/new_home_page.dart';
 import '../model/error_message.dart';
 import 'sign_up.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -19,17 +20,23 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
   var snackBar = const SnackBar(
       content: Text(
     "Login Error",
     style: TextStyle(fontFamily: 'Ubuntu'),
   ));
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   late String token;
 
+  bool _isChecked = false;
+
   Future<bool> loginState() async {
+
+
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
     var url = Uri.parse("$urlString/guest/user-login");
     //var url = Uri.parse("http://10.0.2.2:8080/guest/user-login");
@@ -59,6 +66,12 @@ class _LoginPageState extends State<LoginPage> {
       print("not 200 and 400");
       return false;
     }
+  }
+
+  @override
+  void initState() {
+    _loadUserEmailPassword();
+    super.initState();
   }
 
   @override
@@ -159,8 +172,18 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
-                      children: const [
-                        Checkbox(value: true, onChanged: null),
+                      children: [
+                        /*
+                        CheckboxListTile(
+                            value: _isChecked,
+                            onChanged: _rememberMeCheckBox,
+                            title: const Text("Beni Hatırla",
+                                style: TextStyle(
+                                    color: Colors.white, fontFamily: 'Ubuntu'),
+                            ),
+                        ) */
+
+                        Checkbox(value: _isChecked, onChanged: _rememberMeCheckBox),
                         Text(
                           "Beni Hatırla",
                           style: TextStyle(
@@ -184,10 +207,24 @@ class _LoginPageState extends State<LoginPage> {
                             primary: Colors.white,
                           ),
                           onPressed: () async {
+
+                            var sp = await SharedPreferences.getInstance();
+
+                            var email = emailController.text;
+                            var password = passwordController.text;
+
+                            await SharedPreferences.getInstance();
+
                             var ans = await loginState();
+                            print(ans);
 
                             if (ans == true) {
+                              print("PASSWORD");
                               print(passwordController.text);
+                              sp.setString("email", email);
+                              sp.setString("password", password);
+                              sp.setBool("remember_me", _isChecked);
+
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -208,7 +245,8 @@ class _LoginPageState extends State<LoginPage> {
                                 color: Colors.black,
                                 fontFamily: 'Ubuntu',
                                 fontWeight: FontWeight.bold),
-                          )),
+                          )
+                      ),
                       TextButton(
                           onPressed: () => {
                                 Navigator.push(
@@ -236,6 +274,43 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+  void _rememberMeCheckBox(bool? value) {
+
+    _isChecked = value!;
+
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setBool("remember_me", value);
+      prefs.setString("email", emailController.text);
+      prefs.setString("password", passwordController.text);
+    },
+    );
+    setState(() {
+      _isChecked = value;
+    });
+  }
+
+  void _loadUserEmailPassword() async {
+
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? email = prefs.getString("email") ?? "";
+      String? password = prefs.getString("password") ?? "";
+      bool? rememberMe = prefs.getBool("remember_me") ?? false;
+
+      if (rememberMe) {
+        setState(() {
+          _isChecked = true;
+        });
+        emailController.text = email;
+        passwordController.text = password;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+
 }
 
 class ProjectUtility {
