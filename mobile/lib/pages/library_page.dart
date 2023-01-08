@@ -38,6 +38,7 @@ class _LibraryPageState extends State<LibraryPage> {
   String yearEndSearch = "";
   String classNumberSearch = "";
   String cutterNumberSearch = "";
+  int _pageNum = 1;
   bool isGridView = false;
   late TextEditingController authorController =
       TextEditingController(text: authorSearch);
@@ -63,8 +64,8 @@ class _LibraryPageState extends State<LibraryPage> {
       "year-end": yearEndSearch,
       "class-number": classNumberSearch,
       "cutter-number": cutterNumberSearch,
-      "per-page": "5",
-      "page": "1"
+      "per-page": "10",
+      "page": _pageNum.toString(),
     };
 
     var body = json.encode(data);
@@ -103,8 +104,7 @@ class _LibraryPageState extends State<LibraryPage> {
                     child: Text(
                   'Detaylı Arama',
                   style: TextStyle(color: Colors.white),
-                    )
-                ),
+                )),
                 actions: <Widget>[
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -287,7 +287,7 @@ class _LibraryPageState extends State<LibraryPage> {
                           child: Text('Tamam'),
                           style: ButtonStyle(
                               backgroundColor:
-                              MaterialStateProperty.all(Colors.white),
+                                  MaterialStateProperty.all(Colors.white),
                               fixedSize: MaterialStateProperty.all(
                                   Size(double.infinity, 20))),
                           onPressed: () async {
@@ -299,7 +299,6 @@ class _LibraryPageState extends State<LibraryPage> {
                       ],
                     ),
                   ),
-
                 ],
               ),
             );
@@ -519,6 +518,40 @@ class _LibraryPageState extends State<LibraryPage> {
                   },
                 )),
         ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextButton(
+              onPressed: () {
+                if (_pageNum > 1) {
+                  --_pageNum;
+                }
+                setState(() {});
+              },
+              child: const Text(
+                "Previous Page",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            TextButton(
+                onPressed: () {
+                  if (_pageNum < 100) {
+                    ++_pageNum;
+                    setState(() {});
+                  }
+                },
+                child: const Text(
+                  "Next Page",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold),
+                )),
+          ],
+        ),
       ],
     );
   }
@@ -737,7 +770,7 @@ class _BookingGridState extends State<BookingGrid> {
                       color: Colors.white,
                       fontSize: 18,
                     ),
-                    maxLines: 2,
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                   ),
@@ -750,7 +783,7 @@ class _BookingGridState extends State<BookingGrid> {
                         color: Colors.white,
                         fontSize: 18,
                         fontFamily: 'Ubuntu'),
-                    maxLines: 2,
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                   ),
