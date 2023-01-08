@@ -42,5 +42,16 @@ button.MB{
     border: none;
     outline-style: outset;
     outline-color: rgb(228, 218, 85);
+    font-family: 'Lucida Bright';
+}
+
+.List .inputUser{
+    font-family: 'Lucida Bright';
+    border: none;
+    border-radius: 5px;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 10px;
 }
 

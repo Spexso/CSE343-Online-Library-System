@@ -3,6 +3,7 @@ import '../components/Booklist.css';
 import background from '../assets/book-icon-145.png';
 import Board from "./Board";
 import { useHistory } from "react-router-dom";
+import { useEffect } from "react";
 
 const Booklist = () => {
     // eslint-disable-next-line
@@ -18,11 +19,39 @@ const Booklist = () => {
     const token = sessionStorage.getItem("token");
     var bearer = 'Bearer ' + token;
 
+
+    useEffect( () => {        
+              
+                fetch(`${REACT_APP_API_TOKEN}/admin/isbn-list`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': bearer,
+                    },
+                    body: JSON.stringify(
+                        {
+                            "name": search,
+                            "per-page": "20",
+                            "page": "1"
+                        }
+                    )
+                }).then( res => {  
+                    return res.json();  
+                })
+                .then((data) => {
+                    console.log(data['isbn-list'])
+                    setBooks(data['isbn-list'])
+                    setStatus(true)       
+                }).catch( err => {
+                    console.log("False");
+                })
+                // eslint-disable-next-line
+    }, []);
+
     const searchBook=(evt)=> {
         if(evt.key === "Enter")
         {
             
-            /*console.log(sessionStorage.getItem("token"));*/
             fetch(`${REACT_APP_API_TOKEN}/admin/isbn-list`, {
                 method: 'POST',
                 headers: { 
@@ -31,6 +60,7 @@ const Booklist = () => {
                 },
                 body: JSON.stringify(
                     {
+                        "name": search,
                         "per-page": "20",
                         "page": "1"
                     }
