@@ -225,7 +225,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     padding: const EdgeInsets.only(top: 8),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[700]
+                        primary: Colors.grey[700]
                       ),
                       onPressed: () async {
                         if (oldPasswordController.text == password) {
