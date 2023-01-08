@@ -10,19 +10,16 @@ import './App.css';
 function App() {
   
   const [LoginStatus, setLStatus] = useState("");
+  // eslint-disable-next-line
   const [token, setT] = useState("");
 
   const getToken = (dataToken) => {
-    console.log("ComingT", dataToken)
     setT(dataToken);
-    console.log("HEREHEHHE4", token);
     sessionStorage.setItem("token", dataToken);
    };
  
   const getLoginStatus = (dataLogin) => {
-   console.log("Login status is -> ", dataLogin)
    setLStatus(dataLogin);
-   console.log(LoginStatus);
   };
 
   return (

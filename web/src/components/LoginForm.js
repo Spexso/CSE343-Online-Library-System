@@ -33,7 +33,6 @@ function LoginForm(props) {
             .then((data) => {
                 console.log("Requested login to Server");
                 setError("");
-                console.log(data);
 
                 if(data.message === "name is not registered") 
                 {
