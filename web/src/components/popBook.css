@@ -1,5 +1,5 @@
 .overlay{
-    min-height: 100vh;
+    min-height: 100%;
     width: 100%;
     position: fixed;
     left: 0;
@@ -14,8 +14,8 @@
 
 .overlay-inner{
     background: white;
-    width: 800px;
-    height: 450px;
+    width: 50%;
+    height: 50%;
     padding: 1.5rem;
     position: relative;
     box-sizing: border-box;
