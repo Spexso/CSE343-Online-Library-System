@@ -92,7 +92,7 @@ const Booklist = () => {
                 <div className="row2">
                     <h2>Search For Book</h2>
                     <div className="search">
-                        <input type="text" placeholder="Enter Information" 
+                        <input type="text" placeholder="Enter Book Name" 
                          value={search} onChange={e=>setSearch(e.target.value)}
                          onKeyDown={searchBook}/>
                         <button><i class="fas fa-search"></i> </button>            

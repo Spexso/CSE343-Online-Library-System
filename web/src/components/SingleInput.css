@@ -7,7 +7,7 @@
 /* .singleInput .singleInput_label{
 } */
 
-/* .singleInput .singleInput_input{
-	padding:10px;
-	margin:10px 10px;
-} */
+.singleInput .singleInput_input{
+	border: 2px solid;
+	margin-bottom: 7px;
+}

@@ -12,6 +12,7 @@
     text-align: left;
     font-size: 18px;
     font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
+    margin: auto;
 }
 
 .List li{
@@ -26,32 +27,55 @@
 }
   
 .List button{
-    display: block;
-    align-items: center;
-    justify-content: center;
+    display: flex;
+    align-items: right;
+    justify-content: right;
     margin: auto;
-    margin-bottom: 10px;
+    margin-right: 35px;
+    float: right;
+    cursor: pointer;
 }
 
 .List button:hover{
     transform: scale(0.9);
 }
 
-button.MB{
-    align-items: center;
+.List button.MB {
     border: none;
-    outline-style: outset;
-    outline-color: rgb(228, 218, 85);
+    align-items: center;
+    outline-style:solid;
+    outline-color: rgb(216, 216, 216);
     font-family: 'Lucida Bright';
 }
 
 .List .inputUser{
-    font-family: 'Lucida Bright';
+    display: table-cell;
+    clear: both;
+    width: 250px;
+    float: right;
     border: none;
     border-radius: 5px;
-    display: block;
-    margin-right: auto;
+    display: inline-block;
+    margin-right: 30px;
     margin-left: auto;
     margin-bottom: 10px;
+}
+
+.List .inputUser[type="text"]:hover {
+    border: 1px solid black;
+    shape-rendering:geometricPrecision;
+}
+
+.List .IconU{
+    position: relative;
+    padding-bottom: 8px;
+    margin-right: 5px; 
+}
+
+.input-icons{
+            display: flex;
+            flex-direction: row;
+            font-size: 25px;
+            float: right;
 }
 

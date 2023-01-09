@@ -1,24 +1,59 @@
 .inputField{
+	height: 62%;
+	width: 40%;
 	display: flex;
 	flex-direction: column;
 	flex-wrap: nowrap;
 
-	border: solid 2px blue;
+	padding: 20px;
+	border: solid 2px rgb(0, 0, 0);
+}
+
+.inputField:hover{
+	transform: scale(1.1);
+	transition: 300ms;
 }
 
 .inputField .inputField_h2{
 	margin: 0px;
+	align-self: center;
+	padding-bottom: 15px;
 }
 
 .inputField .inputField_ul{
 	list-style-type: none;
 	padding: 0px;
 	margin: 0px;
-
 	display: flex;
 	flex-direction: column;
 	flex-wrap: nowrap;
 }
 
-/* .inputField .inputField_button{
-}*/
+.inputField .jpg_button{
+	padding-top: 3px;
+}
+
+.inputField .inputField_p{
+	margin: 0px;
+	padding-bottom: 10px;
+	padding-top: 3px;
+}
+
+.inputField .inputField_button{
+	background: rgb(202, 212, 230);
+	align-self: center;
+	width: 30%;
+	border: none;
+	cursor: pointer;
+	border: 2px solid #070d13;
+	outline: none;
+	transition: 1s ease-in-out;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+
+.inputField .inputField_button:hover{	
+transition: 300ms ease-in-out;
+background: #96a0a0;
+}
+

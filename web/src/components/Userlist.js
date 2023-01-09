@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useState } from "react";
+import { HiUsers } from "react-icons/hi";
 import './Userlist.css';
 
 const Userlist = () => {
@@ -62,6 +63,13 @@ const Userlist = () => {
     return ( 
         <div className="List">
         <p>Users</p> 
+        <div className="input-icons">
+        <HiUsers className="IconU"/>
+        <input className="inputUser" type="text" placeholder="Enter User Name" onChange={(e) => setRegex(e.target.value)} onKeyDown={searhUsers} onBlur={searhUsers}></input>
+        </div>
+        <br/>
+        <br/>
+        <button className="MB" onClick={BackToMain}>Main Page</button>
                 <ul id="L">
                     {
                         users?.map((users,index) => {
@@ -72,10 +80,6 @@ const Userlist = () => {
                         })
                     }
                 </ul>
-            <br></br>
-            <input className="inputUser" type="text" placeholder="Enter User Info" onChange={(e) => setRegex(e.target.value)} onKeyDown={searhUsers} onBlur={searhUsers}></input>
-            <br></br>
-            <button className="MB" onClick={BackToMain}>Main Page</button>
         </div>
      );
 }
