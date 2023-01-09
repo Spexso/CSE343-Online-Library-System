@@ -90,7 +90,6 @@ html.header{
 }
 
 .search button{
-    outline: 0;
     border: none;
     height: 35px;
     padding: 0 0.5rem;
@@ -108,11 +107,11 @@ html.header{
 
 .board{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: rgb(228, 204, 169);
+    background-color: rgb(255, 227, 189);
     border-radius: 1rem;
     padding: 0.5rem;
     margin-bottom: 10px;
-    box-shadow: 0 5px 5px rgba(80, 52, 24, 0.5);
+    box-shadow: 0 5px 5px rgba(158, 228, 230, 0.5);
     transition: .5s;
     text-align: center;
     position: relative;
@@ -120,7 +119,7 @@ html.header{
 
 .board:hover{
     transform: scale(0.9);
-    background-color: rgba(218, 231, 225, 0.8);
+    background-color: rgb(231, 191, 139);
 }
 
 .board .bottom{
@@ -150,14 +149,15 @@ html.header{
 }
 
 
-button.MB{
+.header .row2 button.MB{
     align-items: center;
     border: none;
-    outline-style: outset;
-    outline-color: rgb(228, 218, 85);
+    outline-style:solid;
+    outline-color: rgb(216, 216, 216);
     font-family: 'Lucida Bright';
 }
 
 .header .row2 button:hover{
+    cursor: pointer;
     transform: scale(0.9);
 }

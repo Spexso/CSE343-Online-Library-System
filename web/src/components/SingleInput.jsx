@@ -10,7 +10,6 @@ import "./SingleInput.css";
  * (function) handleChange: onChange function of the input field
  */
 class SingleInput extends Component{
-	
 
 	render(){
 		return(

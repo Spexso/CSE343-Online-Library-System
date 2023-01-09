@@ -52,13 +52,14 @@ function LoginForm(props) {
                 else
                 {        
                     props.getLoginV("true");
-
                     console.log("------------");
                     props.getTokenV(data.token);
                     console.log("------------");
+                    props.getAdminN(name);
+                    console.log("------------");
+                    console.log(name);
 
                     history.push('/main');
-                    console.log(data.message);
                     
                 }               
             }).catch( err => {

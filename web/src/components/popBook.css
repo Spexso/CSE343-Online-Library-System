@@ -1,5 +1,5 @@
 .overlay{
-    min-height: 100vh;
+    min-height: 100%;
     width: 100%;
     position: fixed;
     left: 0;
@@ -14,8 +14,8 @@
 
 .overlay-inner{
     background: white;
-    width: 800px;
-    height: 450px;
+    width: 50%;
+    height: 50%;
     padding: 1.5rem;
     position: relative;
     box-sizing: border-box;
@@ -39,27 +39,23 @@
     justify-content: center;
 }
 
-.overlay-inner .inner-box h3{
-    margin-top: 10px;
-    color: green;
+.overlay-inner .inner-box br{
+    margin-top: 20px;
 }
 
-.overlay-inner .inner-box h2{
-    font-weight: Goudy Old Style;
-    margin-top: 10px;
-    color: green;
-}
-
-.overlay-inner .inner-box h4{
-    font-family: Bahnschrift Light;
-    color: blue;
-}
-
-.overlay-inner .inner-box h1{
+.overlay-inner .inner-box div{
+    font-size: 15px;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    color: black;
 }
 
+.overlay-inner .inner-box .Name{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: green;
+}
+
+.overlay-inner .inner-box {
+    color: rgb(2, 3, 2);
+}
 
 .overlay-inner .info {
     font-size: 11px;
@@ -74,7 +70,8 @@
 }
 
 .overlay .overlay-inner button:hover{
+    cursor: pointer;
     transform: scale(0.9);
-    color: aquamarine;
+    color: rgb(120, 168, 187);
 }
 

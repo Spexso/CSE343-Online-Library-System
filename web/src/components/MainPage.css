@@ -4,7 +4,8 @@
 	flex-wrap: nowrap; /* default value */
 	height: 100vh;
 	width: 100vw;
-	background-color: rgb(239, 139, 17);
+	background-color: rgb(247, 222, 168);
+	font-family: "Segoe UI", Arial, sans-serif;
 }
 
 .wholePage .sidebar{ /* .class1 .class2 represents nesting, whereas .class1.class2 means having both classes */
@@ -13,8 +14,8 @@
 	flex-wrap: nowrap;
 	height: 100%;
 	width: 15%;
-	background-color: rgb(76, 81, 68);
 }
+@keyframes anim-ss { 0% {background-position: 0%;} 100% {background-position: 100%;} }
 
 .wholePage .non-sidebar{
 	display: flex;
@@ -22,19 +23,41 @@
 	flex-wrap: nowrap;
 	height: 100%;
 	width: 85%;
-	background-color: blanchedalmond;
-
+	background-color: rgba(240, 232, 204, 0.788); 
+	background-repeat: no-repeat;
+    background-size: cover;
+	box-shadow: 10px 10px 10px 14px #241f1f;
 	justify-content: center;
 	align-items: center;
+	background-image: url(/src/assets/output-onlinegiftools.gif);
+	background-position-x: 1240px;
+	background-position-y: 630px;
+	background-size: 30%;
+}
+
+.wholePage .non-sidebar:hover{
+	animation-play-state: paused;
 }
 
 /* sidebar css rules */
 
+@property --myColor1 {
+	syntax: '<color>';
+	initial-value: rgb(172, 220, 226);
+	inherits: false;
+  }
+  
+  @property --myColor2 {
+	syntax: '<color>';
+	initial-value: rgb(172, 220, 226);
+	inherits: false;
+  }
+
 .wholePage .sidebar .sidebar_ul{
+	background-color: rgb(172, 220, 226);
 	list-style-type: none;
 	padding: 0px;
 	margin: 0px;
-
 	display: flex;
 	flex-direction: column;
 	flex-wrap: nowrap;
@@ -42,37 +65,129 @@
 	width: 100%;
 }
 
+.wholePage .sidebar .sidebar_ul .sidebar_li:hover{
+	--myColor1: rgb(160, 202, 207);
+  	--myColor2: rgb(76, 111, 136); 
+	  background: linear-gradient(to right bottom, var(--myColor1), var(--myColor2));
+	  transition: --myColor1 1s, --myColor2 1s;
+	
+}
+
 .wholePage .sidebar .sidebar_ul .sidebar_li{
 	display: flex;
 	flex-direction: row;
 	flex-wrap: nowrap;
-
-	/* width: 100%;
-	height: auto;
-	padding: 0px;
-	margin: 0px; */
+	padding-top: 3px;
+	padding-bottom: 3px;
 }
 
-/* icon ve text ekliycem buraya */
+.icon{
+	padding-left: 7px;
+}
 
-/* .icon{
-	height: 100%;
-	width: 30%;
-	text-align: center;
-} */
-
-/* .text{
-	height: 100%;
-	width: 70%;
-	text-align: left;
-} */
+.text{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: center;
+	padding-left: 10px;
+}
 
 /*  non-sidebar css rules  */
 
-.wholePage .non-sidebar .content{
+/* redirection area */
+
+.wholePage .non-sidebar .redirection_area{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	height: 15%;
+	width: 100%;
+	/* background-color: blueviolet; */
+	/* height: min-content; */
+	/* width: min-content; */
+
+	justify-content: center;
+	align-items: flex-end;
+}
+
+
+
+
+.wholePage .non-sidebar .redirection_area .side_space{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	height: 100%;
+	flex-grow: 0.35;
+	/* background-color: rgb(61, 101, 179); */
+}
+
+.wholePage .non-sidebar .redirection_area .middle_space{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	height: 100%;
+	flex-grow: 0.3;
+	/* background-color: rgb(61, 101, 179); */
+}
+
+.wholePage .non-sidebar .redirection_area .redirect_div{
+	transition: .3s;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	background-color: rgba(180, 161, 136, 0.788);
+	height: 60%;
+	align-items: center;
+	cursor: pointer;
+	border-style:ridge;
+
+}
+.wholePage .non-sidebar .redirection_area .redirect_div:hover{
+	transform: rotate3d(0, 0, 1, -15deg);
+}
+
+
+.wholePage .non-sidebar .redirection_area .redirect_div .red_text{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: center;
+	padding-right: 10px;
+	
+	padding-left: 20px;
+}
+
+.wholePage .non-sidebar .redirection_area .redirect_div .red_icon{
+
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	
+	padding-right: 20px;
+}
+
+
+/* content area */
+
+.wholePage .non-sidebar .content_area{
 	display: flex;
 	flex-direction: column;
 	flex-wrap: nowrap;
-	/* height: min-content; */
-	/* width: min-content; */
+	height: 85%;
+	width: 100%;
+	justify-content: center;
+	align-items: center;
 }
+
+/* .wholePage .non-sidebar .content_area .content{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	height: 50%;
+	width: 50%;
+
+	justify-content: center;
+	align-items: center;
+} */
