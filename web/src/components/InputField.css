@@ -9,10 +9,6 @@
 	border: solid 2px rgb(0, 0, 0);
 }
 
-.inputField:hover{
-	transform: scale(1.1);
-	transition: 300ms;
-}
 
 .inputField .inputField_h2{
 	margin: 0px;
