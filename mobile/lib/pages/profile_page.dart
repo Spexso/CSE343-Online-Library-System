@@ -168,6 +168,26 @@ class _ProfilePageState extends State<ProfilePage> {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
 
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Uygulamadan çıkış yapmak istediğinize emin misiniz?', style: TextStyle(fontSize: 17),),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false), //<-- SEE HERE
+            child: Text('Hayır', style: TextStyle(color: Colors.cyan[800], fontSize: 15),),
+          ),
+          TextButton(
+            onPressed: () => exit(), // <-- SEE HERE
+            child: Text('Evet', style: TextStyle(color: Colors.cyan[800], fontSize: 15)),
+          ),
+        ],
+      ),
+    )) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -178,10 +198,14 @@ class _ProfilePageState extends State<ProfilePage> {
             //Text(dotenv.env['API_URL'] ?? "API_URL not found"),
             const SizedBox(
               width: 150,
-              height: 70,
+              height: 20,
+            ),
+            CircleAvatar(
+              backgroundImage: AssetImage('assets/images/profile_photo.jpeg'),
+              radius: 50,
             ),
             const SizedBox(
-              height: 40,
+              height: 10,
             ),
             FutureBuilder(
               future: userProfile(),
@@ -358,7 +382,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: const [
                       Text(
-                        "Ödünç Kitaplar",
+                        "Kitaplarım",
                         style: TextStyle(color: Colors.white, fontSize: 17),
                       ),
                       Icon(
@@ -378,7 +402,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   height: 40,
                   child: ElevatedButton(
                     onPressed: () {
-                      exit();
+                      _onWillPop();
                     },
                     style: ElevatedButton.styleFrom(
                         primary: const Color.fromRGBO(100, 100, 100, 1),

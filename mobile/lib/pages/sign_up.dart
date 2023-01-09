@@ -198,6 +198,36 @@ class _SignUpPageState extends State<SignUpPage> {
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: TextField(
                     style: const TextStyle(color: Colors.white, fontSize: 20),
+                    controller: _tfPhoneController,
+                    cursorColor: Colors.white,
+                    decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color.fromRGBO(42, 43, 46, 1),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                          const BorderSide(width: 1.5, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                          const BorderSide(width: 2, color: Colors.white),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        hintStyle: const TextStyle(
+                            color: Colors.white, fontFamily: 'Ubuntu'),
+                        suffixIcon: const Icon(
+                          Icons.phone,
+                          color: Colors.white,
+                        ),
+                        hintText: "Telefon",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10))),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: TextField(
+                    style: const TextStyle(color: Colors.white, fontSize: 20),
                     controller: _tfKeyController,
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: true,
@@ -226,36 +256,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             borderRadius: BorderRadius.circular(10))),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: TextField(
-                    style: const TextStyle(color: Colors.white, fontSize: 20),
-                    controller: _tfPhoneController,
-                    cursorColor: Colors.white,
-                    decoration: InputDecoration(
-                        filled: true,
-                        fillColor: const Color.fromRGBO(42, 43, 46, 1),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(width: 1.5, color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(width: 2, color: Colors.white),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        hintStyle: const TextStyle(
-                            color: Colors.white, fontFamily: 'Ubuntu'),
-                        suffixIcon: const Icon(
-                          Icons.phone,
-                          color: Colors.white,
-                        ),
-                        hintText: "Telefon",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10))),
-                  ),
-                ),
+
                 Center(
                   child: Column(children: [
                     Padding(

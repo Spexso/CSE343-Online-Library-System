@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import '../model/error_message.dart';
 import 'new_home_page.dart';
 import 'package:http/http.dart' as http;
 
@@ -33,70 +34,131 @@ class BookPage extends StatefulWidget {
   State<BookPage> createState() => _BookPageState();
 }
 
-Future<bool> saveBook(isbn, token) async {
-  var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
-  var url = Uri.parse("$urlString/user/save-book");
-  var data = {"isbn": isbn};
-  var body = await json.encode(data);
-  var answer = await http
-      .post(url, body: body, headers: {"Authorization": "Bearer $token"});
 
-  if (answer.statusCode == 200) {
-    print("TRUE");
-    return true;
-  }
-  print("FALSE");
-  return false;
-}
 
-Future<bool> unsaveBook(isbn, token) async {
-  var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
-  var url = Uri.parse("$urlString/user/unsave-book");
-  var data = {"isbn": isbn};
-  var body = await json.encode(data);
-  var answer = await http
-      .post(url, body: body, headers: {"Authorization": "Bearer $token"});
 
-  if (answer.statusCode == 200) {
-    print("TRUE ");
-    return true;
-  }
-  print("FALSE");
-  return false;
-}
-
-Future<bool> enqueueBook(isbn, token) async {
-  var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
-  var url = Uri.parse("$urlString/user/enqueue");
-  var data = {"isbn": isbn};
-  var body = await json.encode(data);
-  var answer = await http
-      .post(url, body: body, headers: {"Authorization": "Bearer $token"});
-  if (answer.statusCode == 200) {
-    print("TRUE enqueue");
-    return true;
-  }
-  print("FALSE enqueue");
-  return false;
-}
-
-Future<bool> dequeueBook(isbn, token) async {
-  var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
-  var url = Uri.parse("$urlString/user/dequeue");
-  var data = {"isbn": isbn};
-  var body = await json.encode(data);
-  var answer = await http
-      .post(url, body: body, headers: {"Authorization": "Bearer $token"});
-
-  if (answer.statusCode == 200) {
-    print("TRUE dequeue");
-    return true;
-  }
-  print("FALSE dequeue");
-  return false;
-}
 
 class _BookPageState extends State<BookPage> {
+
+  String? errorMessage;
+
+  String convertErrorMessage(String message) {
+    switch (message) {
+      case 'err-isbn-not-exist':
+        return 'ISBN mevcut değildir.';
+      // enqueue errors
+      case 'err-user-suspended':
+        return 'Hesabınızda ceza var. Talep etmek için lütfen adminle iletişime geçin.';
+      case 'err-past-due':
+        return 'past due';
+      case 'err-user-in-queue':
+        return 'Kitap zaten talepler listenizdedir.';
+      case 'err-already-borrowed':
+        return 'Kitap zaten sizdedir.';
+      // dequeue errors
+      case 'err-user-not-in-queue':
+        return 'Kitap talepli değildir.';
+      // save errors
+      case 'err-book-is-saved':
+        return 'Kitap zaten kaydedilenler listenizdedir.';
+      // unsave errors
+      case 'err-book-is-not-saved':
+        return 'Kitap kayıtlı değildir.';
+      default:
+        return 'Bilinmeyen bir hata oluştu.';
+    }
+  }
+
+  Future<bool> saveBook(isbn, token) async {
+    var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
+    var url = Uri.parse("$urlString/user/save-book");
+    var data = {"isbn": isbn};
+    var body = await json.encode(data);
+    var answer = await http
+        .post(url, body: body, headers: {"Authorization": "Bearer $token"});
+
+    if (answer.statusCode == 200) {
+      print("TRUE");
+      return true;
+    }
+    else if(answer.statusCode == 400){
+      print("FALSE");
+      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
+      errorMessage = convertErrorMessage(resp.kind);
+      print(errorMessage);
+      return false;
+    }
+
+    return false;
+  }
+
+  Future<bool> unsaveBook(isbn, token) async {
+    var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
+    var url = Uri.parse("$urlString/user/unsave-book");
+    var data = {"isbn": isbn};
+    var body = await json.encode(data);
+    var answer = await http
+        .post(url, body: body, headers: {"Authorization": "Bearer $token"});
+
+    if (answer.statusCode == 200) {
+      print("TRUE ");
+      return true;
+    }
+    else if(answer.statusCode == 400){
+      print("FALSE");
+      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
+      errorMessage = convertErrorMessage(resp.kind);
+      print(errorMessage);
+      return false;
+    }
+    return false;
+  }
+
+  Future<bool> enqueueBook(isbn, token) async {
+    var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
+    var url = Uri.parse("$urlString/user/enqueue");
+    var data = {"isbn": isbn};
+    var body = await json.encode(data);
+    var answer = await http
+        .post(url, body: body, headers: {"Authorization": "Bearer $token"});
+    if (answer.statusCode == 200) {
+      print("TRUE enqueue");
+      return true;
+    }
+    else if(answer.statusCode == 400){
+      print("FALSE ENQU");
+      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
+      errorMessage = convertErrorMessage(resp.kind);
+      print(errorMessage);
+      return false;
+    }
+
+    return false;
+  }
+
+  Future<bool> dequeueBook(isbn, token) async {
+    var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
+    var url = Uri.parse("$urlString/user/dequeue");
+    var data = {"isbn": isbn};
+    var body = await json.encode(data);
+    var answer = await http
+        .post(url, body: body, headers: {"Authorization": "Bearer $token"});
+
+    if (answer.statusCode == 200) {
+      print("TRUE dequeue");
+      return true;
+    }
+    else if(answer.statusCode == 400){
+      print("FALSE DEQU");
+      ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
+      errorMessage = convertErrorMessage(resp.kind);
+      print(errorMessage);
+      return false;
+    }
+
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,8 +175,20 @@ class _BookPageState extends State<BookPage> {
         ),
         actions: [
           IconButton(
-            onPressed: () {
-              unsaveBook(widget.isbn, widget.token);
+            onPressed: () async {
+              var ans = await unsaveBook(widget.isbn, widget.token);
+              if(ans){
+                const snackBar = SnackBar(
+                  content: Text('Kayıtlardan çıkarma başarılı!'),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
+              else{
+                final snackBar = SnackBar(
+                  content: Text(errorMessage!),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
             },
             icon: const Icon(
               Icons.bookmark_outline,
@@ -122,8 +196,20 @@ class _BookPageState extends State<BookPage> {
             color: Colors.white,
           ),
           IconButton(
-            onPressed: () {
-              saveBook(widget.isbn, widget.token);
+            onPressed: () async {
+              var ans = await saveBook(widget.isbn, widget.token);
+              if(ans){
+                const snackBar = SnackBar(
+                  content: Text('Kaydetme başarılı!'),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
+              else{
+                final snackBar = SnackBar(
+                  content: Text(errorMessage!),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
             },
             icon: const Icon(
               Icons.bookmark_outlined,
@@ -232,8 +318,20 @@ class _BookPageState extends State<BookPage> {
                                     backgroundColor: MaterialStateProperty.all(
                                       Colors.white,
                                     )),
-                                onPressed: () {
-                                  enqueueBook(widget.isbn, widget.token);
+                                onPressed: () async {
+                                  var ans = await enqueueBook(widget.isbn, widget.token);
+                                  if(ans){
+                                    const snackBar = SnackBar(
+                                      content: Text('Talep etme başarılı!'),
+                                    );
+                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                  }
+                                  else{
+                                    final snackBar = SnackBar(
+                                      content: Text(errorMessage!),
+                                    );
+                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                  }
                                 },
                                 child: const Text(
                                   "Talep Et",
@@ -252,8 +350,20 @@ class _BookPageState extends State<BookPage> {
                                     backgroundColor: MaterialStateProperty.all(
                                       Colors.white,
                                     )),
-                                onPressed: () {
-                                  dequeueBook(widget.isbn, widget.token);
+                                onPressed: () async {
+                                  var ans = await dequeueBook(widget.isbn, widget.token);
+                                  if(ans){
+                                    const snackBar = SnackBar(
+                                      content: Text('Talep iptali başarılı!'),
+                                    );
+                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                  }
+                                  else{
+                                    final snackBar = SnackBar(
+                                      content: Text(errorMessage!),
+                                    );
+                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                  }
                                 },
                                 child: const Text(
                                   "Talep İptal",

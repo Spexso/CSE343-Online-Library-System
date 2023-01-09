@@ -127,7 +127,10 @@ class _LibraryPageState extends State<LibraryPage> {
                         hintText: "Yazar adı giriniz",
                       ),
                       controller: authorController,
-                      onChanged: (value) => {authorSearch = value},
+                      onChanged: (value) => {
+                        authorSearch = value,
+                        _pageNum = 1,
+                      },
                     ),
                   ),
                   Padding(
@@ -280,6 +283,8 @@ class _LibraryPageState extends State<LibraryPage> {
 
                             cutterNumberController.text = "";
                             cutterNumberSearch = "";
+
+                            _pageNum = 1;
                           }),
                           child: Text("Sıfırla"),
                         ),
@@ -318,7 +323,11 @@ class _LibraryPageState extends State<LibraryPage> {
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: TextField(
-            onChanged: (value) => {bookNameSearch = value, setState(() {})},
+            onChanged: (value) => {
+              bookNameSearch = value,
+              _pageNum = 1,
+              setState(() {})
+            },
             onSubmitted: (value) => {setState(() {})},
             controller: _tfBookNameController,
             style: const TextStyle(
@@ -460,7 +469,7 @@ class _LibraryPageState extends State<LibraryPage> {
                     } else if (snapshot.hasError) {
                       return Center(
                           child: Text(
-                        'NO DATA',
+                        'VERİ YOK',
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 15,
@@ -502,7 +511,7 @@ class _LibraryPageState extends State<LibraryPage> {
                     } else if (snapshot.hasError) {
                       return Center(
                           child: Text(
-                        'NO DATA',
+                        'VERİ YOK',
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 15,
@@ -529,7 +538,7 @@ class _LibraryPageState extends State<LibraryPage> {
                 setState(() {});
               },
               child: const Text(
-                "Previous Page",
+                "Önceki Sayfa",
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 15,
@@ -544,7 +553,7 @@ class _LibraryPageState extends State<LibraryPage> {
                   }
                 },
                 child: const Text(
-                  "Next Page",
+                  "Sonraki Sayfa",
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 15,

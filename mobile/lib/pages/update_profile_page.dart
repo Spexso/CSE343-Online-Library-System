@@ -38,6 +38,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
 
   late bool _isObscure = true;
 
+  String? errorMessage;
+
   late TextEditingController nameController;
   late TextEditingController surnameController;
   late TextEditingController emailController;
@@ -114,6 +116,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     } else if (answer.statusCode == 400) {
       print("email update NOT success");
       ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
+      errorMessage = convertErrorMessage(resp.kind);
       print(resp.kind);
       print(resp.message);
       return false;
@@ -142,6 +145,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     } else if (answer.statusCode == 400) {
       print("phone update NOT success");
       ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
+      errorMessage = convertErrorMessage(resp.kind);
       print(resp.kind);
       print(resp.message);
       return false;
@@ -170,6 +174,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     } else if (answer.statusCode == 400) {
       print("password update NOT success");
       ErrorMessage resp = ErrorMessage.fromJson(json.decode(answer.body));
+      errorMessage = convertErrorMessage(resp.kind);
       print(resp.kind);
       print(resp.message);
       return false;
@@ -238,6 +243,10 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                         else {
                           print("old password false");
                           print(oldPasswordController.text);
+                          final snackBar = SnackBar(
+                            content: Text(errorMessage ?? "Geçersiz şifre."),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         }
                         Navigator.pop(context);
                         setState(() {
@@ -262,6 +271,17 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   late bool emailChange = false;
   late bool phoneChange = false;
   late bool passwordChange = false;
+
+  String convertErrorMessage(String message) {
+    switch (message) {
+      case 'err-email-exist':
+        return 'Bu email zaten var.';
+      case 'err-invalid-password':
+        return 'Geçersiz şifre.';
+      default:
+        return 'Bilinmeyen bir hata oluştu.';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -473,6 +493,10 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     } else if (ans == false) {
                       print("error update Email button");
                       errorFlag = true;
+                      final snackBar = SnackBar(
+                        content: Text(errorMessage!),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     }
                   }
 
@@ -485,22 +509,30 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     } else if (ans == false) {
                       print("error update phone button");
                       errorFlag = true;
+                      final snackBar = SnackBar(
+                        content: Text(errorMessage!),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     }
                   }
 
                   if (passwordChange == true) {
                     var ans = await changeUserPassword();
-
                     if (ans == true) {
                       print("success update password button");
                       //Navigator.pop(context);
                     } else if (ans == false) {
                       print("error update password button");
                       errorFlag = true;
+
                     }
                   }
 
                   if (errorFlag == false) {
+                    const snackBar = SnackBar(
+                      content: Text('Profil başarıyla güncellendi!'),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     Navigator.pop(context);
                   }
                 },

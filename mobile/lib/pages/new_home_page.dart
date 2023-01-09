@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:login_page/pages/library_page.dart';
 import 'package:login_page/pages/requests_page.dart';
 import 'package:login_page/pages/saved_page.dart';
@@ -45,90 +46,118 @@ class _NewHomePageState extends State<NewHomePage> {
     super.initState();
   }
 
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Uygulamadan çıkmak istediğinize emin misiniz?', style: TextStyle(fontSize: 17),),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false), //<-- SEE HERE
+            child: const Text('Hayır'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true), // <-- SEE HERE
+            child: const Text('Evet'),
+          ),
+        ],
+      ),
+    )) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromRGBO(60, 60, 60, 1),
-      appBar: AppBar(
-        title: const Text(
-          "Libware",
-          style: TextStyle(color: Colors.white, fontFamily: 'Ubuntu'),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        backgroundColor: const Color.fromRGBO(60, 60, 60, 1),
+        appBar: AppBar(
+          title: const Text(
+            "Libware",
+            style: TextStyle(color: Colors.white, fontFamily: 'Ubuntu'),
+          ),
+          iconTheme: const IconThemeData(size: 30, color: Colors.white),
+          automaticallyImplyLeading: false,
+          backgroundColor: const Color.fromRGBO(42, 43, 46, 1),
+          /*
+          actions: [
+            IconButton(
+                onPressed: () => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const NotificationsPage()),
+                      )
+                    },
+                icon: const Icon(
+                  Icons.notifications,
+                  color: Colors.white,
+                )),
+          ],*/
         ),
-        iconTheme: const IconThemeData(size: 30, color: Colors.white),
-        automaticallyImplyLeading: false,
-        backgroundColor: const Color.fromRGBO(42, 43, 46, 1),
-        /*
-        actions: [
-          IconButton(
-              onPressed: () => {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const NotificationsPage()),
-                    )
-                  },
-              icon: const Icon(
-                Icons.notifications,
+        body: _children[_selectedIndex],
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: const Color.fromRGBO(42, 43, 46, 1),
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 20,
+                color: Colors.black.withOpacity(.1),
+              )
+            ],
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+              child: GNav(
+                rippleColor: Colors.grey[800]!,
+                hoverColor: Colors.grey[600]!,
+                gap: 8,
+                iconSize: 24,
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                duration: const Duration(milliseconds: 400),
+                tabBackgroundColor: const Color.fromRGBO(60, 60, 60, 1),
                 color: Colors.white,
-              )),
-        ],*/
-      ),
-      body: _children[_selectedIndex],
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: const Color.fromRGBO(42, 43, 46, 1),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 20,
-              color: Colors.black.withOpacity(.1),
-            )
-          ],
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-            child: GNav(
-              rippleColor: Colors.grey[800]!,
-              hoverColor: Colors.grey[600]!,
-              gap: 8,
-              iconSize: 24,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              duration: const Duration(milliseconds: 400),
-              tabBackgroundColor: const Color.fromRGBO(60, 60, 60, 1),
-              color: Colors.white,
-              activeColor: Colors.white,
-              tabs: const [
-                GButton(
-                  icon: Icons.menu_book,
-                  text: 'Kitaplık',
-                  textStyle:
-                      TextStyle(fontFamily: 'Ubuntu', color: Colors.white),
-                ),
-                GButton(
-                  icon: Icons.bookmark,
-                  text: 'Kaydedilenler',
-                  textStyle:
-                      TextStyle(fontFamily: 'Ubuntu', color: Colors.white),
-                ),
-                GButton(
-                  icon: Icons.check,
-                  text: 'Talepler',
-                  textStyle:
-                      TextStyle(fontFamily: 'Ubuntu', color: Colors.white),
-                ),
-                GButton(
-                  icon: Icons.account_box,
-                  text: 'Profil',
-                  textStyle:
-                      TextStyle(fontFamily: 'Ubuntu', color: Colors.white),
-                ),
-              ],
-              selectedIndex: _selectedIndex,
-              onTabChange: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
+                activeColor: Colors.white,
+                tabs: [
+                  GButton(
+                    hoverColor: Colors.cyan[900],
+                    icon: Icons.menu_book,
+                    text: 'Kitaplık',
+                    textStyle:
+                        TextStyle(fontFamily: 'Ubuntu', color: Colors.white),
+                  ),
+                  GButton(
+                    //rippleColor: Colors.blue[900],
+                    hoverColor: Colors.cyan[900],
+                    icon: Icons.bookmark,
+                    text: 'Kaydedilenler',
+                    textStyle:
+                        TextStyle(fontFamily: 'Ubuntu', color: Colors.white),
+                  ),
+                  GButton(
+                    hoverColor: Colors.cyan[900],
+                    icon: Icons.check,
+                    text: 'Talepler',
+                    textStyle:
+                        TextStyle(fontFamily: 'Ubuntu', color: Colors.white),
+                  ),
+                  GButton(
+                    hoverColor: Colors.cyan[900],
+                    icon: Icons.account_box,
+                    text: 'Profil',
+                    textStyle:
+                        TextStyle(fontFamily: 'Ubuntu', color: Colors.white),
+                  ),
+                ],
+                selectedIndex: _selectedIndex,
+                onTabChange: (index) {
+                  setState(() {
+                    _selectedIndex = index;
+                  });
+                },
+              ),
             ),
           ),
         ),

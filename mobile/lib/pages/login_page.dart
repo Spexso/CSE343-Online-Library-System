@@ -96,8 +96,17 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const CustomTitle(
-                  str: 'Giriş Yap',
+                  str: 'Hoşgeldiniz',
                 ),
+                SizedBox(height: 5,),
+                const Text("Devam etmek için lütfen giriş yapınız.",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontFamily: 'Ubuntu',
+                  ),
+                ),
+                SizedBox(height: 15,),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: TextField(
@@ -183,7 +192,11 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                         ) */
 
-                        Checkbox(value: _isChecked, onChanged: _rememberMeCheckBox),
+                        Checkbox(
+                            value: _isChecked,
+                            onChanged: _rememberMeCheckBox,
+                            activeColor: Colors.grey[900],
+                        ),
                         Text(
                           "Beni Hatırla",
                           style: TextStyle(
@@ -383,7 +396,7 @@ class CustomTitle extends StatelessWidget {
         str,
         style: const TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 35,
+            fontSize: 37,
             color: Colors.white,
             fontFamily: 'Ubuntu',
         ),

@@ -32,15 +32,7 @@ class _BorrowedPageState extends State<BorrowedPage> {
       for (int i = 0; i < resp.borrowedList.length; ++i) {
         DateTime tsdate = DateTime.fromMillisecondsSinceEpoch(
             int.parse(resp.borrowedList[i].dueDate) * 1000);
-        resp.borrowedList[i].dueDate = tsdate.day.toString() +
-            "/" +
-            tsdate.month.toString() +
-            "/" +
-            tsdate.year.toString() +
-            "-" +
-            tsdate.hour.toString() +
-            ":" +
-            tsdate.minute.toString();
+        resp.borrowedList[i].dueDate = "${tsdate.day}/${tsdate.month}/${tsdate.year}-${tsdate.hour}:${tsdate.minute}";
       }
       return resp;
     } else if (answer.statusCode == 400) {
