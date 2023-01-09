@@ -24,10 +24,11 @@
 	width: 85%;
 	background-color: rgba(240, 232, 204, 0.788); 
 	background-repeat: no-repeat;
-    background-size: cover;
+
 	box-shadow: 10px 10px 10px 14px #241f1f;
 	justify-content: center;
 	align-items: center;
+	
 	background-image: url(/src/assets/output-onlinegiftools.gif);
 	background-position-x: 1240px;
 	background-position-y: 630px;
