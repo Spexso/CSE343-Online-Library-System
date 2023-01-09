@@ -50,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
       print("DATE SUCCESS");
       var resp = SuspendUntil.fromJson(json.decode(answer.body));
       String dateTime;
-      if (int.parse(resp.timestamp) > currentTime) {
+      if ((int.parse(resp.timestamp)*1000) > currentTime) {
         DateTime tsdate = DateTime.fromMillisecondsSinceEpoch(
             int.parse(resp.timestamp) * 1000);
         dateTime = "${tsdate.day}/${tsdate.month}/${tsdate.year}-${tsdate.hour}:${tsdate.minute}";

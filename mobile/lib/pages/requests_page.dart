@@ -78,16 +78,8 @@ class _RequestsPageState extends State<RequestsPage> {
   }
 
   String _timestampConverter(timestamp) {
-    DateTime tsdate = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
-    String dateTime = tsdate.day.toString() +
-        "/" +
-        tsdate.month.toString() +
-        "/" +
-        tsdate.year.toString() +
-        "-" +
-        tsdate.hour.toString() +
-        ":" +
-        tsdate.minute.toString();
+    DateTime tsdate = DateTime.fromMillisecondsSinceEpoch(int.parse(timestamp) * 1000);
+    String dateTime = "${tsdate.day}/${tsdate.month}/${tsdate.year}-${tsdate.hour}:${tsdate.minute}";
     return dateTime;
   }
 
@@ -269,7 +261,7 @@ class _RequestsPageState extends State<RequestsPage> {
                 } else if (snapshot.hasError) {
                   return Center(
                       child: Text(
-                    'NO DATA',
+                    'KİTAP YOK',
                     style: TextStyle(color: Colors.white, fontSize: 15),
                   ));
                 }

@@ -47,9 +47,9 @@ class _SavedPageState extends State<SavedPage> {
     var urlString = dotenv.env['API_URL'] ?? "API_URL not found";
     var url = Uri.parse("$urlString/user/isbn-profile");
     var list = await savedBooks();
-    if(list.length == 0)
+    if(list.isEmpty)
       {
-        _ErrorStr = "NO DATA";
+        _ErrorStr = "KİTAP YOK";
       }
     var data = List.filled(list.length, {"isbn": list[0]});
     for (int i = 0; i < list.length; ++i) {
@@ -210,7 +210,7 @@ class _SavedPageState extends State<SavedPage> {
         } else if (snapshot.hasError) {
           return  Center(
               child: Text(_ErrorStr,
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: Colors.white,
                       fontSize: 15,
                       fontFamily: 'Ubuntu')));

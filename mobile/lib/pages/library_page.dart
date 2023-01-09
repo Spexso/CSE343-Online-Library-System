@@ -469,7 +469,7 @@ class _LibraryPageState extends State<LibraryPage> {
                     } else if (snapshot.hasError) {
                       return Center(
                           child: Text(
-                        'VERİ YOK',
+                        'KİTAP YOK',
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 15,
@@ -511,7 +511,7 @@ class _LibraryPageState extends State<LibraryPage> {
                     } else if (snapshot.hasError) {
                       return Center(
                           child: Text(
-                        'VERİ YOK',
+                        'KİTAP YOK',
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 15,
