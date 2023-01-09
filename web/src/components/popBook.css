@@ -71,7 +71,7 @@
 
 .overlay .overlay-inner button:hover{
     cursor: pointer;
-    transform: scale(0.9);
+    transform: scale(1.1);
     color: rgb(120, 168, 187);
 }
 
